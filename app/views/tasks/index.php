@@ -1,6 +1,6 @@
-<h1>Liste des tâches</h1>
-<a href="/create">Ajouter une tâche</a>
-<table>
+<h1 class="h1">Liste des tâches</h1>
+<a class=" h2 link-primary" href="/create">Ajouter une tâche</a>
+<table class="table">
    <thead>
       <tr>
          <th>ID</th>
@@ -19,12 +19,12 @@
             <?php if (!$task['is_completed']): ?>
             <form method="POST" action="/complete">
                <input type="hidden" name="id" value="<?= $task['id'] ?>">
-               <button type="submit">Marquer comme terminée</button>
+               <button class="btn btn-primary" type="submit">Marquer comme terminée</button>
             </form>
             <?php endif; ?>
             <form method="POST" action="/delete">
                <input type="hidden" name="id" value="<?= $task['id'] ?>">
-               <button class=".c-button" type="submit">Supprimer</button>
+               <button class="btn btn-secondary" type="submit">Supprimer</button>
             </form>
          </td>
       </tr>
@@ -32,9 +32,9 @@
    </tbody>
 </table>
 
-<h1>Tâches pour le projet actuel:</h1>
-<a href="/projects/<?= $project['id'] ?>/tasks/create">Ajouter une tâche au projet crouant</a>
-<table>
+<h1 class="h1">Tâches pour le projet actuel:</h1>
+<a class="h2 link-primary" href="/projects/<?= $project['id'] ?>/tasks/create">Ajouter une tâche au projet crouant</a>
+<table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -52,11 +52,11 @@
                 <td>
                     <form method="POST" action="/complete">
                         <input type="hidden" name="id" value="<?= $task['id'] ?>">
-                        <button type="submit">Marquer comme terminée</button>
+                        <button class="btn btn-primary" type="submit">Marquer comme terminée</button>
                     </form>
                     <form method="POST" action="/delete">
                         <input type="hidden" name="id" value="<?= $task['id'] ?>">
-                        <button type="submit">Supprimer</button>
+                        <button class="btn btn-secondary" type="submit">Supprimer</button>
                     </form>
                 </td>
             </tr>

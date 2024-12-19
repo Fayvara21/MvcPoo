@@ -5,6 +5,7 @@ class TaskController
     {
         $projectId = $_GET['project_id'] ?? null;
         $project = Project::find($projectId);
+        var_dump($_GET);
         $tasks = Task::all($projectId);
         include __DIR__ . "/../views/tasks/index.php";
     }
