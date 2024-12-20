@@ -10,7 +10,7 @@ class Task
     public static function create($title, $projectId)
     {
         $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("INSERT INTO tasks (title, project_id) VALUES (:title, :project_id)");
+        $stmt = $db->prepare("INSERT INTO `tasks` (`id`, `title`, `is_completed`, `created_at`, `project_id`) VALUES (NULL, :title, 0, current_timestamp(), :project_id);");
         $stmt->execute(['title' => $title, 'project_id' => $projectId]);
     }
     public static function markAsCompleted($id)

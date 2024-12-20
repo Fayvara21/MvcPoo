@@ -1,40 +1,37 @@
 <?php
 class TaskController
 {
-    public function index()
+    public function index($id)
     {
-        $projectId = $_GET['project_id'] ?? null;
-        $project = Project::find($projectId);
-        var_dump($_GET);
-        $tasks = Task::all($projectId);
+
+        $project = Project::find($id);
+        $tasks = Task::listProjects($id);
         include __DIR__ . "/../views/tasks/index.php";
     }
     
-    public function create()
+    public function create($id)
     {
-      $projectId = $_GET['project_id'] ?? null;
-
+        $project = Project::find($id);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title = $_POST['title'];
-            Task::create($title, $projectId);
-            header("Location: /tasks?project_id=$projectId");
+            $title = htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8');
+            Task::create($title, $id);
+            header("Location: /projects/$id/tasks");
             exit;
         }
-    
-        $project = Project::find($projectId);
+
         include __DIR__ . '/../views/tasks/create.php';
     }
     public function markAsCompleted($id)
     {
         Task::markAsCompleted($id);
-        header("Location: /");
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
 
     }
     public function delete($id)
     {
         Task::delete($id);
-        header("Location: /");
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
 }
