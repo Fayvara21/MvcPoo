@@ -1,9 +1,10 @@
 <?php
-class TaskController
+require_once '../app/controllers/BaseController.php';
+class TaskController extends BaseController
 {
     public function index($id)
     {
-
+		$this->requireAuth();
         $project = Project::find($id);
         $tasks = Task::listProjects($id);
         include __DIR__ . "/../views/tasks/index.php";

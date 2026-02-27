@@ -1,11 +1,14 @@
 <?php
-
-class ProjectController
+require_once '../app/controllers/BaseController.php';
+class ProjectController extends BaseController
 {
     public function index()
     {
+		$this->requireAuth();
         $projects = Project::all();
         include __DIR__ . '/../views/projects/index.php';
+
+		
     }
 
     public function create()
