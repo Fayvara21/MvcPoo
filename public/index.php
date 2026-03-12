@@ -4,6 +4,8 @@ require_once __DIR__ . "/../core/Router.php";
 require_once __DIR__ . "/../app/models/Task.php";
 require_once __DIR__ . "/../app/controllers/TaskController.php";
 require_once __DIR__ . '/../app/models/Project.php';
+require_once __DIR__ . '/../app/models/Retour.php';
+require_once __DIR__ . '/../app/models/Appro.php';
 require_once __DIR__ . '/../app/controllers/ProjectController.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 
@@ -24,14 +26,20 @@ $router->add('/projects/{project_id}/tasks/{task_id}/delete', function ($project
 });
 
 $router->add('/projects', [new ProjectController(), 'index']);
-$router->add('/projects/create', [new ProjectController(), 'create']);
+$router->add('/projects/', [new ProjectController(), 'index']);
+
+//$router->add('/projects/create', [new ProjectController(), 'create']);
 $router->add('/projects/{id}/tasks', [new TaskController(), 'index']);
+$router->add('/projects/{id}', [new TaskController(), 'index']);
 $router->add('/projects/{id}/tasks/create', [new TaskController(), 'create']);
+//$router->add('/projects/{id}/tasks/view', [new TaskController(), 'view']);
+$router->add('/projects/tasks/view', [new TaskController(), 'viewall']);
+
+//$router->add('/projects/{id}/tasks/view/json', [new TaskController(), 'json']);
+$router->add('/projects/tasks/view/json', [new TaskController(), 'jsonall']);
 $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
-
-var_dump($_SESSION);
 
 $router->dispatch();
 

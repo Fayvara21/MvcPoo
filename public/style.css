@@ -1,1 +1,135 @@
-/* un peu overkill, j'utilise bootstrap quand même :) */
+#taskContainer{
+	display:flex;
+	justify-content: center;
+	flex-wrap:wrap;
+	gap: 10px;
+	flex-direction:row;
+}
+form{
+	margin-left:20px;
+	margin-right:20px;
+}
+
+.login, .register {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login::before, .register::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(rgba(40,57,101,0.6), rgba(40,57,101,0.6)),
+    url("images/FlightSimulator.png") center / cover no-repeat;
+  filter: blur(3px);
+  transform: scale(1.05); 
+  z-index: -1;
+}
+
+.custom-navbar {
+  background-color: #013966;
+  padding: 0.8rem 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.custom-navbar .navbar-brand {
+  font-size: 1.5rem;
+}
+
+.custom-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  margin-right: 1rem;
+  transition: all 0.3s;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #013966;
+  text-decoration: underline;
+}
+
+.custom-navbar .nav-link.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.custom-navbar .form-control {
+  padding: 5px 15px;
+  border-radius: 50px;
+  border: none;
+  transition: all 0.3s;
+}
+
+.custom-navbar .form-control:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 206, 0, 0.5);
+}
+
+.custom-navbar .btn-outline-light {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  transition: all 0.3s;
+}
+
+.custom-navbar .btn-outline-light:hover {
+  background-color: #013966;
+  border-color: #013966;
+  color: #013966;
+}
+
+/* Minimal custom CSS */
+.navbar .nav-link {
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  padding: 8px 16px !important;
+  margin: 0 2px;
+}
+
+.navbar .nav-link:hover {
+  background-color: #013966;
+  color: white !important;
+}
+
+.navbar .nav-link.text-white-50:hover {
+  color: white !important;
+}
+
+.navbar .form-control::placeholder {
+  color: #013966;
+}
+
+.navbar .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  color: white !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 991px) {
+  .navbar .nav-link {
+    padding: 10px 15px !important;
+    margin: 2px 0;
+  }
+  
+  .navbar form {
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  .navbar .form-control {
+    min-width: auto !important;
+  }
+}
+

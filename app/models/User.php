@@ -12,12 +12,14 @@ class User
         $this->db = Database::getInstance()->getPdo();
     }
 
-    public function register($username, $password, $part)
-    {
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->db->prepare("INSERT INTO users (username, password, part) VALUES (?, ?, ?)");
-        return $stmt->execute([$username, $hashed, $part]);
-    }
+    public function register($username, $password, $group)
+	{
+		$hashed = password_hash($password, PASSWORD_DEFAULT);
+
+		$stmt = $this->db->prepare("INSERT INTO users (username, password, `group`) VALUES (?, ?, ?)");
+		
+		return $stmt->execute([$username, $hashed, $group]);
+	}
 
     public function findByUsername($username)
     {

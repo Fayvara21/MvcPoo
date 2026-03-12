@@ -23,7 +23,7 @@ class AuthController
                 session_regenerate_id(true);
                 $_SESSION['user'] = $user['username'];
 				$_SESSION['user_id'] = $user['id'];
-				$_SESSION['user_part'] = $user["part"];
+				$_SESSION['group'] = $user["group"];
                 header("Location: /projects");
                 exit();
             } else {
@@ -36,23 +36,31 @@ class AuthController
     }
 
 
-    public function register()
-    {
-		if ($_SESSION['user_part'] === 'admin'){
-			if ($_SERVER['REQUEST_METHOD'] === 'POST') {	
-				$this->userModel->register($_POST['username'], $_POST['password'], $_POST["part"]);
-				header("Location: /login");
-				exit();
-			} else {
-				require '../app/views/register.php';
-        }
-		
-		} else {
-			$error = "You must be an admin to create an account. Please contact your adminitrator.";
+	public function register()
+	{
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+			$part = $_POST['part'];
+
+			$allowed = ['magasin', 'adv', 'part145', 'part21'];
+
+			// Only admin can create admin accounts
+			if ($_SESSION['group'] === 'admin') {
+				$allowed[] = 'admin';
+			}
+
+			if (!in_array($part, $allowed)) {
+				die("Unauthorized role assignment.");
+			}
+
+			$this->userModel->register($_POST['username'], $_POST['password'], $part);
+
 			header("Location: /login");
 			exit();
 		}
-    }
+
+		require '../app/views/register.php';
+	}
 	
 
     public function dashboard()
