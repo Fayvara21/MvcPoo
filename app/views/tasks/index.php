@@ -1,3 +1,22 @@
+<?php
+
+$stateCounts = [
+    0 => 0,
+    1 => 0,
+    2 => 0,
+    3 => 0
+];
+
+foreach ($tasks as $t) {
+    $state = (int)$t['is_completed'];
+    if (isset($stateCounts[$state])) {
+        $stateCounts[$state]++;
+    }
+}
+
+$totalTasks = array_sum($stateCounts);
+?>
+
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container-fluid py-4">
@@ -55,17 +74,74 @@
     </div>
 
     <!-- Optional: Quick filters or tabs (can be removed if not needed) -->
-    <div class="d-flex gap-2 mb-4">
-        <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-            <i class="bi bi-list-ul me-1"></i>Toutes les demandes
-        </span>
-        <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-            <i class="bi bi-clock me-1"></i>En attente
-        </span>
-        <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-            <i class="bi bi-check-circle me-1"></i>Terminées
-        </span>
-    </div>
+<?php
+
+$stateCounts = [
+    0 => 0,
+    1 => 0,
+    2 => 0,
+    3 => 0
+];
+
+// Count tasks per state
+foreach ($tasks as $t) {
+    $state = (int)$t['is_completed'];
+    if (isset($stateCounts[$state])) {
+        $stateCounts[$state]++;
+    }
+}
+
+$totalTasks = array_sum($stateCounts);
+
+// Determine which states are currently active from query string
+$activeStates = $_GET['states'] ?? [];
+if (!is_array($activeStates)) $activeStates = [$activeStates];
+$activeStates = array_map('intval', $activeStates);
+
+// Filter tasks according to selected states
+$filteredTasks = [];
+foreach ($tasks as $task) {
+    if (empty($activeStates) || in_array((int)$task['is_completed'], $activeStates)) {
+        $filteredTasks[] = $task;
+    }
+}
+?>
+
+<div class="d-flex flex-wrap gap-2 mb-4">
+    <?php 
+    $stateColors = [
+        0 => 'primary',
+        1 => 'warning text-dark',
+        2 => 'info text-dark',
+        3 => 'success'
+    ];
+    foreach ([0=>'Envoyé', 1=>'Traitement', 2=>'Livraison', 3=>'Soldé'] as $state => $label): 
+        $count = $stateCounts[$state];
+        $isActive = in_array($state, $activeStates);
+        $newStates = $activeStates;
+        if ($isActive) {
+            $newStates = array_diff($activeStates, [$state]);
+        } else {
+            $newStates[] = $state;
+        }
+        $query = http_build_query(['states' => $newStates]);
+        $btnClass = $isActive ? "btn-{$stateColors[$state]}" : "btn-outline-{$stateColors[$state]}";
+    ?>
+        <a href="?<?= $query ?>" class="btn <?= $btnClass ?> rounded-pill px-2 py-2">
+            <?= $count ?> <?= $label ?>
+        </a>
+    <?php endforeach; ?>
+
+    <!-- Total tasks button -->
+    <a href="?" class="btn btn-dark rounded-pill px-3 py-2">
+        <?= $totalTasks ?> demandes
+    </a>
+</div>
+
+<?php
+// Override $tasks with filtered tasks for table rendering
+$tasks = $filteredTasks;
+?>
 
     <!-- Content area for tasks will go here -->
     <div id="tasksContainer">
@@ -100,9 +176,9 @@ $isAppro = !empty($task['appro_pn']);
 $isRetour = !empty($task['retour_pn']);
 ?>
 
-<tr>
-    <td><?= $task['id'] ?></td>
 
+<tr class="task-row" data-task-id="<?= $task['id']?>" data-task-state="<?= $task["is_completed"] ?>" >
+    <td><?= $task['id'] ?></td>
     <td>
         <?php if ($isAppro): ?>
             <span class="badge bg-primary">APPRO</span>
@@ -127,27 +203,56 @@ $isRetour = !empty($task['retour_pn']);
     </td>
 
     <td>
-        <?php if ($task['is_completed']): ?>
-            <span class="badge bg-success">Terminée</span>
-        <?php else: ?>
-            <span class="badge bg-warning text-dark">En cours</span>
-        <?php endif; ?>
-    </td>
+	<?php
+	switch($task['is_completed']) {
+		case 0:
+			echo '<span class="badge bg-primary">Envoyé</span>';
+			break;
+		case 1:
+			echo '<span class="badge bg-warning text-dark">Traitement</span>';
+			break;
+		case 2:
+			echo '<span class="badge bg-info text-dark">Livré</span>';
+			break;
+		case 3:
+			echo '<span class="badge bg-success">Soldé</span>';
+			break;
+	}
+	?>
+	</td>
 
     <td><?= $task['created_at'] ?></td>
 	<td><?= $task['due_date'] ?></td>
 
-    <td>
-        <?php if (!$task['is_completed']): ?>
-        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete">
-            <button class="btn btn-primary btn-sm">Marquer terminée</button>
-        </form>
-        <?php endif; ?>
-    </td>
+	<td>
+		<?php if (!$task['is_completed']): ?>
+			<!-- Mark as En traitement -->
+			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/1" class="d-inline">
+				<button class="btn btn-warning btn-sm">Marquer comme En traitement</button>
+			</form>
+
+			<!-- Delete button -->
+			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete" class="d-inline ms-2">
+				<button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('Supprimer cette tâche ?')">
+					<i class="bi bi-trash"></i> Supprimer
+				</button>
+			</form>
+		<?php elseif ($task['is_completed'] == 1): ?>
+			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/2">
+				<button class="btn btn-info btn-sm">Marquer comme Livré</button>
+			</form>
+		<?php elseif ($task['is_completed'] == 2): ?>
+			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/3">
+				<button class="btn btn-success btn-sm">Marquer comme Soldé</button>
+			</form>
+		<?php else: ?>
+			<span class="text-success">Traité</span>
+		<?php endif; ?>
+	</td>
 </tr>
 
 <!-- Dedicated row for Informations -->
-<tr class="table-info">
+<tr class="task-row bg-light" data-task-id="<?= $task['id'] ?>" data-task-state="<?= $task["is_completed"] ?>" >
     <td colspan="9">
         <?php if ($isAppro): ?>
             <strong>Quantité:</strong> <?= $task['appro_nb'] ?? '-' ?> &nbsp; | &nbsp;
@@ -164,7 +269,52 @@ $isRetour = !empty($task['retour_pn']);
     </td>
 </tr>
 
+
+
+<script>
+const projectId = <?= $project['id'] ?>;
+
+function showError(message) {
+    const toastEl = document.getElementById('errorToast');
+    toastEl.querySelector('.toast-body').textContent = message;
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+}
+
+// Use event delegation
+document.addEventListener('click', function(e) {
+    // Ignore clicks on buttons, forms, or links
+    if (e.target.closest('button, form, a')) return;
+
+    // Only handle row clicks
+    const row = e.target.closest('.task-row');
+    if (!row) return;
+
+    const taskState = Number(row.dataset.taskState || 0);
+    const taskId = row.dataset.taskId;
+
+    if (taskState !== 0) {
+        showError("Cette demande ne peut plus être modifiée.");
+        return;
+    }
+
+    window.location.href = `/projects/${projectId}/tasks/${taskId}/edit`;
+});
+</script>
 <?php endforeach; ?>
+
 
 </tbody>
 </table>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-danger text-white">
+      <strong class="me-auto">Error</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body">
+      Error message here.
+    </div>
+  </div>
+</div>

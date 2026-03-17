@@ -17,14 +17,16 @@ $router->add("/", function () {
     exit;
 });
 
-$router->add('/projects/{project_id}/tasks/{task_id}/complete', function ($project_id, $task_id) {
-    (new TaskController())->markAsCompleted($task_id);
+$router->add('/projects/{project_id}/tasks/{task_id}/complete/{state}', function ($project_id, $task_id, $state) {
+    (new TaskController())->markAsCompleted($task_id, $state);
 });
 
 $router->add('/projects/{project_id}/tasks/{task_id}/delete', function ($project_id, $task_id) {
     (new TaskController())->delete($task_id);
 });
-
+$router->add('/projects/{project_id}/tasks/{task_id}/edit', function ($project_id, $task_id) {
+    (new TaskController())->edit($task_id);
+});
 $router->add('/projects', [new ProjectController(), 'index']);
 $router->add('/projects/', [new ProjectController(), 'index']);
 

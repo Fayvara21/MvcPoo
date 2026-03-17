@@ -7,10 +7,7 @@
             <h1 class="display-6 fw-bold mb-1">Liste des projets</h1>
             <p class="text-muted mb-0">Tous les projets avec des demandes actives</p>
         </div>
-        <a href="/projects/tasks/view" class="btn btn-outline-primary rounded-pill px-4 py-2">
-            <i class="bi bi-grid-3x3-gap-fill me-2"></i>
-            Vue globale des tâches
-        </a>
+        
     </div>
 
     <!-- Projects Grid -->
@@ -38,17 +35,23 @@
                                     <i class="bi bi-folder2-open text-primary fs-4"></i>
                                 </div>
                                 <div>
-                                    <span class="badge bg-light text-dark mb-2">Projet #<?= $project['id'] ?></span>
-                                    <h5 class="card-title fw-semibold mb-0">
+                                    <!-- <span class="badge bg-light text-dark mb-2">Projet #<?= $project['id'] ?></span> -->
+                                    <h4 class="card-title fw-semibold mb-0">
                                         <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks" 
                                            class="text-decoration-none text-dark stretched-link">
                                             <?= htmlspecialchars($project['title']) ?>
                                         </a>
-                                    </h5>
+                                    </h4>
+
                                 </div>
                             </div>
+							
+							<?php if (!empty($project['description'])): ?>
+                                <p class="card-text text-muted small mt-3">
+                                    <?= htmlspecialchars(substr($project['description'], 0, 100)) ?>
+                                </p>
+                            <?php endif; ?>
                             
-                            <!-- Project Stats (if available) -->
                             <?php if (!empty($project['tasks_count'])): ?>
                                 <div class="d-flex gap-3 mt-3 pt-3 border-top">
                                     <div>
@@ -64,12 +67,7 @@
                                 </div>
                             <?php endif; ?>
                             
-                            <!-- Project Description (if available) -->
-                            <?php if (!empty($project['description'])): ?>
-                                <p class="card-text text-muted small mt-3">
-                                    <?= htmlspecialchars(substr($project['description'], 0, 100)) ?>...
-                                </p>
-                            <?php endif; ?>
+                            
                         </div>
                         
                         <!-- Card Footer with Quick Actions -->

@@ -1,34 +1,38 @@
-#taskContainer{
-	display:flex;
-	justify-content: center;
-	flex-wrap:wrap;
-	gap: 10px;
-	flex-direction:row;
+#taskContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem; /* use relative units */
+    padding: 0 1rem; /* avoid horizontal overflow */
 }
-form{
-	margin-left:20px;
-	margin-right:20px;
+
+form {
+    margin: 0 1rem; /* relative margin for small screens */
 }
 
 .login, .register {
-  height: 100vh;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+    min-height: 100vh;
+    padding: 1rem 0; /* prevent cut-off on tall narrow screens */
+    flex-direction: column; /* stack elements on portrait */
 }
 
-.login::before, .register::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: 
-    linear-gradient(rgba(40,57,101,0.6), rgba(40,57,101,0.6)),
-    url("images/FlightSimulator.png") center / cover no-repeat;
-  filter: blur(3px);
-  transform: scale(1.05); 
-  z-index: -1;
+@media (max-width: 700px) {
+    .login, .register {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 3rem; /* space below navbar */
+    }
+
+    #taskContainer {
+        gap: 0.25rem;
+    }
+
+
+}
+
+.login::before, .register::before {
+    background-size: contain; /* or try 'cover' with responsive adjustments */
+    background-position: center top;
 }
 
 .custom-navbar {
@@ -38,98 +42,198 @@ form{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.custom-navbar .navbar-brand {
-  font-size: 1.5rem;
-}
+
+
 
 .custom-navbar .nav-link {
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   margin-right: 1rem;
-  transition: all 0.3s;
+  border-radius: 20px;
+  padding: 8px 16px !important;
+  margin: 0 2px;
+  transition: all 0.2s ease;
 }
 
+/* Revert hover effect - buttons change to white background with dark text */
 .custom-navbar .nav-link:hover {
-  color: #013966;
-  text-decoration: underline;
+  background-color: white;
+  color: #013966 !important;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .custom-navbar .nav-link.active {
   color: #ffffff;
   font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .custom-navbar .form-control {
   padding: 5px 15px;
   border-radius: 50px;
-  border: none;
-  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.custom-navbar .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Revert hover effect for form controls */
+.custom-navbar .form-control:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .custom-navbar .form-control:focus {
   outline: none;
-  box-shadow: 0 0 8px rgba(255, 206, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
+/* Button styling with revert effect */
 .custom-navbar .btn-outline-light {
-  border: 1px solid #ffffff;
+  border: 2px solid #ffffff;
   color: #ffffff;
-  transition: all 0.3s;
+  background-color: transparent;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  padding: 8px 20px !important;
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
+/* Revert hover effect - buttons become white with dark text */
 .custom-navbar .btn-outline-light:hover {
-  background-color: #013966;
-  border-color: #013966;
+  background-color: white;
+  border-color: white;
+  color: #013966;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Active state for buttons */
+.custom-navbar .btn-outline-light:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Search button specific */
+.navbar form.d-flex .btn-outline-light {
+  border-width: 2px;
+}
+
+.navbar form.d-flex .btn-outline-light:hover {
+  background-color: white;
   color: #013966;
 }
 
-/* Minimal custom CSS */
-.navbar .nav-link {
+/* Toggler styling */
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.5);
   transition: all 0.2s ease;
-  border-radius: 20px;
-  padding: 8px 16px !important;
-  margin: 0 2px;
 }
 
-.navbar .nav-link:hover {
-  background-color: #013966;
-  color: white !important;
+.navbar-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.navbar .nav-link.text-white-50:hover {
-  color: white !important;
-}
-
-.navbar .form-control::placeholder {
-  color: #013966;
-}
-
-.navbar .form-control:focus {
-  background-color: rgba(255, 255, 255, 0.35) !important;
-  color: white !important;
-  box-shadow: none !important;
-  outline: none !important;
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 .navbar-toggler:focus {
-  box-shadow: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
   outline: none !important;
 }
 
-/* Mobile adjustments */
-@media (max-width: 991px) {
-  .navbar .nav-link {
-    padding: 10px 15px !important;
-    margin: 2px 0;
-  }
-  
-  .navbar form {
-    margin-top: 10px;
-    width: 100%;
-  }
-  
-  .navbar .form-control {
-    min-width: auto !important;
-  }
+.task-row{
+    cursor: pointer;
 }
 
+.task-row:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Form alignment in navbar */
+.navbar form.d-flex .form-control,
+.navbar form.d-flex .btn {
+  height: 42px;
+  line-height: 1.5;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  border-radius: 50rem;
+  font-size: 1rem;
+}
+
+.navbar form.d-flex {
+  align-items: center;
+}
+
+/* Active state indicators */
+.navbar-nav .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  position: relative;
+}
+
+.navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px 3px 0 0;
+}
+
+/* Smooth transitions for all interactive elements */
+.navbar .btn,
+.navbar .nav-link,
+.navbar .form-control,
+.navbar-toggler {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Ensure buttons are clearly interactive */
+.navbar .btn {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Focus states for accessibility */
+.navbar .btn:focus-visible,
+.navbar .nav-link:focus-visible,
+.navbar .form-control:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+.navbar .logo {
+    height: 40px;        /* Fits standard navbar height */
+    width: auto;         /* Maintains aspect ratio */
+    max-height: 100%;    /* Never exceeds navbar */
+    object-fit: contain; /* Ensures full logo visible */
+    display: block;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .navbar .logo {
+        height: 32px;    /* Smaller on mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar .logo {
+        height: 28px;    /* Even smaller on XS */
+    }
+}

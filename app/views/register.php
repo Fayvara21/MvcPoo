@@ -7,7 +7,7 @@
 	<div class="card shadow p-4" style="width:350px;">
 	
 		<div class="d-flex flex-row">
-			<h2 class="">Sign-in</h2>
+			<h2 class="">Créer un compte</h2>
 			<img class="ms-auto mb-3" src="/images/ASI.jpg" alt="logo asi" width="86px">
 		</div>
 
@@ -16,16 +16,16 @@
 		<form method="POST">
 
 			<div class="form-group form-outline mb-3">
-				<input class="form-control" type="text" name="username" placeholder="Username" required>
+				<input class="form-control" type="text" name="username" placeholder="Nom d'utilisateur" required>
 			</div>
 
 			<div class="form-group form-outline mb-3">
-				<input class="form-control" type="password" name="password" placeholder="Password" required>    
+				<input class="form-control" type="password" name="password" placeholder="Mot de passe" required>    
 			</div>
 
 			<div class="form-group form-outline mb-4">
 				<select class="form-select" name="part" required>
-					<option value="" disabled selected>-- groupe --</option>
+					<option value="" disabled selected>-- Groupe --</option>
 					<option value="magasin">Magasin</option>
 					<option value="adv">ADV</option>
 					<option value="part145">PART145</option>
@@ -41,7 +41,7 @@
 
 		</form>
 
-		<a class="btn btn-secondary ms-auto" href="/login">Login</a>
+		<a class="btn btn-secondary ms-auto" href="/login">Connexion</a>
 
 	</div>
 

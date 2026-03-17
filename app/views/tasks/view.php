@@ -1,11 +1,11 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container-fluid py-4">
-    <!-- Header Section -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="display-6 fw-bold mb-1">Real Time View</h1>
-            <p class="text-muted mb-0">Vue globale en temps réel</p>
+            <h1 class="display-6 fw-bold mb-1">Vue globale</h1>
+            <p class="text-muted mb-0">Vue sur toutes les demandes en cours</p>
         </div>
         <div>
             <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
@@ -14,155 +14,201 @@
         </div>
     </div>
 
-    <div id="taskContainer">
-        <?php
-        // Group tasks by project
-		$projects = [];
-		$allProjects = Task::getAuthorizedProjects();
+<?php
 
-		// initialize all projects
-		foreach ($allProjects as $p) {
-			$projects[$p['id']] = [
-				'title' => $p['title'],
-				'tasks' => []
-			];
-		}
+$allProjects = Task::getAuthorizedProjects();
+$tasks = Task::getAllTasksForAllProjects();
 
-		// attach tasks if they exist
-		foreach ($tasks as $task) {
-			if (!$task['is_completed'] && isset($projects[$task['project_id']])) {
-				$projects[$task['project_id']]['tasks'][] = $task;
-			}
-		}
+$projects = [];
 
-        foreach ($projects as $projectId => $projectData): ?>
-            <!-- Project Card -->
-            <div class="card shadow-sm border-1 mb-4">
-                <div class="card-header bg-white border-1 pt-4 px-4">
-                    <h3 class="h5 fw-semibold mb-0">
-                        <i class="bi bi-folder2-open text-primary me-2"></i>
-                        <?= htmlspecialchars($projectData['title']) ?>
-                    </h3>
-                </div>
-                
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 project-table" data-project-id="<?= $projectId ?>">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="ps-4" style="width: 60px">#</th>
-                                    <th style="width: 100px">Type</th>
-                                    <th>Titre</th>
-                                    <th>Desc</th>
-                                    <th style="width: 120px">Ref</th>
-                                    <th style="width: 160px">Date limite</th>
-                                </tr>
-                            </thead>
-							<tbody>
+foreach ($allProjects as $p) {
+    $projects[$p['id']] = [
+        'title' => $p['title'],
+        'tasks' => []
+    ];
+}
 
-								<?php if (!empty($projectData['tasks'])): ?>
+foreach ($tasks as $task) {
 
-									<?php foreach ($projectData['tasks'] as $task): 
-										$isAppro = !empty($task['appro_pn']);
-										$isRetour = !empty($task['retour_pn']);
+    if (($task['is_completed'] == 0 || $task['is_completed'] == 1) && isset($projects[$task['project_id']])) {
+        $projects[$task['project_id']]['tasks'][] = $task;
+    }
+}
 
-										// Determine urgency class
-										$urgencyClass = '';
-										$dueClass = '';
+?>
 
-										if (!empty($task['due_date'])) {
-											$now = new DateTime();
-											$due = new DateTime($task['due_date']);
-											$diffDays = (int)$now->diff($due)->format('%r%a');
+<div id="taskContainer">
 
-											if ($diffDays > 7) {
-												$urgencyClass = 'table-primary';
-												$dueClass = 'text-primary';
-											} elseif ($diffDays > 0) {
-												$urgencyClass = 'table-warning';
-												$dueClass = 'text-warning';
-											} else {
-												$urgencyClass = 'table-danger';
-												$dueClass = 'text-danger';
-											}
-										}
-									?>
+<?php foreach ($projects as $projectId => $projectData): ?>
 
-										<!-- Main Task Row -->
-										<tr class="<?= $urgencyClass ?>">
-											<td class="ps-4 fw-medium"><?= $task['id'] ?></td>
-											<td>
-												<?php if ($isAppro): ?>
-													<span class="badge bg-primary">APPRO</span>
-												<?php elseif ($isRetour): ?>
-													<span class="badge bg-warning text-dark">RETOUR</span>
-												<?php else: ?>
-													<span class="badge bg-secondary">Tâche</span>
-												<?php endif; ?>
-											</td>
-											<td><?= htmlspecialchars($task['title']) ?></td>
-											<td><?= htmlspecialchars($task['description']) ?></td>
-											<td>
-												<?= $isAppro ? $task['appro_pn'] : ($isRetour ? $task['retour_pn'] : '-') ?>
-											</td>
-											<td class="<?= $dueClass ?>">
-												<?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
-											</td>
-										</tr>
+<div class="card shadow-sm border-1 mb-4">
 
-										<!-- Details Row -->
-										<tr class="table-info">
-											<td colspan="7" class="p-3">
-												<?php if ($isAppro): ?>
-													<div class="d-flex flex-wrap gap-4 small">
-														<span><strong>Quantité:</strong> <?= $task['appro_nb'] ?? '-' ?></span>
-														<span><strong>Désignation:</strong> <?= $task['designation'] ?? '-' ?></span>
-														<span><strong>Lieu:</strong> <?= $task['location'] ?? '-' ?></span>
-														<span><strong>Avion:</strong> <?= $task['plane'] ?? '-' ?></span>
-													</div>
-												<?php elseif ($isRetour): ?>
-													<div class="d-flex flex-wrap gap-4 small">
-														<span><strong>Quantité:</strong> <?= $task['retour_nb'] ?? '-' ?></span>
-														<span><strong>SN:</strong> <?= $task['sn'] ?? '-' ?></span>
-														<span><strong>Certif:</strong> <?= $task['certif'] ?? '-' ?></span>
-													</div>
-												<?php else: ?>
-													<span class="text-muted small">-</span>
-												<?php endif; ?>
-											</td>
-										</tr>
+<div class="card-header bg-white border-1 pt-4 px-4">
+<h3 class="h5 fw-semibold mb-0">
+<i class="bi bi-folder2-open text-primary me-2"></i>
+<?= htmlspecialchars($projectData['title']) ?>
+</h3>
+</div>
 
-									<?php endforeach; ?>
+<div class="card-body p-0">
 
-								<?php else: ?>
+<div class="table-responsive">
 
-									<!-- Empty project row -->
-									<tr>
-										<td colspan="6" class="text-center text-muted py-4">
-											Aucune tâche pour ce projet
-										</td>
-									</tr>
+<table class="table table-hover align-middle mb-0 project-table" data-project-id="<?= $projectId ?>">
 
-								<?php endif; ?>
-							</tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-        
-        <?php if (empty($projects)): ?>
-            <div class="text-center py-5">
-                <div class="display-1 text-muted mb-3">📋</div>
-                <h3 class="h5 text-muted">Aucune tâche en cours</h3>
-                <p class="text-muted small">Toutes les tâches sont terminées</p>
-            </div>
-        <?php endif; ?>
-    </div>
+<thead class="bg-light">
+<tr>
+<th class="ps-4" style="width:60px">#</th>
+<th style="width:100px">Type</th>
+<th>Titre</th>
+<th>Desc</th>
+<th style="width:120px">Ref</th>
+<th style="width:160px">Date limite</th>
+</tr>
+</thead>
+
+<tbody>
+
+<?php if (!empty($projectData['tasks'])): ?>
+
+<?php
+
+usort($projectData['tasks'], function($a,$b){
+
+$getTypePriority = fn($t) => !empty($t['appro_pn']) ? 1 : (!empty($t['retour_pn']) ? 2 : 3);
+
+$typeA = $getTypePriority($a);
+$typeB = $getTypePriority($b);
+
+if ($typeA !== $typeB) return $typeA <=> $typeB;
+
+$dueA = !empty($a['due_date']) ? strtotime($a['due_date']) : PHP_INT_MAX;
+$dueB = !empty($b['due_date']) ? strtotime($b['due_date']) : PHP_INT_MAX;
+
+return $dueA <=> $dueB;
+
+});
+
+$lastType = 0;
+
+?>
+
+<?php foreach ($projectData['tasks'] as $task):
+
+$isAppro = !empty($task['appro_pn']);
+$isRetour = !empty($task['retour_pn']);
+
+$currentType = $isAppro ? 1 : ($isRetour ? 2 : 3);
+
+if ($lastType && $lastType !== $currentType) {
+echo '<tr class="table-info"><td colspan="6" class="text-center text-muted fw-bold"></td></tr>';
+}
+
+$lastType = $currentType;
+
+?>
+
+<tr>
+
+<td class="ps-4 fw-medium"><?= $task['id'] ?></td>
+
+<td>
+
+<?php if ($isAppro): ?>
+<span class="badge bg-primary">APPRO</span>
+<?php elseif ($isRetour): ?>
+<span class="badge bg-warning text-dark">RETOUR</span>
+<?php else: ?>
+<span class="badge bg-secondary">AUTRE</span>
+<?php endif; ?>
+
+</td>
+
+<td><?= htmlspecialchars($task['title']) ?></td>
+
+<td><?= htmlspecialchars($task['description']) ?></td>
+
+<td>
+<?= $isAppro ? $task['appro_pn'] : ($isRetour ? $task['retour_pn'] : '-') ?>
+</td>
+
+<td>
+
+<?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
+
+<?php if ($task['is_completed'] == 1): ?>
+<span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
+<?php endif; ?>
+
+</td>
+
+</tr>
+
+<tr class="table">
+
+<td colspan="6" class="p-3">
+
+<?php if ($isAppro): ?>
+
+<div class="d-flex flex-wrap gap-4 small">
+<span><strong>Quantité:</strong> <?= $task['appro_nb'] ?? '-' ?></span>
+<span><strong>Désignation:</strong> <?= $task['designation'] ?? '-' ?></span>
+<span><strong>Lieu:</strong> <?= $task['location'] ?? '-' ?></span>
+<span><strong>Avion:</strong> <?= $task['plane'] ?? '-' ?></span>
+</div>
+
+<?php elseif ($isRetour): ?>
+
+<div class="d-flex flex-wrap gap-4 small">
+<span><strong>Quantité:</strong> <?= $task['retour_nb'] ?? '-' ?></span>
+<span><strong>SN:</strong> <?= $task['sn'] ?? '-' ?></span>
+<span><strong>Certif:</strong> <?= $task['certif'] ?? '-' ?></span>
+</div>
+
+<?php else: ?>
+
+<span class="text-muted small">-</span>
+
+<?php endif; ?>
+
+</td>
+</tr>
+
+<?php endforeach; ?>
+
+<?php else: ?>
+
+<tr>
+<td colspan="6" class="text-center text-muted py-4">
+Aucune tâche pour ce projet
+</td>
+</tr>
+
+<?php endif; ?>
+
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<?php endforeach; ?>
+
+<?php if (empty($projects)): ?>
+
+<div class="text-center py-5">
+<div class="display-1 text-muted mb-3">📋</div>
+<p class="text-muted small">Toutes les tâches sont terminées</p>
+</div>
+
+<?php endif; ?>
+
+</div>
 </div>
 
 
 <script>
+
 const addSound = new Audio('/sounds/open.mp3');
 const removeSound = new Audio('/sounds/close.mp3');
 
@@ -170,132 +216,190 @@ let previousTaskIds = JSON.parse(localStorage.getItem('previousTaskIds') || '{}'
 let soundEnabled = true;
 let firstLoad = true;
 
-function loadTasks() {
-    fetch(window.location.pathname + '/json')
-        .then(r => r.json())
-        .then(tasks => {
+function loadTasks(){
 
-            const projects = {};
+fetch(window.location.pathname + '/json')
+.then(r => r.json())
+.then(tasks => {
 
-            // Group tasks by project
-            tasks.forEach(task => {
-                if (!task.is_completed) {
-                    if (!projects[task.project_id]) {
-                        projects[task.project_id] = { title: task.project_title, tasks: [] };
-                    }
-                    projects[task.project_id].tasks.push(task);
-                }
-            });
+const projects = {};
 
-            document.querySelectorAll('.project-table').forEach(table => {
+tasks.forEach(task => {
 
-				const projectId = table.dataset.projectId;
-				const projectDiv = table.querySelector('tbody');
+if(task.is_completed === 0 || task.is_completed === 1){
 
-				const projectTasks = projects[projectId]?.tasks || [];
+if(!projects[task.project_id]){
+projects[task.project_id] = {title:task.project_title,tasks:[]};
+}
 
-                let html = [];
-				let currentIds = [];
+projects[task.project_id].tasks.push(task);
 
-				projectTasks.forEach(task => {
+}
 
-                    let rowClass = '';
-                    let dueClass = '';
+});
 
-                    if (task.due_date) {
+document.querySelectorAll('.project-table').forEach(table => {
 
-                        const now = new Date();
-                        const due = new Date(task.due_date);
-                        const diffDays = Math.floor((due - now) / (1000 * 60 * 60 * 24));
+const projectId = table.dataset.projectId;
+const projectDiv = table.querySelector('tbody');
 
-                        if (diffDays > 7) {
-                            rowClass = 'table-success';
-                            dueClass = 'text-success';
-                        }
-                        else if (diffDays > 0) {
-                            rowClass = 'table-warning';
-                            dueClass = 'text-warning';
-                        }
-                        else {
-                            rowClass = 'table-danger';
-                            dueClass = 'text-danger';
-                        }
-                    }
+const projectTasks = projects[projectId]?.tasks || [];
 
-                    currentIds.push(task.id);
+let html = [];
+let currentIds = [];
 
-                    const typeBadge = task.appro_pn 
-                        ? '<span class="badge bg-primary">APPRO</span>'
-                        : task.retour_pn 
-                            ? '<span class="badge bg-warning text-dark">RETOUR</span>'
-                            : '<span class="badge bg-secondary">Tâche</span>';
+const typePriority = t => t.appro_pn ? 1 : t.retour_pn ? 2 : 3;
 
-                    const reference = task.appro_pn ?? task.retour_pn ?? '-';
+projectTasks.sort((a,b)=>{
 
-                    html.push(`
-                        <tr class="${rowClass}">
-                            <td>${task.id}</td>
-                            <td>${typeBadge}</td>
-                            <td>${task.title}</td>
-                            <td>${task.description}</td>
-                            <td>${reference}</td>
-                            <td class="${dueClass}">${task.due_date ?? '-'}</td>
-                        </tr>
-                        <tr class="table-info">
-                            <td colspan="8">
-                                ${task.appro_pn ? `<strong>Quantité:</strong> ${task.appro_nb ?? '-'} | 
-                                <strong>Désignation:</strong> ${task.designation ?? '-'} | 
-                                <strong>Lieu:</strong> ${task.location ?? '-'} | 
-                                <strong>Avion:</strong> ${task.plane ?? '-'}` : ''}
-                                ${task.retour_pn ? `<strong>Quantité:</strong> ${task.retour_nb ?? '-'} | 
-                                <strong>SN:</strong> ${task.sn ?? '-'} | 
-                                <strong>Certif:</strong> ${task.certif ?? '-'}` : ''}
-                                ${!task.appro_pn && !task.retour_pn ? '-' : ''}
-                            </td>
-                        </tr>
-                    `);
-                });
-				
-				if (projectTasks.length === 0) {
-					html.push(`
-						<tr>
-							<td colspan="6" class="text-center text-muted py-0">
-								<div class="text-center py-0">
-									<div class="display-1 text-muted mb-1">📋</div>
-									<h3 class="h5 text-muted">Aucune tâche en cours</h3>
-									<p class="text-muted small">Toutes les tâches sont terminées</p>
-								</div>
-							</td>
-						</tr>
-					`);
-				}
+const typeA = typePriority(a);
+const typeB = typePriority(b);
 
-                // Sound logic
-                const prev = previousTaskIds[projectId] || [];
+if(typeA !== typeB) return typeA - typeB;
 
-				const addedTasks = currentIds.filter(id => !prev.includes(id));
-				const removedTasks = prev.filter(id => !currentIds.includes(id));
+const dueA = a.due_date ? new Date(a.due_date) : new Date(8640000000000000);
+const dueB = b.due_date ? new Date(b.due_date) : new Date(8640000000000000);
 
-                if (!firstLoad && soundEnabled) {
-                    if (addedTasks.length) addSound.play().catch(()=>{});
-                    if (removedTasks.length) removeSound.play().catch(()=>{});
-                }
+return dueA - dueB;
 
-                previousTaskIds[projectId] = currentIds;
+});
 
-                projectDiv.innerHTML = html.join('');
-            });
+let lastType = 0;
 
-            // Save state
-            localStorage.setItem('previousTaskIds', JSON.stringify(previousTaskIds));
+projectTasks.forEach(task => {
 
-            // After first poll we allow sounds
-            firstLoad = false;
+const currentType = typePriority(task);
 
-        })
-        .catch(console.error);
+if(lastType && lastType !== currentType){
+
+const typeLabels = {1:'APPRO',2:'RETOUR',3:'Tâche'};
+
+html.push(`
+<tr class="table-info">
+<td colspan="6" class="text-center text-muted fw-semibold">
+${typeLabels[currentType]}
+</td>
+</tr>
+`);
+
+}
+
+lastType = currentType;
+
+let rowClass = '';
+let dueClass = '';
+
+if(task.due_date){
+
+const now = new Date();
+const due = new Date(task.due_date);
+
+const diffDays = Math.floor((due-now)/(1000*60*60*24));
+
+if(diffDays > 7){
+rowClass='table-secondary';
+dueClass='text-dark';
+}else if(diffDays > 0){
+rowClass='table-warning';
+dueClass='text-warning';
+}else{
+rowClass='table-danger';
+dueClass='text-danger';
+}
+
+}
+
+currentIds.push(task.id);
+
+const typeBadge = task.appro_pn
+? '<span class="badge bg-primary">APPRO</span>'
+: task.retour_pn
+? '<span class="badge bg-warning text-dark">RETOUR</span>'
+: '<span class="badge bg-secondary">Tâche</span>';
+
+const reference = task.appro_pn ?? task.retour_pn ?? '-';
+
+const spinner = task.is_completed == 1
+? `<span class="ms-2 spinner-border spinner-border-sm text-warning"></span>`
+: '';
+
+html.push(`
+
+<tr class="${rowClass}">
+<td>${task.id}</td>
+<td>${typeBadge}</td>
+<td>${task.title}</td>
+<td>${task.description}</td>
+<td>${reference}</td>
+<td class="${dueClass}">
+${task.due_date ?? '-'} ${spinner}
+</td>
+</tr>
+
+<tr class="table">
+<td colspan="6">
+
+${task.appro_pn ? `<strong>Quantité:</strong> ${task.appro_nb ?? '-'} |
+<strong>Désignation:</strong> ${task.designation ?? '-'} |
+<strong>Lieu:</strong> ${task.location ?? '-'} |
+<strong>Avion:</strong> ${task.plane ?? '-'}` : ''}
+
+${task.retour_pn ? `<strong>Quantité:</strong> ${task.retour_nb ?? '-'} |
+<strong>SN:</strong> ${task.sn ?? '-'} |
+<strong>Certif:</strong> ${task.certif ?? '-'}` : ''}
+
+${!task.appro_pn && !task.retour_pn ? '-' : ''}
+
+</td>
+</tr>
+
+`);
+
+});
+
+if(projectTasks.length === 0){
+
+html.push(`
+<tr>
+<td colspan="6" class="text-center text-muted py-0">
+<div class="text-center py-0">
+<div class="display-1 text-muted mb-1">✔️</div>
+<h2 class="text-muted small">Toutes les tâches sont terminées</h2>
+</div>
+</td>
+</tr>
+`);
+
+}
+
+const prev = previousTaskIds[projectId] || [];
+
+const addedTasks = currentIds.filter(id => !prev.includes(id));
+const removedTasks = prev.filter(id => !currentIds.includes(id));
+
+if(!firstLoad && soundEnabled){
+
+if(addedTasks.length) addSound.play().catch(()=>{});
+if(removedTasks.length) removeSound.play().catch(()=>{});
+
+}
+
+previousTaskIds[projectId] = currentIds;
+
+projectDiv.innerHTML = html.join('');
+
+});
+
+localStorage.setItem('previousTaskIds',JSON.stringify(previousTaskIds));
+
+firstLoad=false;
+
+})
+.catch(console.error);
+
 }
 
 loadTasks();
-setInterval(loadTasks, 3000);
+setInterval(loadTasks,3000);
+
 </script>
