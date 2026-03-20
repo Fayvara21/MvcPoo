@@ -16,7 +16,8 @@
 
 <?php
 
-$allProjects = Task::getAuthorizedProjects();
+//$allProjects = Task::getAuthorizedProjects();
+$allProjects = Task::getAllProjects();
 $tasks = Task::getAllTasksForAllProjects();
 
 $projects = [];

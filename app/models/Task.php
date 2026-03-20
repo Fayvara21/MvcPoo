@@ -51,64 +51,7 @@ class Task
 		$stmt = $db->prepare("DELETE FROM `tasks` WHERE `id` = :id");
 		$stmt->execute(['id' => $id]);
 	}
-    public static function getAuthorizedTasksByProject($projectId)
-    {
-        $db = Database::getInstance()->getPdo();
-
-        $stmt = $db->prepare("SELECT * FROM projects WHERE id = ?");
-        $stmt->execute([$projectId]);
-        $project = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$project) return [];
         
-        $userGroups = explode(',', $_SESSION['group']);
-        $projectGroups = explode(',', $project['groups']);
-        $hasAccess = false;
-        foreach ($userGroups as $g) {
-            if (in_array(trim($g), $projectGroups)) {
-                $hasAccess = true;
-                break;
-            }
-        }
-        if (!$hasAccess) return [];
-
-        $stmt = $db->prepare("
-            SELECT 
-                t.id,
-                t.title,
-                t.description,
-                t.created_at,
-                t.due_date,
-                t.project_id,
-                t.is_completed,
-
-                a.pn AS appro_pn,
-                a.nb AS appro_nb,
-                a.designation,
-                a.location,
-                a.plane,
-                a.of AS of,
-                a.oe AS oe,
-
-                r.PN AS retour_pn,
-                r.nb AS retour_nb,
-                r.sn,
-                r.certif
-
-            FROM tasks t
-            LEFT JOIN appro a ON a.TaskID = t.id
-            LEFT JOIN retour r ON r.TaskID = t.id
-            WHERE t.project_id = ?
-            ORDER BY t.created_at DESC
-        ");
-
-        $stmt->execute([$projectId]);
-
-        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $tasks;
-    }
-    
     public static function getAuthorizedTasksForAllProjects()
     {
         $db = Database::getInstance()->getPdo();
@@ -147,7 +90,7 @@ class Task
                 a.designation AS designation,
                 a.location AS location,
                 a.plane AS plane,
-                a.of AS of,
+                a.of AS `of`,
                 a.oe AS oe,
 
                 r.pn AS retour_pn,
@@ -277,7 +220,7 @@ class Task
 				a.designation AS designation,
 				a.location AS location,
 				a.plane AS plane,
-				a.of AS of,
+				a.of AS `of`,
 				a.oe AS oe,
 
 				r.pn AS retour_pn,
@@ -294,4 +237,110 @@ class Task
 
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
+
+public static function getAuthorizedTasksByProject($projectId)
+{
+    $db = Database::getInstance()->getPdo();
+
+    // 1. Get project
+    $stmt = $db->prepare("SELECT id, `groups` FROM projects WHERE id = ?");
+    $stmt->execute([$projectId]);
+    $project = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$project) {
+        return [];
+    }
+
+    // 2. Check access (handle NULL groups safely)
+    $userGroups = isset($_SESSION['group'])
+        ? array_map('trim', explode(',', $_SESSION['group']))
+        : [];
+
+    $projectGroups = !empty($project['groups'])
+        ? array_map('trim', explode(',', $project['groups']))
+        : [];
+
+    if (empty(array_intersect($userGroups, $projectGroups))) {
+        return [];
+    }
+
+    // 3. Get tasks
+    $stmt = $db->prepare("
+        SELECT 
+            id,
+            title,
+            description,
+            created_at,
+            due_date,
+            project_id,
+            is_completed
+        FROM tasks
+        WHERE project_id = ?
+        ORDER BY created_at DESC
+    ");
+    $stmt->execute([$projectId]);
+    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($tasks)) {
+        return [];
+    }
+
+    // 4. Extract task IDs
+    $taskIds = array_column($tasks, 'id');
+    $placeholders = implode(',', array_fill(0, count($taskIds), '?'));
+
+    // 5. Fetch appro
+    $stmt = $db->prepare("
+        SELECT 
+            TaskID,
+            pn,
+            nb,
+            designation,
+            location,
+            plane,
+            `of`,
+            oe
+        FROM appro
+        WHERE TaskID IN ($placeholders)
+    ");
+    $stmt->execute($taskIds);
+    $approRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 6. Fetch retour
+    $stmt = $db->prepare("
+        SELECT 
+            TaskID,
+            PN,
+            nb,
+            sn,
+            certif
+        FROM retour
+        WHERE TaskID IN ($placeholders)
+    ");
+    $stmt->execute($taskIds);
+    $retourRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 7. Group appro by TaskID
+    $approByTask = [];
+    foreach ($approRows as $row) {
+        $approByTask[$row['TaskID']][] = $row;
+    }
+
+    // 8. Group retour by TaskID
+    $retourByTask = [];
+    foreach ($retourRows as $row) {
+        $retourByTask[$row['TaskID']][] = $row;
+    }
+
+    // 9. Attach data to tasks
+    foreach ($tasks as &$task) {
+        $taskId = $task['id'];
+
+        $task['appro'] = $approByTask[$taskId] ?? [];
+        $task['retour'] = $retourByTask[$taskId] ?? [];
+    }
+
+    return $tasks;
+}
+
 }

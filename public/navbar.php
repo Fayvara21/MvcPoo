@@ -23,7 +23,7 @@
     </li>
     <li class="nav-item">
       <a href="/" class="btn btn-link nav-link text-decoration-none" aria-current="page">
-        <i class="bi bi-house-door me-1"></i>Acceuil
+	<i class="bi bi-house-door me-1"></i>Accueil
       </a>
     </li>
 	<li>
@@ -33,12 +33,12 @@
 	</li>
     <li class="nav-item">
       <a href="/register" class="btn btn-outline-light rounded-pill px-4 mx-1">
-        <i class="bi bi-person-plus me-1"></i>Creer un compte
+        <i class="bi bi-person-plus me-1"></i>Créer un compte
       </a>
     </li>		
     <li class="nav-item">
       <a href="/logout" class="btn btn-outline-light rounded-pill px-4 mx-1">
-        <i class="bi bi-box-arrow-right me-1"></i>Deconnexion
+        <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
       </a>
     </li>
 	

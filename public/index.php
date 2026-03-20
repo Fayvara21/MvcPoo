@@ -27,6 +27,10 @@ $router->add('/projects/{project_id}/tasks/{task_id}/delete', function ($project
 $router->add('/projects/{project_id}/tasks/{task_id}/edit', function ($project_id, $task_id) {
     (new TaskController())->edit($task_id);
 });
+$router->add('/projects/{project_id}/tasks/{task_id}/check', function ($project_id, $task_id) {
+    (new TaskController())->view($task_id);
+});
+
 $router->add('/projects', [new ProjectController(), 'index']);
 $router->add('/projects/', [new ProjectController(), 'index']);
 

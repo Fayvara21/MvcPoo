@@ -1,7 +1,7 @@
 <?php
 return [
 'db_host' => '127.0.0.1',
-'db_name' => 'mcdo',
+'db_name' => 'cb12',
 'db_user' => 'root',
-'db_pass' => '18794402',
+'db_pass' => 'O9WS2&nAU=',
 ];

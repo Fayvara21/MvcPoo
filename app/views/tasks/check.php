@@ -1,25 +1,17 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <?php
-
 // Fetch APPRO and RETOUR data for this task
-$approList = Appro::findByTaskId($task['id']) ?? [];
-$retourList = Retour::findByTaskId($task['id']) ?? [];
-
-// Take first row only (for edit form)
-$appro = !empty($approList) ? $approList[0] : null;
-$retour = !empty($retourList) ? $retourList[0] : null;
+$appro = Appro::findByTaskId($task['id']);
+$retour = Retour::findByTaskId($task['id']);
 
 // Determine the task type based on which related data exists
 $selectedType = '';
-if (!empty($approList)) {
+if ($appro) {
     $selectedType = 'appro';
-} elseif (!empty($retourList)) {
+} elseif ($retour) {
     $selectedType = 'retour';
-} else {
-    $selectedType = '';
 }
-
 ?>
 
 <div class="container py-4">
@@ -131,43 +123,44 @@ if (!empty($approList)) {
                                     <label class="form-label">PN</label>
                                     <input class="form-control" 
                                            name="appro_pn"
-                                           value="<?= htmlspecialchars($appro['pn'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['pn'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Nombre</label>
                                     <input class="form-control" 
                                            type="number" 
                                            name="appro_nb"
-                                           value="<?= (int)($appro['nb'] ?? 1) ?>"                                </div>
+                                           value="<?= htmlspecialchars($appro['nb'] ?? '1') ?>">
+                                </div>
                                 <div class="col-12">
                                     <label class="form-label">Designation</label>
                                     <input class="form-control" 
                                            name="appro_designation"
-                                           value="<?= htmlspecialchars($appro['designation'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['designation'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">OF</label>
                                     <input class="form-control" 
                                            name="appro_of"
-                                           value="<?= htmlspecialchars($appro['of'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['of'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Emplacement</label>
                                     <input class="form-control" 
                                            name="appro_location"
-                                           value="<?= htmlspecialchars($appro['location'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['location'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Avion</label>
                                     <input class="form-control" 
                                            name="appro_plane"
-                                           value="<?= htmlspecialchars($appro['plane'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['plane'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">OE</label>
                                     <input class="form-control" 
                                            name="appro_oe"
-                                           value="<?= htmlspecialchars($appro['oe'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($appro['oe'] ?? '') ?>">
                                 </div>
                             </div>
                         </div>
@@ -187,25 +180,26 @@ if (!empty($approList)) {
                                     <label class="form-label">PN</label>
                                     <input class="form-control" 
                                            name="retour_pn"
-                                           value="<?= htmlspecialchars($retour['PN'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($retour['PN'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Nombre</label>
                                     <input class="form-control" 
                                            type="number" 
                                            name="retour_nb"
-                                           value="<?= (int)($retour['nb'] ?? 1) ?>"                                </div>
+                                           value="<?= htmlspecialchars($retour['nb'] ?? '1') ?>">
+                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label">SN</label>
                                     <input class="form-control" 
                                            name="retour_sn"
-                                           value="<?= htmlspecialchars($retour['sn'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($retour['sn'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Certification</label>
                                     <input class="form-control" 
                                            name="retour_certif"
-                                           value="<?= htmlspecialchars($retour['certif'] ?? '', ENT_QUOTES, 'UTF_8') ?>">
+                                           value="<?= htmlspecialchars($retour['certif'] ?? '') ?>">
                                 </div>
                             </div>
                         </div>
@@ -245,27 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial update based on pre-selected value
     updateFields();
 });
-
-function updateFields() {
-    const approInputs = approFields.querySelectorAll('input');
-    const retourInputs = retourFields.querySelectorAll('input');
-
-    // Reset
-    approFields.style.display = 'none';
-    retourFields.style.display = 'none';
-
-    approInputs.forEach(i => i.disabled = true);
-    retourInputs.forEach(i => i.disabled = true);
-
-    if (typeSelect.value === 'appro') {
-        approFields.style.display = 'block';
-        approInputs.forEach(i => i.disabled = false);
-    } else if (typeSelect.value === 'retour') {
-        retourFields.style.display = 'block';
-        retourInputs.forEach(i => i.disabled = false);
-    }
-}
-
 </script>
 
 <link rel="stylesheet"

@@ -8,8 +8,10 @@ class AuthController
 
     public function __construct()
     {
-        session_start();
-        $this->userModel = new User();
+	if (session_status() === PHP_SESSION_NONE){
+		session_start();
+	} 
+                $this->userModel = new User();
     }
 
     public function login() {
@@ -37,32 +39,39 @@ class AuthController
 
 
 	public function register()
-	{
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-			$part = $_POST['part'];
+        $part = $_POST['part'];
 
-			$allowed = ['magasin', 'adv', 'part145', 'part21'];
+        $allowed = ['magasin', 'adv', 'part145', 'part21'];
 
-			// Only admin can create admin accounts
-			if ($_SESSION['group'] === 'admin') {
-				$allowed[] = 'admin';
-			}
+        // Only admin can create admin accounts
+        if (isset($_SESSION['group']) && $_SESSION['group'] === 'admin') {
+            $allowed[] = 'admin';
+        }
 
-			if (!in_array($part, $allowed)) {
-				die("Unauthorized role assignment.");
-			}
+        if (!in_array($part, $allowed)) {
+            $_SESSION['error'] = "Rôle non autorisé.";
+            header("Location: /register");
+            exit();
+        }
 
-			$this->userModel->register($_POST['username'], $_POST['password'], $part);
+        $result = $this->userModel->register($_POST['username'], $_POST['password'], $part);
+        
+        if ($result['success']) {
+            $_SESSION['success'] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+            header("Location: /login");
+            exit();
+        } else {
+            $_SESSION['error'] = $result['error'] ?? "Erreur lors de l'inscription.";
+            header("Location: /register");
+            exit();
+        }
+    }
 
-			header("Location: /login");
-			exit();
-		}
-
-		require '../app/views/register.php';
-	}
-	
-
+    require '../app/views/register.php';
+}
     public function dashboard()
     {
 		if (!isset($_SESSION['user_id'])) {

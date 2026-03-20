@@ -237,3 +237,23 @@ form {
         height: 28px;    /* Even smaller on XS */
     }
 }
+
+body:has(.login), body:has(.register) {
+  position: relative;
+}
+
+body:has(.login)::before, body:has(.register)::before{
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("images/FlightSimulator.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  filter: blur(6px); /* Add blur effect */
+  z-index: -1;
+}

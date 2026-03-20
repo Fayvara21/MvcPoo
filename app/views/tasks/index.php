@@ -227,21 +227,22 @@ $isRetour = !empty($task['retour_pn']);
 	<td>
 		<?php if (!$task['is_completed']): ?>
 			<!-- Mark as En traitement -->
-			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/1" class="d-inline">
-				<button class="btn btn-warning btn-sm">Marquer comme En traitement</button>
-			</form>
-
+			<?php if (($_SESSION["group"] == "magasin") || ($_SESSION["group"] == "admin")): ?>
+				<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/1" class="d-inline">
+					<button class="btn btn-warning btn-sm">Marquer comme En traitement</button>
+				</form>
+			<?php endif; ?>
 			<!-- Delete button -->
 			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete" class="d-inline ms-2">
 				<button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('Supprimer cette tâche ?')">
 					<i class="bi bi-trash"></i> Supprimer
 				</button>
 			</form>
-		<?php elseif ($task['is_completed'] == 1): ?>
+		<?php elseif ($task['is_completed'] == 1 && (($_SESSION["group"] == "magasin") || ($_SESSION["group"] == "admin"))): ?>
 			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/2">
 				<button class="btn btn-info btn-sm">Marquer comme Livré</button>
 			</form>
-		<?php elseif ($task['is_completed'] == 2): ?>
+		<?php elseif ($task['is_completed'] == 2 && $_SESSION["group"] != "magasin"): ?>
 			<form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/complete/3">
 				<button class="btn btn-success btn-sm">Marquer comme Soldé</button>
 			</form>

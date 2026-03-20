@@ -13,6 +13,15 @@
 
 		<?php session_start(); ?>
 
+		<?php if (isset($_SESSION['error'])): ?>
+		    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+		<?php endif; ?>
+
+		<?php if (isset($_SESSION['success'])): ?>
+		    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+		<?php endif; ?>
+
+
 		<form method="POST">
 
 			<div class="form-group form-outline mb-3">
@@ -29,7 +38,7 @@
 					<option value="magasin">Magasin</option>
 					<option value="adv">ADV</option>
 					<option value="part145">PART145</option>
-					<option value="part21g">PART21G</option>
+					<option value="part21">PART21</option>
 
 					<?php if ($_SESSION['group'] === 'admin'): ?>
 						<option value="admin">Admin</option>
@@ -46,3 +55,5 @@
 	</div>
 
 </div>
+
+

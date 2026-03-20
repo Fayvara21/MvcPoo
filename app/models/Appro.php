@@ -11,7 +11,7 @@ class Appro
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            INSERT INTO appro (TaskID, pn, nb, designation, of, location, plane, oe)
+            INSERT INTO appro (TaskID, pn, nb, designation, `of`, location, plane, `oe`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
@@ -47,7 +47,7 @@ class Appro
             // Update existing record
             $stmt = $db->prepare("
                 UPDATE appro 
-                SET pn = ?, nb = ?, designation = ?, of = ?, location = ?, plane = ?, oe = ?
+                SET pn = ?, nb = ?, designation = ?, `of` = ?, location = ?, plane = ?, `oe` = ?
                 WHERE TaskID = ?
             ");
 
