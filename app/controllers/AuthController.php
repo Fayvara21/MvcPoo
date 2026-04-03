@@ -37,7 +37,6 @@ class AuthController
 		}
     }
 
-
 	public function register()
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -69,7 +68,6 @@ class AuthController
             exit();
         }
     }
-
     require '../app/views/register.php';
 }
     public function dashboard()
@@ -87,5 +85,4 @@ class AuthController
         header("Location: /login");
         exit();
     }
-	
 }
