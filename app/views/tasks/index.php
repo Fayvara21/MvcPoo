@@ -1,12 +1,11 @@
 <?php
-session_start(); // Ensure session is started
+session_start();
 
-// Safe helper
+// Helper
 function e($value) {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-// Current user group
 $currentUserGroup = $_SESSION['group'] ?? '';
 
 // State counts
@@ -15,7 +14,6 @@ foreach ($tasks as $t) {
     $state = (int)($t['is_completed'] ?? 0);
     if (isset($stateCounts[$state])) $stateCounts[$state]++;
 }
-
 $totalTasks = array_sum($stateCounts);
 
 // Filters
@@ -23,39 +21,26 @@ $activeStates = $_GET['states'] ?? [];
 if (!is_array($activeStates)) $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
-// Filter tasks
-$filteredTasks = [];
-foreach ($tasks as $task) {
-    if (empty($activeStates) || in_array((int)$task['is_completed'], $activeStates)) {
-        $filteredTasks[] = $task;
-    }
-}
-$tasks = $filteredTasks;
+// Filter
+$tasks = array_filter($tasks, function($task) use ($activeStates) {
+    return empty($activeStates) || in_array((int)$task['is_completed'], $activeStates);
+});
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container-fluid py-4">
 
-    <!-- Breadcrumb -->
-    <nav class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/projects">Projets</a></li>
-            <li class="breadcrumb-item">
-                <a href="/projects/<?= (int)$project['id'] ?>"><?= e($project['title']) ?></a>
-            </li>
-            <li class="breadcrumb-item active">Demandes</li>
-        </ol>
-    </nav>
-
     <!-- Header -->
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm border-0">
         <div class="card-body">
             <h1 class="fw-bold">Demandes vers <?= e($project['title']) ?></h1>
             <?php if (!empty($project['description'])): ?>
                 <p class="text-muted"><?= e($project['description']) ?></p>
             <?php endif; ?>
-            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">+ Nouvelle demande</a>
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">
+                + Nouvelle demande
+            </a>
         </div>
     </div>
 
@@ -78,122 +63,150 @@ $tasks = $filteredTasks;
     </div>
 
     <!-- TABLE -->
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>État</th>
-                <th>Créé</th>
-                <th>Deadline</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+    <div class="table-responsive">
+        <table class="table align-middle">
 
-        <tbody>
-        <?php foreach ($tasks as $task): ?>
-            <?php 
-                $approList = $task['appro'] ?? [];
-                $retourList = $task['retour'] ?? [];
-                $isAppro = !empty($approList);
-                $isRetour = !empty($retourList);
-                $s = (int)($task['is_completed']);
-                $labels = [0=>'Envoyé',1=>'Traitement',2=>'Livré',3=>'Soldé'];
-                $statesColor = [0=>'primary',1=>'warning',2=>'info',3=>'success'];
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Titre</th>
+                    <th>État</th>
+                    <th>Créé</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-                // --- PERMISSIONS BASED ON SESSION GROUP ---
-                $canEdit = false;
-                $canSetState = false;
+            <tbody>
 
-                if ($currentUserGroup === 'admin') {
-                    $canEdit = true;
-                    $canSetState = true;
-                } elseif ($currentUserGroup === 'magasin' && in_array($s + 1, [1,2])) {
-                    $canSetState = true;
-                } elseif ($s === 0 && $currentUserGroup !== 'magasin' && $currentUserGroup !== 'admin') {
-                    // Members of original group can edit tasks with state 0
-                    $canEdit = true;
-                } elseif ($currentUserGroup !== 'admin' && $currentUserGroup !== 'magasin' && $s + 1 === 3) {
-                    // Other groups can set state only to 3
-                    $canSetState = true;
-                }
-            ?>
+            <?php foreach ($tasks as $task): ?>
+                <?php 
+                    $approList = $task['appro'] ?? [];
+                    $retourList = $task['retour'] ?? [];
+                    $isAppro = !empty($approList);
+                    $isRetour = !empty($retourList);
 
-            <!-- Main task row -->
-            <tr class="task-row" data-task-id="<?= (int)$task['id'] ?>" data-task-state="<?= $s ?>">
-                <td><?= (int)$task['id'] ?></td>
-                <td>
-                    <?= $isAppro ? '<span class="badge bg-primary">APPRO</span>' :
-                       ($isRetour ? '<span class="badge bg-warning">RETOUR</span>' :
-                       '<span class="badge bg-secondary">-</span>') ?>
-                </td>
-                <td><?= e($task['title']) ?></td>
-                <td><?= e($task['description']) ?></td>
+                    $s = (int)$task['is_completed'];
+                    $statesColor = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
 
-                <td>
-                    <span class="badge bg-<?= $statesColor[$s] ?>"><?= $labels[$s] ?></span>
-                </td>
+                    $canEdit = false;
+                    $canSetState = false;
 
-                <td><?= e($task['created_at']) ?></td>
-                <td><?= e($task['due_date']) ?></td>
+                    if ($currentUserGroup === 'admin') {
+                        $canEdit = true;
+                        $canSetState = true;
+                    } elseif ($currentUserGroup === 'magasin' && in_array($s + 1, [1,2])) {
+                        $canSetState = true;
+                    } elseif ($s === 0 && !in_array($currentUserGroup, ['admin','magasin'])) {
+                        $canEdit = true;
+                    } elseif (!in_array($currentUserGroup, ['admin','magasin']) && $s + 1 === 3) {
+                        $canSetState = true;
+                    }
+                ?>
 
-                <td>
-                    <div class="d-flex gap-1 flex-wrap">
-                        <!-- Edit button -->
-                        <?php if ($canEdit): ?>
-                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit" class="btn btn-sm btn-primary">Modifier</a>
+                <!-- TASK ROW -->
+                <tr class="border-top border-3">
+                    <td class="fw-bold"><?= (int)$task['id'] ?></td>
+
+                    <td>
+                        <?php if ($isAppro): ?>
+                            <span class="badge bg-success">APPRO</span>
+                        <?php elseif ($isRetour): ?>
+                            <span class="badge bg-danger">RETOUR</span>
+                        <?php else: ?>
+                            <span class="badge bg-secondary">-</span>
                         <?php endif; ?>
+                    </td>
 
-                        <!-- Delete button -->
-                        <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete" onsubmit="return confirm('Confirmer la suppression ?');">
-                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
-                        </form>
-                        <?php endif; ?>
+                    <td>
+                        <div class="fw-semibold"><?= e($task['title']) ?></div>
+                        <div class="small text-muted"><?= e($task['description']) ?></div>
+                    </td>
 
-                        <!-- State increment button -->
-                        <?php if ($s < 3 && $canSetState): ?>
-                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed" class="ms-1">
-                            <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                            <button type="submit" class="btn btn-sm btn-success">
-                                Définir comme: <?= $labels[$s + 1] ?>
-                            </button>
-                        </form>
-                        <?php endif; ?>
-                    </div>
-                </td>
-            </tr>
+                    <td>
+                        <span class="badge bg-<?= $statesColor[$s] ?>">
+                            <?= $labels[$s] ?>
+                        </span>
+                    </td>
 
-            <!-- Sub-info rows for APPRO -->
-            <?php foreach ($approList as $a): ?>
-            <tr class="bg-light">
-                <td colspan="8">
-                    <strong>APPRO</strong> - PN: <?= e($a['pn']) ?> |
-                    Q: <?= (int)($a['nb'] ?? 0) ?> |
-                    Désignation: <?= e($a['designation']) ?> |
-                    Lieu: <?= e($a['location']) ?> |
-                    Avion: <?= e($a['plane']) ?> |
-                    OF: <?= e($a['of']) ?> |
-                    OE: <?= e($a['oe']) ?>
-                </td>
-            </tr>
+                    <td class="small text-muted"><?= e($task['created_at']) ?></td>
+                    <td class="small text-muted"><?= e($task['due_date']) ?></td>
+
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+
+                            <?php if ($canEdit): ?>
+                                <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Modifier
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                <form method="POST"
+                                      action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                      onsubmit="return confirm('Confirmer la suppression ?');">
+                                    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            <?php endif; ?>
+
+                            <?php if ($s < 3 && $canSetState): ?>
+                                <form method="POST"
+                                      action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                                    <input type="hidden" name="state" value="<?= $s + 1 ?>">
+                                    <button class="btn btn-sm btn-success">
+                                        → <?= $labels[$s + 1] ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- APPRO BLOCK -->
+                <?php foreach ($approList as $a): ?>
+                <tr>
+                    <td></td>
+                    <td colspan="6">
+                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
+                            <div class="fw-bold text-success mb-1">APPRO PN</div>
+                            <div class="small">
+                                <strong>PN:</strong> <?= e($a['pn']) ?> |
+                                <strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?> |
+                                <?= e($a['designation']) ?><br>
+                                <strong>Lieu:</strong> <?= e($a['location']) ?> |
+                                <strong>Avion:</strong> <?= e($a['plane']) ?> |
+                                <strong>OF:</strong> <?= e($a['of']) ?> |
+                                <strong>OE:</strong> <?= e($a['oe']) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+
+                <!-- RETOUR BLOCK -->
+                <?php foreach ($retourList as $r): ?>
+                <tr>
+                    <td></td>
+                    <td colspan="6">
+                        <div class="p-3 rounded-3 border-start border-4 border-danger bg-danger bg-opacity-10 mb-2">
+                            <div class="fw-bold text-danger mb-1">RETOUR PN</div>
+                            <div class="small">
+                                <strong>PN:</strong> <?= e($r['PN']) ?> |
+                                <strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?> |
+                                <strong>SN:</strong> <?= e($r['sn']) ?> |
+                                <strong>Certif:</strong> <?= e($r['certif']) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+
             <?php endforeach; ?>
 
-            <!-- Sub-info rows for RETOUR -->
-            <?php foreach ($retourList as $r): ?>
-            <tr class="bg-light">
-                <td colspan="8">
-                    <strong>RETOUR</strong> - PN: <?= e($r['PN']) ?> |
-                    Q: <?= (int)($r['nb'] ?? 0) ?> |
-                    SN: <?= e($r['sn']) ?> |
-                    Certif: <?= e($r['certif']) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
