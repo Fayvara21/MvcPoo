@@ -21,96 +21,78 @@ $activeStates = $_GET['states'] ?? [];
 if (!is_array($activeStates)) $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
-// Search query
-$searchQuery = trim($_GET['q'] ?? '');
-
 // Filter tasks
-$tasks = array_filter($tasks, function($task) use ($activeStates, $searchQuery) {
-    $matchState = empty($activeStates) || in_array((int)$task['is_completed'], $activeStates);
-    if ($searchQuery === '') return $matchState;
-    $matchSearch = stripos($task['title'], $searchQuery) !== false
-                || stripos($task['description'] ?? '', $searchQuery) !== false;
-    return $matchState && $matchSearch;
+$tasks = array_filter($tasks, function($task) use ($activeStates) {
+    return empty($activeStates) || in_array((int)$task['is_completed'], $activeStates);
 });
-
-// Determine default wrapped state
-// Wrapped = true if no search/filter applied; false (unwrapped) if searching
-$defaultWrapped = $searchQuery === '' && empty($activeStates);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-3">
 
     <!-- Header -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-body">
-            <h1 class="fw-bold">Demandes vers <?= e($project['title']) ?></h1>
-            <?php if (!empty($project['description'])): ?>
-                <p class="text-muted"><?= e($project['description']) ?></p>
-            <?php endif; ?>
-            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">
+    <div class="mb-3">
+        <h2 class="fw-semibold mb-1">Demandes — <?= e($project['title']) ?></h2>
+        <?php if (!empty($project['description'])): ?>
+            <div class="text-muted small"><?= e($project['description']) ?></div>
+        <?php endif; ?>
+        <div class="mt-2 d-flex gap-2 flex-wrap">
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary btn-sm">
                 + Nouvelle demande
             </a>
+            <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher titre, OF, Avion, PN" style="max-width:300px;">
         </div>
     </div>
 
     <!-- Filters -->
-    <div class="mb-4">
+    <div class="mb-3 d-flex flex-wrap gap-2">
         <?php 
         $labels = [0=>'Envoyé',1=>'Traitement',2=>'Livré',3=>'Soldé'];
+        $filterColors = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
+
         foreach ($labels as $state => $label): 
             $count = $stateCounts[$state];
             $isActive = in_array($state, $activeStates);
             $newStates = $activeStates;
             $isActive ? $newStates = array_diff($activeStates, [$state]) : $newStates[] = $state;
-            $query = http_build_query(['states' => $newStates, 'q' => $searchQuery]);
+            $query = http_build_query(['states' => $newStates]);
         ?>
-            <a href="?<?= e($query) ?>" class="btn btn-sm <?= $isActive ? 'btn-dark' : 'btn-outline-dark' ?>">
+            <a href="?<?= e($query) ?>"
+               class="btn btn-sm <?= $isActive ? 'btn-'.$filterColors[$state] : 'btn-outline-'.$filterColors[$state] ?>">
                 <?= $count ?> <?= e($label) ?>
             </a>
         <?php endforeach; ?>
-        <a href="?q=<?= urlencode($searchQuery) ?>" class="btn btn-sm btn-secondary"><?= $totalTasks ?> total</a>
-    </div>
 
-    <!-- Search -->
-    <form class="mb-4" method="GET">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="<?= e($searchQuery) ?>">
-            <?php foreach ($activeStates as $state): ?>
-                <input type="hidden" name="states[]" value="<?= (int)$state ?>">
-            <?php endforeach; ?>
-            <button class="btn btn-outline-primary" type="submit">🔍</button>
-        </div>
-    </form>
+        <a href="?" class="btn btn-sm btn-outline-dark">
+            <?= $totalTasks ?> total
+        </a>
+    </div>
 
     <!-- TABLE -->
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table table-sm align-middle table-bordered">
 
             <thead class="table-light">
-                <tr>
+                <tr class="text-uppercase small text-muted">
                     <th>#</th>
                     <th>Type</th>
-                    <th>Titre / Description</th>
+                    <th>Titre</th>
                     <th>État</th>
                     <th>Créé</th>
                     <th>Deadline</th>
-                    <th>Actions</th>
+                    <th class="actions-header" style="display:none;">Actions</th>
                 </tr>
             </thead>
 
             <tbody>
-
-            <?php foreach ($tasks as $task): ?>
+            <?php foreach ($tasks as $taskIndex => $task): ?>
                 <?php 
                     $approList = $task['appro'] ?? [];
                     $retourList = $task['retour'] ?? [];
-                    $isAppro = !empty($approList);
-                    $isRetour = !empty($retourList);
 
-                    $s = (int)$task['is_completed'];
-                    $statesColor = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
+                    $s = (int)($task['is_completed'] ?? 0);
+                    $stateClass = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
 
                     $canEdit = false;
                     $canSetState = false;
@@ -126,50 +108,35 @@ $defaultWrapped = $searchQuery === '' && empty($activeStates);
                         $canSetState = true;
                     }
 
-                    // Determine if this task should be wrapped
-                    $taskWrapped = $defaultWrapped ? true : false;
+                    $subIndex = 0; // sub-counter for APPRO/RETOUR
+                    $taskId = (int)$task['id'];
                 ?>
 
-                <!-- TASK ROW -->
-                <tr class="border-top border-3 task-row <?= $taskWrapped ? 'wrapped' : '' ?>">
-                    <td class="fw-bold"><?= (int)$task['id'] ?></td>
-
+                <!-- MAIN TASK ROW -->
+                <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row" data-task="<?= $taskId ?>">
+                    <td class="fw-semibold"><?= $taskId ?></td>
                     <td>
-                        <?php if ($isAppro): ?>
-                            <span class="badge bg-success">APPRO</span>
-                        <?php elseif ($isRetour): ?>
-                            <span class="badge bg-warning text-dark">RETOUR</span>
+                        <?php if (!empty($approList)): ?>
+                            <span class="badge bg-primary">APPRO</span>
+                        <?php elseif (!empty($retourList)): ?>
+                            <span class="badge bg-dark">RETOUR</span>
                         <?php else: ?>
-                            <span class="badge bg-secondary">-</span>
+                            <span class="text-muted">-</span>
                         <?php endif; ?>
                     </td>
-
                     <td>
                         <div class="fw-semibold"><?= e($task['title']) ?></div>
-                        <?php if (!empty($task['description'])): ?>
-                            <div class="small text-muted"><?= e($task['description']) ?></div>
-                        <?php endif; ?>
+                        <div class="small description" style="display:block; font-size:1rem;"><?= e($task['description']) ?></div>
                     </td>
-
-                    <td>
-                        <span class="badge bg-<?= $statesColor[$s] ?>">
-                            <?= $labels[$s] ?>
-                        </span>
-                    </td>
-
+                    <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
                     <td class="small text-muted"><?= e($task['due_date']) ?></td>
-
-                    <td>
+                    <td class="actions" style="display:none;">
                         <div class="d-flex gap-1 flex-wrap">
-
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                   class="btn btn-sm btn-primary">
-                                    Modifier
-                                </a>
+                                   class="btn btn-sm btn-primary">Modifier</a>
                             <?php endif; ?>
-
                             <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
@@ -177,78 +144,124 @@ $defaultWrapped = $searchQuery === '' && empty($activeStates);
                                     <button class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             <?php endif; ?>
-
                             <?php if ($s < 3 && $canSetState): ?>
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
                                     <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                                    <button class="btn btn-sm btn-success">
-                                        → <?= $labels[$s + 1] ?>
-                                    </button>
+                                    <button class="btn btn-sm btn-success">→ <?= $labels[$s + 1] ?></button>
                                 </form>
                             <?php endif; ?>
-
                         </div>
                     </td>
                 </tr>
 
-                <!-- APPRO BLOCK -->
+                <!-- SUB-TASK ROWS -->
                 <?php foreach ($approList as $a): ?>
-                <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
-                    <td></td>
-                    <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
-                            <div class="fw-bold text-success mb-2">APPRO PN</div>
-                            <div class="d-flex align-items-center gap-4 mb-2">
-                                <div class="fw-semibold">PN: <?= e($a['pn']) ?></div>
-                                <div class="fw-semibold">Qté: <?= (int)($a['nb'] ?? 0) ?></div>
+                    <?php $subIndex++; ?>
+                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                        <td><?= $subIndex ?></td>
+                        <td colspan="6">
+                            <div class="small fw-semibold mb-1 text-primary">APPRO</div>
+                            <div class="d-flex gap-4 mb-1">
+                                <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
+                                <div><strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?></div>
+                                <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
+                                <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
                             </div>
-                            <?php if (!empty($a['designation'])): ?>
-                            <div class="small text-muted mb-2"><?= e($a['designation']) ?></div>
-                            <?php endif; ?>
-                            <?php if (!empty($a['description'])): ?>
-                            <div class="small text-muted mb-2"><?= e($a['description']) ?></div>
-                            <?php endif; ?>
-                            <div class="d-flex flex-wrap gap-3 small">
-                                <div><span class="text-muted">Emplacement:</span> <?= e($a['location']) ?></div>
-                                <div><span class="text-muted">Avion:</span> <?= e($a['plane']) ?></div>
-                                <div><span class="text-muted">OF:</span> <?= e($a['of']) ?></div>
-                                <div><span class="text-muted">OE:</span> <?= e($a['oe']) ?></div>
+                            <div class="small mb-1">
+                                <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                            <div class="small d-flex flex-wrap gap-3">
+                                <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
+                                <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
+                            </div>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
 
-                <!-- RETOUR BLOCK -->
                 <?php foreach ($retourList as $r): ?>
-                <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
-                    <td></td>
-                    <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2">
-                            <div class="fw-bold text-warning mb-2">RETOUR PN</div>
-                            <div class="d-flex align-items-center gap-4 mb-2">
-                                <div class="fw-semibold">PN: <?= e($r['PN']) ?></div>
-                                <div class="fw-semibold">Qté: <?= (int)($r['nb'] ?? 0) ?></div>
+                    <?php $subIndex++; ?>
+                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                        <td><?= $subIndex ?></td>
+                        <td colspan="6">
+                            <div class="small fw-semibold mb-1 text-dark">RETOUR</div>
+                            <div class="d-flex gap-4 mb-1">
+                                <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
+                                <div><strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?></div>
                             </div>
-                            <?php if (!empty($r['designation'])): ?>
-                            <div class="small text-muted mb-2"><?= e($r['designation']) ?></div>
-                            <?php endif; ?>
-                            <?php if (!empty($r['description'])): ?>
-                            <div class="small text-muted mb-2"><?= e($r['description']) ?></div>
-                            <?php endif; ?>
-                            <div class="d-flex flex-wrap gap-3 small">
-                                <div><span class="text-muted">SN:</span> <?= e($r['sn']) ?></div>
-                                <div><span class="text-muted">Certif:</span> <?= e($r['certif']) ?></div>
+                            <div class="small d-flex gap-3">
+                                <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
+                                <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
 
             <?php endforeach; ?>
-
             </tbody>
+
         </table>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const firstActionsHeader = document.querySelector('.actions-header');
+
+    // Toggle task rows on click
+    document.querySelectorAll('.task-row').forEach(function(row) {
+        row.addEventListener('click', function() {
+            const taskId = row.dataset.task;
+            const actions = row.querySelector('.actions');
+
+            // Toggle sub-rows
+            document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
+            });
+
+            // Toggle actions column
+            if (actions) {
+                const isVisible = actions.style.display !== 'none';
+                actions.style.display = isVisible ? 'none' : 'table-cell';
+                if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
+            }
+        });
+    });
+
+    // Search function
+    const searchInput = document.getElementById('task-search');
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value.toLowerCase();
+
+        document.querySelectorAll('.task-row').forEach(function(taskRow) {
+            const taskId = taskRow.dataset.task;
+            const title = taskRow.querySelector('td:nth-child(3) div.fw-semibold')?.textContent.toLowerCase() || '';
+            
+            // Search inside subtasks
+            let match = title.includes(query);
+            document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                const text = subRow.textContent.toLowerCase();
+                if (text.includes(query)) match = true;
+            });
+
+            if (match) {
+                taskRow.style.display = '';
+                // Unwrap matched task
+                document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                    subRow.style.display = 'table-row';
+                });
+                const actions = taskRow.querySelector('.actions');
+                if (actions) {
+                    actions.style.display = 'table-cell';
+                    if (firstActionsHeader) firstActionsHeader.style.display = 'table-cell';
+                }
+            } else {
+                taskRow.style.display = 'none';
+                document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                    subRow.style.display = 'none';
+                });
+            }
+        });
+    });
+});
+</script>
