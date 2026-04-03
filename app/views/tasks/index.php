@@ -170,9 +170,9 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 <tr>
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
+                        <div class="p-3 rounded-3 border-start border-4 border-info bg-info bg-opacity-10 mb-2">
 
-                            <div class="fw-bold text-success mb-2">APPRO PN</div>
+                            <div class="fw-bold mb-2">APPRO</div>
 
                             <div class="d-flex align-items-center gap-4 mb-2">
                                 <div class="fw-semibold">
@@ -204,9 +204,9 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 <tr>
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2">
+                        <div class="p-3 rounded-3 border-start border-4 border-info bg-info bg-opacity-10 mb-2">
 
-                            <div class="fw-bold text-warning mb-2">RETOUR PN</div>
+                            <div class="fw-bold mb-2">RETOUR</div>
 
                             <div class="d-flex align-items-center gap-4 mb-2">
                                 <div class="fw-semibold">
