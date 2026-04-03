@@ -38,8 +38,8 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
             <div class="text-muted small"><?= e($project['description']) ?></div>
         <?php endif; ?>
         <div class="mt-2">
-            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-sm btn-dark">
-                Nouvelle demande
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary btn-sm">
+                + Nouvelle demande
             </a>
         </div>
     </div>
@@ -48,6 +48,8 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
     <div class="mb-3 d-flex flex-wrap gap-2">
         <?php 
         $labels = [0=>'Envoyé',1=>'Traitement',2=>'Livré',3=>'Soldé'];
+        $filterColors = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
+
         foreach ($labels as $state => $label): 
             $count = $stateCounts[$state];
             $isActive = in_array($state, $activeStates);
@@ -56,10 +58,11 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
             $query = http_build_query(['states' => $newStates]);
         ?>
             <a href="?<?= e($query) ?>"
-               class="btn btn-sm <?= $isActive ? 'btn-dark' : 'btn-outline-secondary' ?>">
+               class="btn btn-sm <?= $isActive ? 'btn-'.$filterColors[$state] : 'btn-outline-'.$filterColors[$state] ?>">
                 <?= $count ?> <?= e($label) ?>
             </a>
         <?php endforeach; ?>
+
         <a href="?" class="btn btn-sm btn-outline-dark">
             <?= $totalTasks ?> total
         </a>
@@ -94,8 +97,8 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                     $stateClass = [
                         0 => 'secondary',
-                        1 => 'dark',
-                        2 => 'primary',
+                        1 => 'warning',
+                        2 => 'info',
                         3 => 'success'
                     ];
 
@@ -120,9 +123,9 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                     <td>
                         <?php if ($isAppro): ?>
-                            <span class="badge bg-dark">APPRO</span>
+                            <span class="badge bg-primary">APPRO</span>
                         <?php elseif ($isRetour): ?>
-                            <span class="badge bg-secondary">RETOUR</span>
+                            <span class="badge bg-dark">RETOUR</span>
                         <?php else: ?>
                             <span class="text-muted">-</span>
                         <?php endif; ?>
@@ -147,7 +150,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                   class="btn btn-sm btn-outline-dark">
+                                   class="btn btn-sm btn-primary">
                                     Modifier
                                 </a>
                             <?php endif; ?>
@@ -156,7 +159,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                       onsubmit="return confirm('Confirmer la suppression ?');">
-                                    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    <button class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             <?php endif; ?>
 
@@ -164,7 +167,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
                                     <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                                    <button class="btn btn-sm btn-dark">
+                                    <button class="btn btn-sm btn-success">
                                         → <?= $labels[$s + 1] ?>
                                     </button>
                                 </form>
@@ -180,11 +183,11 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <td></td>
                     <td colspan="6">
 
-                        <div class="small fw-semibold mb-1">APPRO</div>
+                        <div class="small fw-semibold mb-1 text-primary">APPRO</div>
 
                         <div class="d-flex gap-4 mb-1">
-                            <div>PN: <?= e($a['pn']) ?></div>
-                            <div>Qté: <?= (int)($a['nb'] ?? 0) ?></div>
+                            <div><strong>PN:</strong> <?= e($a['pn']) ?></div>
+                            <div><strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?></div>
                         </div>
 
                         <div class="small text-muted mb-1">
@@ -192,10 +195,10 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         </div>
 
                         <div class="small text-muted d-flex flex-wrap gap-3">
-                            <div>Emplacement: <?= e($a['location']) ?></div>
-                            <div>Avion: <?= e($a['plane']) ?></div>
-                            <div>OF: <?= e($a['of']) ?></div>
-                            <div>OE: <?= e($a['oe']) ?></div>
+                            <div><strong>Emplacement:</strong> <?= e($a['location']) ?></div>
+                            <div><strong>Avion:</strong> <?= e($a['plane']) ?></div>
+                            <div><strong>OF:</strong> <?= e($a['of']) ?></div>
+                            <div><strong>OE:</strong> <?= e($a['oe']) ?></div>
                         </div>
 
                     </td>
@@ -208,16 +211,16 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <td></td>
                     <td colspan="6">
 
-                        <div class="small fw-semibold mb-1">RETOUR</div>
+                        <div class="small fw-semibold mb-1 text-dark">RETOUR</div>
 
                         <div class="d-flex gap-4 mb-1">
-                            <div>PN: <?= e($r['PN']) ?></div>
-                            <div>Qté: <?= (int)($r['nb'] ?? 0) ?></div>
+                            <div><strong>PN:</strong> <?= e($r['PN']) ?></div>
+                            <div><strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?></div>
                         </div>
 
                         <div class="small text-muted d-flex gap-3">
-                            <div>SN: <?= e($r['sn']) ?></div>
-                            <div>Certif: <?= e($r['certif']) ?></div>
+                            <div><strong>SN:</strong> <?= e($r['sn']) ?></div>
+                            <div><strong>Certif:</strong> <?= e($r['certif']) ?></div>
                         </div>
 
                     </td>
