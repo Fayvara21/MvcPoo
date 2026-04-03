@@ -126,8 +126,8 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="fw-semibold task-title"><?= e($task['title']) ?></div>
-                        <div class="small description" style="display:block; font-size:1rem;"><?= e($task['description']) ?></div>
+                        <div class="fw-semibold task-title" style="white-space:normal;"><?= e($task['title']) ?></div>
+                        <div class="small description" style="display:block; font-size:1rem; white-space:normal;"><?= e($task['description']) ?></div>
                     </td>
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
@@ -162,17 +162,17 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
                         <td><?= $subIndex ?></td>
                         <td colspan="6">
-                            <div class="small fw-semibold mb-1 text-primary">APPRO</div>
-                            <div class="d-flex gap-4 mb-1">
+                            <div class="small fw-semibold mb-1 text-primary sub-text" style="white-space:normal;">APPRO</div>
+                            <div class="d-flex gap-4 mb-1 sub-text" style="white-space:normal;">
                                 <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
                                 <div><strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?></div>
                                 <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
                                 <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
                             </div>
-                            <div class="small mb-1">
+                            <div class="small mb-1 sub-text" style="white-space:normal;">
                                 <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
                             </div>
-                            <div class="small d-flex flex-wrap gap-3">
+                            <div class="small d-flex flex-wrap gap-3 sub-text" style="white-space:normal;">
                                 <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
                                 <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
                             </div>
@@ -185,12 +185,12 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
                         <td><?= $subIndex ?></td>
                         <td colspan="6">
-                            <div class="small fw-semibold mb-1 text-dark">RETOUR</div>
-                            <div class="d-flex gap-4 mb-1">
+                            <div class="small fw-semibold mb-1 text-dark sub-text" style="white-space:normal;">RETOUR</div>
+                            <div class="d-flex gap-4 mb-1 sub-text" style="white-space:normal;">
                                 <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
                                 <div><strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?></div>
                             </div>
-                            <div class="small d-flex gap-3">
+                            <div class="small d-flex gap-3 sub-text" style="white-space:normal;">
                                 <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
                                 <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
                             </div>
@@ -236,20 +236,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelectorAll('.task-row').forEach(function(taskRow) {
             const taskId = taskRow.dataset.task;
-            const title = taskRow.querySelector('td:nth-child(3) div.fw-semibold')?.textContent.toLowerCase() || '';
+            const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
             
             // Search inside subtasks
             let match = title.includes(query);
             document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
-                const text = subRow.textContent.toLowerCase();
-                if (text.includes(query)) match = true;
+                if (subRow.textContent.toLowerCase().includes(query)) match = true;
             });
 
             if (match) {
                 taskRow.style.display = '';
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                     subRow.style.display = 'table-row';
-                    subRow.style.whiteSpace = 'normal'; // wrap text by default
                 });
                 const actions = taskRow.querySelector('.actions');
                 if (actions) {
@@ -269,10 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleWrapBtn = document.getElementById('toggle-wrap');
     let isWrapped = true;
     toggleWrapBtn.addEventListener('click', function() {
-        document.querySelectorAll('.task-row, .sub-task-row, tbody tr').forEach(function(row) {
-            row.querySelectorAll('td').forEach(td => {
-                td.style.whiteSpace = isWrapped ? 'nowrap' : 'normal';
-            });
+        document.querySelectorAll('.task-title, .description, .sub-text').forEach(function(el) {
+            el.style.whiteSpace = isWrapped ? 'nowrap' : 'normal';
         });
         isWrapped = !isWrapped;
     });
