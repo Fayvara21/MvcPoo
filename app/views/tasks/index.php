@@ -33,8 +33,9 @@ $tasks = array_filter($tasks, function($task) use ($activeStates, $searchQuery) 
     return $matchState && $matchSearch;
 });
 
-// Default: all tasks wrapped
-$defaultWrapped = true;
+// Determine default wrapped state
+// Wrapped = true if no search/filter applied; false (unwrapped) if searching
+$defaultWrapped = $searchQuery === '' && empty($activeStates);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
@@ -42,15 +43,16 @@ $defaultWrapped = true;
 <div class="container-fluid py-4">
 
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body">
             <h1 class="fw-bold">Demandes vers <?= e($project['title']) ?></h1>
             <?php if (!empty($project['description'])): ?>
                 <p class="text-muted"><?= e($project['description']) ?></p>
             <?php endif; ?>
-            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">+ Nouvelle demande</a>
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">
+                + Nouvelle demande
+            </a>
         </div>
-        <button id="toggle-all" class="btn btn-outline-primary">Montrer tout</button>
     </div>
 
     <!-- Filters -->
@@ -110,16 +112,28 @@ $defaultWrapped = true;
                     $s = (int)$task['is_completed'];
                     $statesColor = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
 
-                    $canEdit = $currentUserGroup === 'admin' || ($s === 0 && !in_array($currentUserGroup, ['admin','magasin']));
-                    $canSetState = $currentUserGroup === 'admin' || ($currentUserGroup === 'magasin' && in_array($s+1, [1,2])) || (!in_array($currentUserGroup, ['admin','magasin']) && $s+1 === 3);
+                    $canEdit = false;
+                    $canSetState = false;
 
-                    $firstSubTaskRendered = false;
-                    $taskWrapped = $defaultWrapped;
+                    if ($currentUserGroup === 'admin') {
+                        $canEdit = true;
+                        $canSetState = true;
+                    } elseif ($currentUserGroup === 'magasin' && in_array($s + 1, [1,2])) {
+                        $canSetState = true;
+                    } elseif ($s === 0 && !in_array($currentUserGroup, ['admin','magasin'])) {
+                        $canEdit = true;
+                    } elseif (!in_array($currentUserGroup, ['admin','magasin']) && $s + 1 === 3) {
+                        $canSetState = true;
+                    }
+
+                    // Determine if this task should be wrapped
+                    $taskWrapped = $defaultWrapped ? true : false;
                 ?>
 
                 <!-- TASK ROW -->
                 <tr class="border-top border-3 task-row <?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td class="fw-bold"><?= (int)$task['id'] ?></td>
+
                     <td>
                         <?php if ($isAppro): ?>
                             <span class="badge bg-success">APPRO</span>
@@ -129,16 +143,53 @@ $defaultWrapped = true;
                             <span class="badge bg-secondary">-</span>
                         <?php endif; ?>
                     </td>
+
                     <td>
                         <div class="fw-semibold"><?= e($task['title']) ?></div>
                         <?php if (!empty($task['description'])): ?>
                             <div class="small text-muted"><?= e($task['description']) ?></div>
                         <?php endif; ?>
                     </td>
-                    <td><span class="badge bg-<?= $statesColor[$s] ?>"><?= $labels[$s] ?></span></td>
+
+                    <td>
+                        <span class="badge bg-<?= $statesColor[$s] ?>">
+                            <?= $labels[$s] ?>
+                        </span>
+                    </td>
+
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
                     <td class="small text-muted"><?= e($task['due_date']) ?></td>
-                    <td></td> <!-- Actions moved to first sub-task -->
+
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+
+                            <?php if ($canEdit): ?>
+                                <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
+                                   class="btn btn-sm btn-primary">
+                                    Modifier
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                <form method="POST"
+                                      action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                      onsubmit="return confirm('Confirmer la suppression ?');">
+                                    <button class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            <?php endif; ?>
+
+                            <?php if ($s < 3 && $canSetState): ?>
+                                <form method="POST"
+                                      action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                                    <input type="hidden" name="state" value="<?= $s + 1 ?>">
+                                    <button class="btn btn-sm btn-success">
+                                        → <?= $labels[$s + 1] ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+
+                        </div>
+                    </td>
                 </tr>
 
                 <!-- APPRO BLOCK -->
@@ -146,45 +197,24 @@ $defaultWrapped = true;
                 <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2 d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="fw-bold text-success mb-2">APPRO PN</div>
-                                <div class="d-flex align-items-center gap-4 mb-2">
-                                    <div class="fw-semibold">PN: <?= e($a['pn']) ?></div>
-                                    <div class="fw-semibold">Qté: <?= (int)($a['nb'] ?? 0) ?></div>
-                                </div>
-                                <?php if (!empty($a['designation'])): ?>
-                                    <div class="small text-muted mb-2"><?= e($a['designation']) ?></div>
-                                <?php endif; ?>
-                                <?php if (!empty($a['description'])): ?>
-                                    <div class="small text-muted mb-2"><?= e($a['description']) ?></div>
-                                <?php endif; ?>
-                                <div class="d-flex flex-wrap gap-3 small">
-                                    <div><span class="text-muted">Emplacement:</span> <?= e($a['location']) ?></div>
-                                    <div><span class="text-muted">Avion:</span> <?= e($a['plane']) ?></div>
-                                    <div><span class="text-muted">OF:</span> <?= e($a['of']) ?></div>
-                                    <div><span class="text-muted">OE:</span> <?= e($a['oe']) ?></div>
-                                </div>
+                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
+                            <div class="fw-bold text-success mb-2">APPRO PN</div>
+                            <div class="d-flex align-items-center gap-4 mb-2">
+                                <div class="fw-semibold">PN: <?= e($a['pn']) ?></div>
+                                <div class="fw-semibold">Qté: <?= (int)($a['nb'] ?? 0) ?></div>
                             </div>
-                            <?php if (!$firstSubTaskRendered): ?>
-                                <div class="d-flex flex-column gap-1 ms-3">
-                                    <?php if ($canEdit): ?>
-                                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit" class="btn btn-sm btn-primary">Modifier</a>
-                                    <?php endif; ?>
-                                    <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete" onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button class="btn btn-sm btn-danger">Supprimer</button>
-                                        </form>
-                                    <?php endif; ?>
-                                    <?php if ($s < 3 && $canSetState): ?>
-                                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
-                                            <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                                            <button class="btn btn-sm btn-success">→ <?= $labels[$s + 1] ?></button>
-                                        </form>
-                                    <?php endif; ?>
-                                </div>
-                                <?php $firstSubTaskRendered = true; ?>
+                            <?php if (!empty($a['designation'])): ?>
+                            <div class="small text-muted mb-2"><?= e($a['designation']) ?></div>
                             <?php endif; ?>
+                            <?php if (!empty($a['description'])): ?>
+                            <div class="small text-muted mb-2"><?= e($a['description']) ?></div>
+                            <?php endif; ?>
+                            <div class="d-flex flex-wrap gap-3 small">
+                                <div><span class="text-muted">Emplacement:</span> <?= e($a['location']) ?></div>
+                                <div><span class="text-muted">Avion:</span> <?= e($a['plane']) ?></div>
+                                <div><span class="text-muted">OF:</span> <?= e($a['of']) ?></div>
+                                <div><span class="text-muted">OE:</span> <?= e($a['oe']) ?></div>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -195,43 +225,22 @@ $defaultWrapped = true;
                 <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2 d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="fw-bold text-warning mb-2">RETOUR PN</div>
-                                <div class="d-flex align-items-center gap-4 mb-2">
-                                    <div class="fw-semibold">PN: <?= e($r['PN']) ?></div>
-                                    <div class="fw-semibold">Qté: <?= (int)($r['nb'] ?? 0) ?></div>
-                                </div>
-                                <?php if (!empty($r['designation'])): ?>
-                                    <div class="small text-muted mb-2"><?= e($r['designation']) ?></div>
-                                <?php endif; ?>
-                                <?php if (!empty($r['description'])): ?>
-                                    <div class="small text-muted mb-2"><?= e($r['description']) ?></div>
-                                <?php endif; ?>
-                                <div class="d-flex flex-wrap gap-3 small">
-                                    <div><span class="text-muted">SN:</span> <?= e($r['sn']) ?></div>
-                                    <div><span class="text-muted">Certif:</span> <?= e($r['certif']) ?></div>
-                                </div>
+                        <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2">
+                            <div class="fw-bold text-warning mb-2">RETOUR PN</div>
+                            <div class="d-flex align-items-center gap-4 mb-2">
+                                <div class="fw-semibold">PN: <?= e($r['PN']) ?></div>
+                                <div class="fw-semibold">Qté: <?= (int)($r['nb'] ?? 0) ?></div>
                             </div>
-                            <?php if (!$firstSubTaskRendered): ?>
-                                <div class="d-flex flex-column gap-1 ms-3">
-                                    <?php if ($canEdit): ?>
-                                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit" class="btn btn-sm btn-primary">Modifier</a>
-                                    <?php endif; ?>
-                                    <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete" onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button class="btn btn-sm btn-danger">Supprimer</button>
-                                        </form>
-                                    <?php endif; ?>
-                                    <?php if ($s < 3 && $canSetState): ?>
-                                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
-                                            <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                                            <button class="btn btn-sm btn-success">→ <?= $labels[$s + 1] ?></button>
-                                        </form>
-                                    <?php endif; ?>
-                                </div>
-                                <?php $firstSubTaskRendered = true; ?>
+                            <?php if (!empty($r['designation'])): ?>
+                            <div class="small text-muted mb-2"><?= e($r['designation']) ?></div>
                             <?php endif; ?>
+                            <?php if (!empty($r['description'])): ?>
+                            <div class="small text-muted mb-2"><?= e($r['description']) ?></div>
+                            <?php endif; ?>
+                            <div class="d-flex flex-wrap gap-3 small">
+                                <div><span class="text-muted">SN:</span> <?= e($r['sn']) ?></div>
+                                <div><span class="text-muted">Certif:</span> <?= e($r['certif']) ?></div>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -243,18 +252,3 @@ $defaultWrapped = true;
         </table>
     </div>
 </div>
-
-<script>
-document.getElementById('toggle-all').addEventListener('click', function() {
-    const rows = document.querySelectorAll('.task-row, tr.wrapped');
-    const isWrapped = Array.from(rows).every(r => r.classList.contains('wrapped'));
-    rows.forEach(r => r.classList.toggle('wrapped', !isWrapped));
-    this.textContent = isWrapped ? 'Cacher tout' : 'Montrer tout';
-});
-</script>
-
-<style>
-tr.wrapped > td > div {
-    display: none;
-}
-</style>
