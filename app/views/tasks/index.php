@@ -8,6 +8,7 @@ function e($value) {
 
 $currentUserGroup = $_SESSION['group'] ?? '';
 
+// State counts
 $stateCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
 foreach ($tasks as $t) {
     $state = (int)($t['is_completed'] ?? 0);
@@ -15,12 +16,15 @@ foreach ($tasks as $t) {
 }
 $totalTasks = array_sum($stateCounts);
 
+// Filters
 $activeStates = $_GET['states'] ?? [];
 if (!is_array($activeStates)) $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
+// Search query
 $searchQuery = trim($_GET['q'] ?? '');
 
+// Filter tasks
 $tasks = array_filter($tasks, function($task) use ($activeStates, $searchQuery) {
     $matchState = empty($activeStates) || in_array((int)$task['is_completed'], $activeStates);
     if ($searchQuery === '') return $matchState;
@@ -29,6 +33,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates, $searchQuery) 
     return $matchState && $matchSearch;
 });
 
+// Default: all tasks wrapped
 $defaultWrapped = true;
 ?>
 
@@ -36,12 +41,14 @@ $defaultWrapped = true;
 
 <div class="container-fluid py-4">
 
-    <div class="card mb-4 shadow-sm border-0 d-flex justify-content-between align-items-center">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="fw-bold">Demandes vers <?= e($project['title']) ?></h1>
             <?php if (!empty($project['description'])): ?>
                 <p class="text-muted"><?= e($project['description']) ?></p>
             <?php endif; ?>
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">+ Nouvelle demande</a>
         </div>
         <button id="toggle-all" class="btn btn-outline-primary">Montrer tout</button>
     </div>
@@ -75,8 +82,10 @@ $defaultWrapped = true;
         </div>
     </form>
 
+    <!-- TABLE -->
     <div class="table-responsive">
         <table class="table align-middle">
+
             <thead class="table-light">
                 <tr>
                     <th>#</th>
@@ -88,35 +97,28 @@ $defaultWrapped = true;
                     <th>Actions</th>
                 </tr>
             </thead>
+
             <tbody>
+
             <?php foreach ($tasks as $task): ?>
                 <?php 
                     $approList = $task['appro'] ?? [];
                     $retourList = $task['retour'] ?? [];
                     $isAppro = !empty($approList);
                     $isRetour = !empty($retourList);
+
                     $s = (int)$task['is_completed'];
                     $statesColor = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
 
-                    $canEdit = false;
-                    $canSetState = false;
+                    $canEdit = $currentUserGroup === 'admin' || ($s === 0 && !in_array($currentUserGroup, ['admin','magasin']));
+                    $canSetState = $currentUserGroup === 'admin' || ($currentUserGroup === 'magasin' && in_array($s+1, [1,2])) || (!in_array($currentUserGroup, ['admin','magasin']) && $s+1 === 3);
 
-                    if ($currentUserGroup === 'admin') {
-                        $canEdit = true;
-                        $canSetState = true;
-                    } elseif ($currentUserGroup === 'magasin' && in_array($s + 1, [1,2])) {
-                        $canSetState = true;
-                    } elseif ($s === 0 && !in_array($currentUserGroup, ['admin','magasin'])) {
-                        $canEdit = true;
-                    } elseif (!in_array($currentUserGroup, ['admin','magasin']) && $s + 1 === 3) {
-                        $canSetState = true;
-                    }
-
-                    $firstSubTaskRendered = false; // Track first APPRO/RETOUR for actions
+                    $firstSubTaskRendered = false;
+                    $taskWrapped = $defaultWrapped;
                 ?>
 
-                <!-- MAIN TASK ROW -->
-                <tr class="border-top border-3 task-row wrapped">
+                <!-- TASK ROW -->
+                <tr class="border-top border-3 task-row <?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td class="fw-bold"><?= (int)$task['id'] ?></td>
                     <td>
                         <?php if ($isAppro): ?>
@@ -141,7 +143,7 @@ $defaultWrapped = true;
 
                 <!-- APPRO BLOCK -->
                 <?php foreach ($approList as $a): ?>
-                <tr class="wrapped">
+                <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td></td>
                     <td colspan="6">
                         <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2 d-flex justify-content-between align-items-start">
@@ -190,7 +192,7 @@ $defaultWrapped = true;
 
                 <!-- RETOUR BLOCK -->
                 <?php foreach ($retourList as $r): ?>
-                <tr class="wrapped">
+                <tr class="<?= $taskWrapped ? 'wrapped' : '' ?>">
                     <td></td>
                     <td colspan="6">
                         <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2 d-flex justify-content-between align-items-start">
@@ -236,6 +238,7 @@ $defaultWrapped = true;
                 <?php endforeach; ?>
 
             <?php endforeach; ?>
+
             </tbody>
         </table>
     </div>
