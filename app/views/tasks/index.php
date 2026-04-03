@@ -49,7 +49,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
     <div class="mb-3 d-flex flex-wrap gap-2">
         <?php 
         $labels = [0=>'Envoyé',1=>'Traitement',2=>'Livré',3=>'Soldé'];
-        $filterColors = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
+        $filterColors = [0=>'primary',1=>'warning',2=>'info',3=>'success'];
 
         foreach ($labels as $state => $label): 
             $count = $stateCounts[$state];
@@ -119,7 +119,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         <?php if (!empty($approList)): ?>
                             <span class="badge bg-primary">APPRO</span>
                         <?php elseif (!empty($retourList)): ?>
-                            <span class="badge bg-dark">RETOUR</span>
+                            <span class="badge bg-warning">RETOUR</span>
                         <?php else: ?>
                             <span class="text-muted">-</span>
                         <?php endif; ?>
