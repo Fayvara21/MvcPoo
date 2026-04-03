@@ -29,23 +29,23 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-3">
 
     <!-- Header -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-body">
-            <h1 class="fw-bold">Demandes vers <?= e($project['title']) ?></h1>
-            <?php if (!empty($project['description'])): ?>
-                <p class="text-muted"><?= e($project['description']) ?></p>
-            <?php endif; ?>
-            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary">
-                + Nouvelle demande
+    <div class="mb-3">
+        <h2 class="fw-semibold mb-1">Demandes — <?= e($project['title']) ?></h2>
+        <?php if (!empty($project['description'])): ?>
+            <div class="text-muted small"><?= e($project['description']) ?></div>
+        <?php endif; ?>
+        <div class="mt-2">
+            <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-sm btn-dark">
+                Nouvelle demande
             </a>
         </div>
     </div>
 
     <!-- Filters -->
-    <div class="mb-4">
+    <div class="mb-3 d-flex flex-wrap gap-2">
         <?php 
         $labels = [0=>'Envoyé',1=>'Traitement',2=>'Livré',3=>'Soldé'];
         foreach ($labels as $state => $label): 
@@ -55,19 +55,22 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
             $isActive ? $newStates = array_diff($activeStates, [$state]) : $newStates[] = $state;
             $query = http_build_query(['states' => $newStates]);
         ?>
-            <a href="?<?= e($query) ?>" class="btn btn-sm <?= $isActive ? 'btn-dark' : 'btn-outline-dark' ?>">
+            <a href="?<?= e($query) ?>"
+               class="btn btn-sm <?= $isActive ? 'btn-dark' : 'btn-outline-secondary' ?>">
                 <?= $count ?> <?= e($label) ?>
             </a>
         <?php endforeach; ?>
-        <a href="?" class="btn btn-sm btn-secondary"><?= $totalTasks ?> total</a>
+        <a href="?" class="btn btn-sm btn-outline-dark">
+            <?= $totalTasks ?> total
+        </a>
     </div>
 
     <!-- TABLE -->
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table table-sm align-middle table-bordered">
 
             <thead class="table-light">
-                <tr>
+                <tr class="text-uppercase small text-muted">
                     <th>#</th>
                     <th>Type</th>
                     <th>Titre</th>
@@ -88,7 +91,13 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     $isRetour = !empty($retourList);
 
                     $s = (int)$task['is_completed'];
-                    $statesColor = [0=>'secondary',1=>'warning',2=>'info',3=>'success'];
+
+                    $stateClass = [
+                        0 => 'secondary',
+                        1 => 'dark',
+                        2 => 'primary',
+                        3 => 'success'
+                    ];
 
                     $canEdit = false;
                     $canSetState = false;
@@ -106,16 +115,16 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 ?>
 
                 <!-- TASK ROW -->
-                <tr class="border-top border-3">
-                    <td class="fw-bold"><?= (int)$task['id'] ?></td>
+                <tr>
+                    <td class="fw-semibold"><?= (int)$task['id'] ?></td>
 
                     <td>
                         <?php if ($isAppro): ?>
-                            <span class="badge bg-success">APPRO</span>
+                            <span class="badge bg-dark">APPRO</span>
                         <?php elseif ($isRetour): ?>
-                            <span class="badge bg-warning text-dark">RETOUR</span>
+                            <span class="badge bg-secondary">RETOUR</span>
                         <?php else: ?>
-                            <span class="badge bg-secondary">-</span>
+                            <span class="text-muted">-</span>
                         <?php endif; ?>
                     </td>
 
@@ -125,7 +134,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     </td>
 
                     <td>
-                        <span class="badge bg-<?= $statesColor[$s] ?>">
+                        <span class="badge bg-<?= $stateClass[$s] ?>">
                             <?= $labels[$s] ?>
                         </span>
                     </td>
@@ -138,7 +147,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                   class="btn btn-sm btn-primary">
+                                   class="btn btn-sm btn-outline-dark">
                                     Modifier
                                 </a>
                             <?php endif; ?>
@@ -147,7 +156,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                       onsubmit="return confirm('Confirmer la suppression ?');">
-                                    <button class="btn btn-sm btn-danger">Supprimer</button>
+                                    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
                                 </form>
                             <?php endif; ?>
 
@@ -155,7 +164,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
                                     <input type="hidden" name="state" value="<?= $s + 1 ?>">
-                                    <button class="btn btn-sm btn-success">
+                                    <button class="btn btn-sm btn-dark">
                                         → <?= $labels[$s + 1] ?>
                                     </button>
                                 </form>
@@ -167,62 +176,50 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                 <!-- APPRO BLOCK -->
                 <?php foreach ($approList as $a): ?>
-                <tr>
+                <tr class="bg-light">
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-info bg-info bg-opacity-10 mb-2">
 
-                            <div class="fw-bold mb-2">APPRO</div>
+                        <div class="small fw-semibold mb-1">APPRO</div>
 
-                            <div class="d-flex align-items-center gap-4 mb-2">
-                                <div class="fw-semibold">
-                                    PN: <span class="text-dark"><?= e($a['pn']) ?></span>
-                                </div>
-                                <div class="fw-semibold">
-                                    Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
-                                </div>
-                            </div>
-
-                            <div class="small text-muted mb-2">
-                                <?= e($a['designation']) ?>
-                            </div>
-
-                            <div class="d-flex flex-wrap gap-3 small">
-                                <div><span class="text-muted">Emplacement:</span> <?= e($a['location']) ?></div>
-                                <div><span class="text-muted">Avion:</span> <?= e($a['plane']) ?></div>
-                                <div><span class="text-muted">OF:</span> <?= e($a['of']) ?></div>
-                                <div><span class="text-muted">OE:</span> <?= e($a['oe']) ?></div>
-                            </div>
-
+                        <div class="d-flex gap-4 mb-1">
+                            <div>PN: <?= e($a['pn']) ?></div>
+                            <div>Qté: <?= (int)($a['nb'] ?? 0) ?></div>
                         </div>
+
+                        <div class="small text-muted mb-1">
+                            <?= e($a['designation']) ?>
+                        </div>
+
+                        <div class="small text-muted d-flex flex-wrap gap-3">
+                            <div>Emplacement: <?= e($a['location']) ?></div>
+                            <div>Avion: <?= e($a['plane']) ?></div>
+                            <div>OF: <?= e($a['of']) ?></div>
+                            <div>OE: <?= e($a['oe']) ?></div>
+                        </div>
+
                     </td>
                 </tr>
                 <?php endforeach; ?>
 
                 <!-- RETOUR BLOCK -->
                 <?php foreach ($retourList as $r): ?>
-                <tr>
+                <tr class="bg-light">
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-info bg-info bg-opacity-10 mb-2">
 
-                            <div class="fw-bold mb-2">RETOUR</div>
+                        <div class="small fw-semibold mb-1">RETOUR</div>
 
-                            <div class="d-flex align-items-center gap-4 mb-2">
-                                <div class="fw-semibold">
-                                    PN: <span class="text-dark"><?= e($r['PN']) ?></span>
-                                </div>
-                                <div class="fw-semibold">
-                                    Qté: <span class="text-dark"><?= (int)($r['nb'] ?? 0) ?></span>
-                                </div>
-                            </div>
-
-                            <div class="d-flex flex-wrap gap-3 small">
-                                <div><span class="text-muted">SN:</span> <?= e($r['sn']) ?></div>
-                                <div><span class="text-muted">Certif:</span> <?= e($r['certif']) ?></div>
-                            </div>
-
+                        <div class="d-flex gap-4 mb-1">
+                            <div>PN: <?= e($r['PN']) ?></div>
+                            <div>Qté: <?= (int)($r['nb'] ?? 0) ?></div>
                         </div>
+
+                        <div class="small text-muted d-flex gap-3">
+                            <div>SN: <?= e($r['sn']) ?></div>
+                            <div>Certif: <?= e($r['certif']) ?></div>
+                        </div>
+
                     </td>
                 </tr>
                 <?php endforeach; ?>
