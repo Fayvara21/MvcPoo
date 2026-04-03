@@ -11,41 +11,42 @@ require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 $router = new Router();
 
-
+// Root redirect
 $router->add("/", function () {
     header('Location: /projects');
     exit;
 });
 
-$router->add('/projects/{project_id}/tasks/{task_id}/complete/{state}', function ($project_id, $task_id, $state) {
-    (new TaskController())->markAsCompleted($task_id, $state);
+// Task actions
+$router->add('/projects/{project_id}/tasks/{task_id}/mark-completed', function ($project_id, $task_id) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $state = $_POST['state'] ?? 0;
+        (new TaskController())->markAsCompleted($task_id, (int)$state);
+    }
 });
 
 $router->add('/projects/{project_id}/tasks/{task_id}/delete', function ($project_id, $task_id) {
-    (new TaskController())->delete($task_id);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        (new TaskController())->delete($task_id);
+    }
 });
+
 $router->add('/projects/{project_id}/tasks/{task_id}/edit', function ($project_id, $task_id) {
     (new TaskController())->edit($task_id);
 });
-$router->add('/projects/{project_id}/tasks/{task_id}/check', function ($project_id, $task_id) {
-    (new TaskController())->view($task_id);
-});
 
+// Project & task views
 $router->add('/projects', [new ProjectController(), 'index']);
 $router->add('/projects/', [new ProjectController(), 'index']);
-
-//$router->add('/projects/create', [new ProjectController(), 'create']);
-$router->add('/projects/{id}/tasks', [new TaskController(), 'index']);
 $router->add('/projects/{id}', [new TaskController(), 'index']);
+$router->add('/projects/{id}/tasks', [new TaskController(), 'index']);
 $router->add('/projects/{id}/tasks/create', [new TaskController(), 'create']);
-//$router->add('/projects/{id}/tasks/view', [new TaskController(), 'view']);
 $router->add('/projects/tasks/view', [new TaskController(), 'viewall']);
-
-//$router->add('/projects/{id}/tasks/view/json', [new TaskController(), 'json']);
 $router->add('/projects/tasks/view/json', [new TaskController(), 'jsonall']);
+
+// Auth
 $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
 
 $router->dispatch();
-

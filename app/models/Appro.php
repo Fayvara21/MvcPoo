@@ -4,8 +4,9 @@ require_once '../core/Database.php';
 
 class Appro
 {
-    private $db;
-
+    /**
+     * Create a single APPRO entry
+     */
     public static function create($taskId, $pn, $nb, $designation, $of, $location, $plane, $oe)
     {
         $db = Database::getInstance()->getPdo();
@@ -20,46 +21,90 @@ class Appro
         ]);
     }
 
+    /**
+     * Create multiple APPRO entries using shared fields
+     */
+    public static function createMultiple(
+        $taskId,
+        array $approRows,
+        $designation = null,
+        $of = null,
+        $location = null,
+        $plane = null,
+        $oe = null
+    )
+    {
+        $db = Database::getInstance()->getPdo();
+
+        $stmt = $db->prepare("
+            INSERT INTO appro (TaskID, pn, nb, designation, `of`, location, plane, `oe`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        foreach ($approRows as $row) {
+
+            // Skip empty rows (important!)
+            if (empty($row['pn'])) {
+                continue;
+            }
+
+            $stmt->execute([
+                $taskId,
+                $row['pn'] ?? null,
+                $row['nb'] ?? 1,
+                $designation,
+                $of,
+                $location,
+                $plane,
+                $oe
+            ]);
+        }
+    }
+
+    /**
+     * Fetch all APPRO rows for a task
+     */
     public static function findByTaskId($taskId)
     {
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            SELECT * FROM appro 
-            WHERE TaskID = ?
-            LIMIT 1
+            SELECT * FROM appro WHERE TaskID = ? ORDER BY id ASC
         ");
 
         $stmt->execute([$taskId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $result ?: null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    public static function edit($taskId, $pn, $nb, $designation, $of, $location, $plane, $oe)
+    /**
+     * Edit multiple APPRO rows
+     */
+    public static function editMultiple(
+        $taskId,
+        array $approRows,
+        $designation = null,
+        $of = null,
+        $location = null,
+        $plane = null,
+        $oe = null
+    )
     {
-        $db = Database::getInstance()->getPdo();
+        self::deleteByTaskId($taskId);
 
-        // Check if an APPRO record already exists for this task
-        $existing = self::findByTaskId($taskId);
-
-        if ($existing) {
-            // Update existing record
-            $stmt = $db->prepare("
-                UPDATE appro 
-                SET pn = ?, nb = ?, designation = ?, `of` = ?, location = ?, plane = ?, `oe` = ?
-                WHERE TaskID = ?
-            ");
-
-            $stmt->execute([
-                $pn, $nb, $designation, $of, $location, $plane, $oe, $taskId
-            ]);
-        } else {
-            // Create new record if it doesn't exist
-            self::create($taskId, $pn, $nb, $designation, $of, $location, $plane, $oe);
-        }
+        self::createMultiple(
+            $taskId,
+            $approRows,
+            $designation,
+            $of,
+            $location,
+            $plane,
+            $oe
+        );
     }
 
+    /**
+     * Delete all APPRO rows for a task
+     */
     public static function deleteByTaskId($taskId)
     {
         $db = Database::getInstance()->getPdo();

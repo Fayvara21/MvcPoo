@@ -16,7 +16,6 @@
 
 <?php
 
-//$allProjects = Task::getAuthorizedProjects();
 $allProjects = Task::getAllProjects();
 $tasks = Task::getAllTasksForAllProjects();
 
@@ -30,10 +29,17 @@ foreach ($allProjects as $p) {
 }
 
 foreach ($tasks as $task) {
-
-    if (($task['is_completed'] == 0 || $task['is_completed'] == 1) && isset($projects[$task['project_id']])) {
+    if (isset($projects[$task['project_id']])) {
         $projects[$task['project_id']]['tasks'][] = $task;
     }
+}
+
+function getDeadlineClass($dueDate) {
+    if (!$dueDate) return '';
+    $diff = strtotime($dueDate) - time();
+    if ($diff <= 86400) return 'table-danger';          // ≤ 1 day
+    if ($diff <= 604800) return 'table-warning';       // ≤ 1 week
+    return '';
 }
 
 ?>
@@ -52,7 +58,6 @@ foreach ($tasks as $task) {
 </div>
 
 <div class="card-body p-0">
-
 <div class="table-responsive">
 
 <table class="table table-hover align-middle mb-0 project-table" data-project-id="<?= $projectId ?>">
@@ -72,49 +77,25 @@ foreach ($tasks as $task) {
 
 <?php if (!empty($projectData['tasks'])): ?>
 
-<?php
-
-usort($projectData['tasks'], function($a,$b){
-
-$getTypePriority = fn($t) => !empty($t['appro_pn']) ? 1 : (!empty($t['retour_pn']) ? 2 : 3);
-
-$typeA = $getTypePriority($a);
-$typeB = $getTypePriority($b);
-
-if ($typeA !== $typeB) return $typeA <=> $typeB;
-
-$dueA = !empty($a['due_date']) ? strtotime($a['due_date']) : PHP_INT_MAX;
-$dueB = !empty($b['due_date']) ? strtotime($b['due_date']) : PHP_INT_MAX;
-
-return $dueA <=> $dueB;
-
-});
-
-$lastType = 0;
-
-?>
-
 <?php foreach ($projectData['tasks'] as $task):
 
-$isAppro = !empty($task['appro_pn']);
-$isRetour = !empty($task['retour_pn']);
+$appro = $task['appro'] ?? [];
+$retour = $task['retour'] ?? [];
 
-$currentType = $isAppro ? 1 : ($isRetour ? 2 : 3);
+$isAppro = !empty($appro);
+$isRetour = !empty($retour);
 
-if ($lastType && $lastType !== $currentType) {
-echo '<tr class="table-info"><td colspan="6" class="text-center text-muted fw-bold"></td></tr>';
-}
+$approFirst = $appro[0] ?? [];
+$retourFirst = $retour[0] ?? [];
 
-$lastType = $currentType;
+$deadlineClass = getDeadlineClass($task['due_date']);
 
 ?>
 
-<tr>
-
+<tr class="<?= $deadlineClass ?>">
 <td class="ps-4 fw-medium"><?= $task['id'] ?></td>
 
 <td>
-
 <?php if ($isAppro): ?>
 <span class="badge bg-primary">APPRO</span>
 <?php elseif ($isRetour): ?>
@@ -122,54 +103,45 @@ $lastType = $currentType;
 <?php else: ?>
 <span class="badge bg-secondary">AUTRE</span>
 <?php endif; ?>
-
 </td>
 
 <td><?= htmlspecialchars($task['title']) ?></td>
-
 <td><?= htmlspecialchars($task['description']) ?></td>
 
 <td>
-<?= $isAppro ? $task['appro_pn'] : ($isRetour ? $task['retour_pn'] : '-') ?>
+<?= $isAppro
+    ? ($approFirst['pn'] ?? '-')
+    : ($isRetour ? ($retourFirst['PN'] ?? '-') : '-') ?>
 </td>
 
 <td>
-
 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
 
 <?php if ($task['is_completed'] == 1): ?>
 <span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
 <?php endif; ?>
-
 </td>
 
 </tr>
 
-<tr class="table">
-
+<tr class="table <?= $deadlineClass ?>">
 <td colspan="6" class="p-3">
 
 <?php if ($isAppro): ?>
-
 <div class="d-flex flex-wrap gap-4 small">
-<span><strong>Quantité:</strong> <?= $task['appro_nb'] ?? '-' ?></span>
-<span><strong>Désignation:</strong> <?= $task['designation'] ?? '-' ?></span>
-<span><strong>Lieu:</strong> <?= $task['location'] ?? '-' ?></span>
-<span><strong>Avion:</strong> <?= $task['plane'] ?? '-' ?></span>
+<span><strong>Quantité:</strong> <?= $approFirst['nb'] ?? '-' ?></span>
+<span><strong>Désignation:</strong> <?= $approFirst['designation'] ?? '-' ?></span>
+<span><strong>Lieu:</strong> <?= $approFirst['location'] ?? '-' ?></span>
+<span><strong>Avion:</strong> <?= $approFirst['plane'] ?? '-' ?></span>
 </div>
-
 <?php elseif ($isRetour): ?>
-
 <div class="d-flex flex-wrap gap-4 small">
-<span><strong>Quantité:</strong> <?= $task['retour_nb'] ?? '-' ?></span>
-<span><strong>SN:</strong> <?= $task['sn'] ?? '-' ?></span>
-<span><strong>Certif:</strong> <?= $task['certif'] ?? '-' ?></span>
+<span><strong>Quantité:</strong> <?= $retourFirst['nb'] ?? '-' ?></span>
+<span><strong>SN:</strong> <?= $retourFirst['sn'] ?? '-' ?></span>
+<span><strong>Certif:</strong> <?= $retourFirst['certif'] ?? '-' ?></span>
 </div>
-
 <?php else: ?>
-
 <span class="text-muted small">-</span>
-
 <?php endif; ?>
 
 </td>
@@ -195,212 +167,132 @@ Aucune tâche pour ce projet
 
 <?php endforeach; ?>
 
-<?php if (empty($projects)): ?>
-
-<div class="text-center py-5">
-<div class="display-1 text-muted mb-3">📋</div>
-<p class="text-muted small">Toutes les tâches sont terminées</p>
-</div>
-
-<?php endif; ?>
-
 </div>
 </div>
-
 
 <script>
+const addSound = new Audio('/sounds/open.mp3');       // state 0
+const completeSound = new Audio('/sounds/close.mp3'); // state 2
 
-const addSound = new Audio('/sounds/open.mp3');
-const removeSound = new Audio('/sounds/close.mp3');
+let previousTasks = {};        // { taskId: state }
+let notifiedTasks = {};        // { taskId: {open: true/false, close: true/false} }
 
-let previousTaskIds = JSON.parse(localStorage.getItem('previousTaskIds') || '{}');
-let soundEnabled = true;
-let firstLoad = true;
-
-function loadTasks(){
-
-fetch(window.location.pathname + '/json')
-.then(r => r.json())
-.then(tasks => {
-
-const projects = {};
-
-tasks.forEach(task => {
-
-if(task.is_completed === 0 || task.is_completed === 1){
-
-if(!projects[task.project_id]){
-projects[task.project_id] = {title:task.project_title,tasks:[]};
+function getDeadlineClassJS(dueDate) {
+    if (!dueDate) return '';
+    const diff = new Date(dueDate) - new Date();
+    if (diff <= 86400 * 1000) return 'table-danger';
+    if (diff <= 604800 * 1000) return 'table-warning';
+    return '';
 }
 
-projects[task.project_id].tasks.push(task);
+function loadTasks() {
+    fetch(window.location.pathname + '/json')
+    .then(r => r.json())
+    .then(tasks => {
 
-}
+        const projects = {};
 
-});
+        tasks.forEach(task => {
+            const s = parseInt(task.is_completed);
 
-document.querySelectorAll('.project-table').forEach(table => {
+            // --- SOUND LOGIC for all tasks ---
+            if (!notifiedTasks[task.id]) notifiedTasks[task.id] = {open: false, close: false};
+            const prevState = previousTasks[task.id] ?? null;
 
-const projectId = table.dataset.projectId;
-const projectDiv = table.querySelector('tbody');
+            // Open sound
+            if (s === 0 && !notifiedTasks[task.id].open) {
+                addSound.play().catch(() => {});
+                notifiedTasks[task.id].open = true;
+            }
 
-const projectTasks = projects[projectId]?.tasks || [];
+            // Close sound
+            if (prevState !== 2 && s === 2 && !notifiedTasks[task.id].close) {
+                completeSound.play().catch(() => {});
+                notifiedTasks[task.id].close = true;
+            }
 
-let html = [];
-let currentIds = [];
+            // Update previous state
+            previousTasks[task.id] = s;
 
-const typePriority = t => t.appro_pn ? 1 : t.retour_pn ? 2 : 3;
+            // --- FILTER FOR RENDERING ONLY ---
+            if (![0,1].includes(s)) return;
 
-projectTasks.sort((a,b)=>{
+            const appro = task.appro || [];
+            const retour = task.retour || [];
 
-const typeA = typePriority(a);
-const typeB = typePriority(b);
+            task.approFirst = appro[0] || {};
+            task.retourFirst = retour[0] || {};
 
-if(typeA !== typeB) return typeA - typeB;
+            task.isAppro = appro.length > 0;
+            task.isRetour = retour.length > 0;
 
-const dueA = a.due_date ? new Date(a.due_date) : new Date(8640000000000000);
-const dueB = b.due_date ? new Date(b.due_date) : new Date(8640000000000000);
+            if(!projects[task.project_id]){
+                projects[task.project_id] = {title:task.project_title,tasks:[]};
+            }
 
-return dueA - dueB;
+            projects[task.project_id].tasks.push(task);
+        });
 
-});
+        document.querySelectorAll('.project-table').forEach(table => {
+            const projectId = table.dataset.projectId;
+            const tbody = table.querySelector('tbody');
+            const projectTasks = projects[projectId]?.tasks || [];
 
-let lastType = 0;
+            let html = [];
 
-projectTasks.forEach(task => {
+            projectTasks.forEach(task => {
+                const typeBadge = task.isAppro
+                    ? '<span class="badge bg-primary">APPRO</span>'
+                    : task.isRetour
+                    ? '<span class="badge bg-warning text-dark">RETOUR</span>'
+                    : '<span class="badge bg-secondary">AUTRE</span>';
 
-const currentType = typePriority(task);
+                const reference = task.isAppro
+                    ? (task.approFirst.pn ?? '-')
+                    : (task.isRetour ? (task.retourFirst.PN ?? '-') : '-');
 
-if(lastType && lastType !== currentType){
+                const rowClass = getDeadlineClassJS(task.due_date);
 
-const typeLabels = {1:'APPRO',2:'RETOUR',3:'Tâche'};
+                const loadingIcon = task.is_completed === 1 
+                    ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>' 
+                    : '';
 
-html.push(`
-<tr class="table-info">
-<td colspan="6" class="text-center text-muted fw-semibold">
-${typeLabels[currentType]}
-</td>
-</tr>
-`);
-
-}
-
-lastType = currentType;
-
-let rowClass = '';
-let dueClass = '';
-
-if(task.due_date){
-
-const now = new Date();
-const due = new Date(task.due_date);
-
-const diffDays = Math.floor((due-now)/(1000*60*60*24));
-
-if(diffDays > 7){
-rowClass='table-secondary';
-dueClass='text-dark';
-}else if(diffDays > 0){
-rowClass='table-warning';
-dueClass='text-warning';
-}else{
-rowClass='table-danger';
-dueClass='text-danger';
-}
-
-}
-
-currentIds.push(task.id);
-
-const typeBadge = task.appro_pn
-? '<span class="badge bg-primary">APPRO</span>'
-: task.retour_pn
-? '<span class="badge bg-warning text-dark">RETOUR</span>'
-: '<span class="badge bg-secondary">Tâche</span>';
-
-const reference = task.appro_pn ?? task.retour_pn ?? '-';
-
-const spinner = task.is_completed == 1
-? `<span class="ms-2 spinner-border spinner-border-sm text-warning"></span>`
-: '';
-
-html.push(`
-
+                html.push(`
 <tr class="${rowClass}">
 <td>${task.id}</td>
 <td>${typeBadge}</td>
 <td>${task.title}</td>
 <td>${task.description}</td>
 <td>${reference}</td>
-<td class="${dueClass}">
-${task.due_date ?? '-'} ${spinner}
-</td>
+<td>${task.due_date ?? '-'} ${loadingIcon}</td>
 </tr>
 
-<tr class="table">
+<tr class="${rowClass}">
 <td colspan="6">
+${task.isAppro ? `
+<strong>Quantité:</strong> ${task.approFirst.nb ?? '-'} |
+<strong>Désignation:</strong> ${task.approFirst.designation ?? '-'} |
+<strong>Lieu:</strong> ${task.approFirst.location ?? '-'} |
+<strong>Avion:</strong> ${task.approFirst.plane ?? '-'}
+` : ''}
 
-${task.appro_pn ? `<strong>Quantité:</strong> ${task.appro_nb ?? '-'} |
-<strong>Désignation:</strong> ${task.designation ?? '-'} |
-<strong>Lieu:</strong> ${task.location ?? '-'} |
-<strong>Avion:</strong> ${task.plane ?? '-'}` : ''}
-
-${task.retour_pn ? `<strong>Quantité:</strong> ${task.retour_nb ?? '-'} |
-<strong>SN:</strong> ${task.sn ?? '-'} |
-<strong>Certif:</strong> ${task.certif ?? '-'}` : ''}
-
-${!task.appro_pn && !task.retour_pn ? '-' : ''}
-
+${task.isRetour ? `
+<strong>Quantité:</strong> ${task.retourFirst.nb ?? '-'} |
+<strong>SN:</strong> ${task.retourFirst.sn ?? '-'} |
+<strong>Certif:</strong> ${task.retourFirst.certif ?? '-'}
+` : ''}
 </td>
 </tr>
+                `);
+            });
 
-`);
+            tbody.innerHTML = html.join('');
+        });
 
-});
-
-if(projectTasks.length === 0){
-
-html.push(`
-<tr>
-<td colspan="6" class="text-center text-muted py-0">
-<div class="text-center py-0">
-<div class="display-1 text-muted mb-1">✔️</div>
-<h2 class="text-muted small">Toutes les tâches sont terminées</h2>
-</div>
-</td>
-</tr>
-`);
-
-}
-
-const prev = previousTaskIds[projectId] || [];
-
-const addedTasks = currentIds.filter(id => !prev.includes(id));
-const removedTasks = prev.filter(id => !currentIds.includes(id));
-
-if(!firstLoad && soundEnabled){
-
-if(addedTasks.length) addSound.play().catch(()=>{});
-if(removedTasks.length) removeSound.play().catch(()=>{});
-
-}
-
-previousTaskIds[projectId] = currentIds;
-
-projectDiv.innerHTML = html.join('');
-
-});
-
-localStorage.setItem('previousTaskIds',JSON.stringify(previousTaskIds));
-
-firstLoad=false;
-
-})
-.catch(console.error);
-
+    })
+    .catch(console.error);
 }
 
 loadTasks();
-setInterval(loadTasks,3000);
-
+setInterval(loadTasks, 3000);
 </script>

@@ -17,7 +17,7 @@
 
         <div class="row g-4">
 
-            <!-- LEFT: MAIN FORM -->
+            <!-- LEFT -->
             <div class="col-10 col-lg-5">
 
                 <div class="card shadow-sm border-0">
@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL -->
+            <!-- RIGHT -->
             <div class="col-12 col-lg-4">
 
                 <!-- APPRO -->
@@ -90,46 +90,27 @@
                     <div class="card-body">
 
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge bg-primary rounded-pill px-3 py-2">APPRO</span>
+                            <span class="badge bg-primary">APPRO</span>
                             <h5 class="fw-semibold mb-0">Informations APPRO</h5>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">PN</label>
-                                <input class="form-control" name="appro_pn">
-                            </div>
+			<!-- MULTI ROW -->
+<button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">
+                            + Ajouter PN
+                        </button>
+                        <div id="approList"></div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Nombre</label>
-                                <input class="form-control" type="number" name="appro_nb" value="1">
-                            </div>
+                        
 
-                            <div class="col-12">
-                                <label class="form-label">Designation</label>
-                                <input class="form-control" name="appro_designation">
-                            </div>
+                        <hr>
 
-                            <div class="col-md-6">
-                                <label class="form-label">OF</label>
-                                <input class="form-control" name="appro_of">
-                            </div>
+                        <!-- SHARED -->
+                        <input class="form-control mb-2" name="appro_designation" placeholder="Designation">
+                        <input class="form-control mb-2" name="appro_of" placeholder="OF">
+                        <input class="form-control mb-2" name="appro_location" placeholder="Emplacement">
+                        <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
+                        <input class="form-control" name="appro_oe" placeholder="OE">
 
-                            <div class="col-md-6">
-                                <label class="form-label">Emplacement</label>
-                                <input class="form-control" name="appro_location">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Avion / destination</label>
-                                <input class="form-control" name="appro_plane">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">OE</label>
-                                <input class="form-control" name="appro_oe">
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -138,31 +119,24 @@
                     <div class="card-body">
 
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">RETOUR</span>
+                            <span class="badge bg-warning text-dark">RETOUR</span>
                             <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
-                        </div>
+			</div>
+<button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">
+                            + Ajouter retour
+                        </button>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">PN</label>
-                                <input class="form-control" name="retour_pn">
-                            </div>
+                        <!-- MULTI ROW -->
+                        <div id="retourList"></div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Nombre</label>
-                                <input class="form-control" type="number" name="retour_nb" value="1">
-                            </div>
+                        
 
-                            <div class="col-md-6">
-                                <label class="form-label">SN</label>
-                                <input class="form-control" name="retour_sn">
-                            </div>
+                        <hr>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Certification</label>
-                                <input class="form-control" name="retour_certif">
-                            </div>
-                        </div>
+                        <!-- SHARED -->
+                        <input class="form-control mb-2" name="retour_sn" placeholder="SN">
+                        <input class="form-control" name="retour_certif" placeholder="Certification">
+
                     </div>
                 </div>
 
@@ -185,6 +159,63 @@ typeSelect.addEventListener("change", function() {
 
     if (this.value === "appro") approFields.style.display = "block";
     if (this.value === "retour") retourFields.style.display = "block";
+});
+
+// === APPRO REPEATER ===
+document.getElementById('addAppro').addEventListener('click', function () {
+    const container = document.getElementById('approList');
+    const index = container.children.length;
+
+    const div = document.createElement('div');
+    div.className = 'border rounded p-2 mb-2';
+
+    div.innerHTML = `
+        <div class="row g-2">
+            <div class="col">
+                <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="number" name="appro[${index}][nb]" value="1">
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger remove">✕</button>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(div);
+});
+
+// === RETOUR REPEATER ===
+document.getElementById('addRetour').addEventListener('click', function () {
+    const container = document.getElementById('retourList');
+    const index = container.children.length;
+
+    const div = document.createElement('div');
+    div.className = 'border rounded p-2 mb-2';
+
+    div.innerHTML = `
+        <div class="row g-2">
+            <div class="col">
+                <input class="form-control" name="retour[${index}][pn]" placeholder="PN" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="number" name="retour[${index}][nb]" value="1">
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger remove">✕</button>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(div);
+});
+
+// REMOVE BUTTON
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove')) {
+        e.target.closest('.border').remove();
+    }
 });
 </script>
 
