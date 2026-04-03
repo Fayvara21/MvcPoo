@@ -172,40 +172,39 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
     <td colspan="6">
         <div class="p-3 rounded-3 border-start border-4 border-secondary bg-secondary bg-opacity-10 mb-2">
 
-            <!-- Header: MAIN INFO -->
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="fw-bold text-success">APPRO PN</div>
+            <!-- Header: TYPE -->
+            <div class="fw-bold text-success mb-2">APPRO PN</div>
 
-                <div class="d-flex gap-3">
-                    <div class="fw-semibold">
-                        PN: <span class="text-dark"><?= e($a['pn']) ?></span>
-                    </div>
-                    <div class="fw-semibold">
-                        Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
-                    </div>
+            <!-- MAIN INFO (LEFT PRIORITY) -->
+            <div class="d-flex align-items-center gap-4 mb-2">
+                <div class="fw-semibold fs-6">
+                    PN: <span class="text-dark"><?= e($a['pn']) ?></span>
+                </div>
+                <div class="fw-semibold fs-6">
+                    Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
                 </div>
             </div>
 
-            <!-- Secondary info -->
+            <!-- Description -->
             <div class="small text-muted mb-2">
                 <?= e($a['designation']) ?>
             </div>
 
             <!-- Structured details -->
             <div class="row small g-2">
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <strong>Lieu</strong><br>
                     <?= e($a['location']) ?>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <strong>Avion</strong><br>
                     <?= e($a['plane']) ?>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <strong>OF</strong><br>
                     <?= e($a['of']) ?>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <strong>OE</strong><br>
                     <?= e($a['oe']) ?>
                 </div>
