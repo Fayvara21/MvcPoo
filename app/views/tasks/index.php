@@ -167,23 +167,53 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                 <!-- APPRO BLOCK -->
                 <?php foreach ($approList as $a): ?>
-                <tr>
-                    <td></td>
-                    <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 bg-opacity-10 mb-2">
-                            <div class="fw-bold text-success mb-1">APPRO PN</div>
-                            <div class="small">
-                                <strong>PN:</strong> <?= e($a['pn']) ?> |
-                                <strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?> |
-                                <?= e($a['designation']) ?><br>
-                                <strong>Lieu:</strong> <?= e($a['location']) ?> |
-                                <strong>Avion:</strong> <?= e($a['plane']) ?> |
-                                <strong>OF:</strong> <?= e($a['of']) ?> |
-                                <strong>OE:</strong> <?= e($a['oe']) ?>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+<tr>
+    <td></td>
+    <td colspan="6">
+        <div class="p-3 rounded-3 border-start border-4 border-secondary bg-secondary bg-opacity-10 mb-2">
+
+            <!-- Header: MAIN INFO -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="fw-bold text-success">APPRO PN</div>
+
+                <div class="d-flex gap-3">
+                    <div class="fw-semibold">
+                        PN: <span class="text-dark"><?= e($a['pn']) ?></span>
+                    </div>
+                    <div class="fw-semibold">
+                        Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary info -->
+            <div class="small text-muted mb-2">
+                <?= e($a['designation']) ?>
+            </div>
+
+            <!-- Structured details -->
+            <div class="row small g-2">
+                <div class="col-md-3">
+                    <strong>Lieu</strong><br>
+                    <?= e($a['location']) ?>
+                </div>
+                <div class="col-md-3">
+                    <strong>Avion</strong><br>
+                    <?= e($a['plane']) ?>
+                </div>
+                <div class="col-md-3">
+                    <strong>OF</strong><br>
+                    <?= e($a['of']) ?>
+                </div>
+                <div class="col-md-3">
+                    <strong>OE</strong><br>
+                    <?= e($a['oe']) ?>
+                </div>
+            </div>
+
+        </div>
+    </td>
+</tr>
                 <?php endforeach; ?>
 
                 <!-- RETOUR BLOCK -->
