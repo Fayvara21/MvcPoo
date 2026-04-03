@@ -113,7 +113,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         <?php if ($isAppro): ?>
                             <span class="badge bg-success">APPRO</span>
                         <?php elseif ($isRetour): ?>
-                            <span class="badge bg-danger">RETOUR</span>
+                            <span class="badge bg-warning text-dark">RETOUR</span>
                         <?php else: ?>
                             <span class="badge bg-secondary">-</span>
                         <?php endif; ?>
@@ -167,57 +167,36 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                 <!-- APPRO BLOCK -->
                 <?php foreach ($approList as $a): ?>
-<tr>
-    <td></td>
-    <td colspan="6">
-        <div class="p-3 rounded-3 border-start border-4 border-secondary bg-secondary bg-opacity-10 mb-2">
+                <tr>
+                    <td></td>
+                    <td colspan="6">
+                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
 
-            <!-- Header: TYPE -->
-            <div class="fw-bold text-success mb-2">APPRO PN</div>
+                            <div class="fw-bold text-success mb-2">APPRO PN</div>
 
-            <!-- MAIN INFO (LEFT PRIORITY) -->
-            <div class="d-flex align-items-center gap-4 mb-2">
-                <div class="fw-semibold fs-6">
-                    PN: <span class="text-dark"><?= e($a['pn']) ?></span>
-                </div>
-                <div class="fw-semibold fs-6">
-                    Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
-                </div>
-            </div>
+                            <div class="d-flex align-items-center gap-4 mb-2">
+                                <div class="fw-semibold">
+                                    PN: <span class="text-dark"><?= e($a['pn']) ?></span>
+                                </div>
+                                <div class="fw-semibold">
+                                    Qté: <span class="text-dark"><?= (int)($a['nb'] ?? 0) ?></span>
+                                </div>
+                            </div>
 
-            <!-- Description -->
-            <div class="small text-muted mb-2">
-                <?= e($a['designation']) ?>
-            </div>
+                            <div class="small text-muted mb-2">
+                                <?= e($a['designation']) ?>
+                            </div>
 
-            <!-- Structured details -->
-            <div class="d-flex flex-wrap gap-3 small">
+                            <div class="d-flex flex-wrap gap-3 small">
+                                <div><span class="text-muted">Emplacement:</span> <?= e($a['location']) ?></div>
+                                <div><span class="text-muted">Avion:</span> <?= e($a['plane']) ?></div>
+                                <div><span class="text-muted">OF:</span> <?= e($a['of']) ?></div>
+                                <div><span class="text-muted">OE:</span> <?= e($a['oe']) ?></div>
+                            </div>
 
-    <div>
-        <span class="text-muted">Emplacement:</span>
-        <span class="fw-medium"><?= e($a['location']) ?></span>
-    </div>
-
-    <div>
-        <span class="text-muted">Avion:</span>
-        <span class="fw-medium"><?= e($a['plane']) ?></span>
-    </div>
-
-    <div>
-        <span class="text-muted">OF:</span>
-        <span class="fw-medium"><?= e($a['of']) ?></span>
-    </div>
-
-    <div>
-        <span class="text-muted">OE:</span>
-        <span class="fw-medium"><?= e($a['oe']) ?></span>
-    </div>
-
-</div>
-
-        </div>
-    </td>
-</tr>
+                        </div>
+                    </td>
+                </tr>
                 <?php endforeach; ?>
 
                 <!-- RETOUR BLOCK -->
@@ -225,14 +204,24 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 <tr>
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-danger bg-danger bg-opacity-10 mb-2">
-                            <div class="fw-bold text-danger mb-1">RETOUR PN</div>
-                            <div class="small">
-                                <strong>PN:</strong> <?= e($r['PN']) ?> |
-                                <strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?> |
-                                <strong>SN:</strong> <?= e($r['sn']) ?> |
-                                <strong>Certif:</strong> <?= e($r['certif']) ?>
+                        <div class="p-3 rounded-3 border-start border-4 border-warning bg-warning bg-opacity-10 mb-2">
+
+                            <div class="fw-bold text-warning mb-2">RETOUR PN</div>
+
+                            <div class="d-flex align-items-center gap-4 mb-2">
+                                <div class="fw-semibold">
+                                    PN: <span class="text-dark"><?= e($r['PN']) ?></span>
+                                </div>
+                                <div class="fw-semibold">
+                                    Qté: <span class="text-dark"><?= (int)($r['nb'] ?? 0) ?></span>
+                                </div>
                             </div>
+
+                            <div class="d-flex flex-wrap gap-3 small">
+                                <div><span class="text-muted">SN:</span> <?= e($r['sn']) ?></div>
+                                <div><span class="text-muted">Certif:</span> <?= e($r['certif']) ?></div>
+                            </div>
+
                         </div>
                     </td>
                 </tr>
