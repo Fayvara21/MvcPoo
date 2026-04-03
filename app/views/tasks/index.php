@@ -132,7 +132,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
                     <td class="small text-muted"><?= e($task['due_date']) ?></td>
-                    <td>
+                    <td class="actions" style="display:none;">
                         <div class="d-flex gap-1 flex-wrap">
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
@@ -211,7 +211,11 @@ document.addEventListener('DOMContentLoaded', function() {
         row.addEventListener('click', function() {
             const taskId = row.dataset.task;
             const desc = row.querySelector('.description');
+            const actions = row.querySelector('.actions');
+
             if (desc) desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
+            if (actions) actions.style.display = actions.style.display === 'none' ? 'block' : 'none';
+
             document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                 subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
             });
