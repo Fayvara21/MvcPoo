@@ -37,10 +37,11 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
         <?php if (!empty($project['description'])): ?>
             <div class="text-muted small"><?= e($project['description']) ?></div>
         <?php endif; ?>
-        <div class="mt-2">
+        <div class="mt-2 d-flex gap-2 flex-wrap">
             <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary btn-sm">
                 + Nouvelle demande
             </a>
+            <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher titre, OF, Avion, PN" style="max-width:300px;">
         </div>
     </div>
 
@@ -164,14 +165,14 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                             <div class="d-flex gap-4 mb-1">
                                 <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
                                 <div><strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?></div>
+                                <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
+                                <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
                             </div>
                             <div class="small mb-1">
                                 <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
                             </div>
                             <div class="small d-flex flex-wrap gap-3">
                                 <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
-                                <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
-                                <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
                                 <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
                             </div>
                         </td>
@@ -207,6 +208,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 document.addEventListener('DOMContentLoaded', function() {
     const firstActionsHeader = document.querySelector('.actions-header');
 
+    // Toggle task rows on click
     document.querySelectorAll('.task-row').forEach(function(row) {
         row.addEventListener('click', function() {
             const taskId = row.dataset.task;
@@ -221,8 +223,43 @@ document.addEventListener('DOMContentLoaded', function() {
             if (actions) {
                 const isVisible = actions.style.display !== 'none';
                 actions.style.display = isVisible ? 'none' : 'table-cell';
-                // Show header only when first unwrapped
                 if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
+            }
+        });
+    });
+
+    // Search function
+    const searchInput = document.getElementById('task-search');
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value.toLowerCase();
+
+        document.querySelectorAll('.task-row').forEach(function(taskRow) {
+            const taskId = taskRow.dataset.task;
+            const title = taskRow.querySelector('td:nth-child(3) div.fw-semibold')?.textContent.toLowerCase() || '';
+            
+            // Search inside subtasks
+            let match = title.includes(query);
+            document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                const text = subRow.textContent.toLowerCase();
+                if (text.includes(query)) match = true;
+            });
+
+            if (match) {
+                taskRow.style.display = '';
+                // Unwrap matched task
+                document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                    subRow.style.display = 'table-row';
+                });
+                const actions = taskRow.querySelector('.actions');
+                if (actions) {
+                    actions.style.display = 'table-cell';
+                    if (firstActionsHeader) firstActionsHeader.style.display = 'table-cell';
+                }
+            } else {
+                taskRow.style.display = 'none';
+                document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
+                    subRow.style.display = 'none';
+                });
             }
         });
     });
