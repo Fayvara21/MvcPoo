@@ -80,12 +80,12 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <th>État</th>
                     <th>Créé</th>
                     <th>Deadline</th>
-                    <th>Actions</th>
+                    <th class="actions-header" style="display:none;">Actions</th>
                 </tr>
             </thead>
 
             <tbody>
-            <?php foreach ($tasks as $task): ?>
+            <?php foreach ($tasks as $taskIndex => $task): ?>
                 <?php 
                     $approList = $task['appro'] ?? [];
                     $retourList = $task['retour'] ?? [];
@@ -125,9 +125,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     </td>
                     <td>
                         <div class="fw-semibold"><?= e($task['title']) ?></div>
-                        <div class="small text-muted description" style="display:none;">
-                            <?= e($task['description']) ?>
-                        </div>
+                        <div class="small description" style="display:block; font-size:1rem;"><?= e($task['description']) ?></div>
                     </td>
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
@@ -207,18 +205,25 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const firstActionsHeader = document.querySelector('.actions-header');
+
     document.querySelectorAll('.task-row').forEach(function(row) {
         row.addEventListener('click', function() {
             const taskId = row.dataset.task;
-            const desc = row.querySelector('.description');
             const actions = row.querySelector('.actions');
 
-            if (desc) desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
-            if (actions) actions.style.display = actions.style.display === 'none' ? 'block' : 'none';
-
+            // Toggle sub-rows
             document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                 subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
             });
+
+            // Toggle actions column
+            if (actions) {
+                const isVisible = actions.style.display !== 'none';
+                actions.style.display = isVisible ? 'none' : 'table-cell';
+                // Show header only when first unwrapped
+                if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
+            }
         });
     });
 });
