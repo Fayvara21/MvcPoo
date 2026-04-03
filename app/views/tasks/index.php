@@ -191,24 +191,29 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
             </div>
 
             <!-- Structured details -->
-            <div class="row small g-2">
-                <div class="col-6 col-md-3">
-                    <strong>Lieu</strong><br>
-                    <?= e($a['location']) ?>
-                </div>
-                <div class="col-6 col-md-3">
-                    <strong>Avion</strong><br>
-                    <?= e($a['plane']) ?>
-                </div>
-                <div class="col-6 col-md-3">
-                    <strong>OF</strong><br>
-                    <?= e($a['of']) ?>
-                </div>
-                <div class="col-6 col-md-3">
-                    <strong>OE</strong><br>
-                    <?= e($a['oe']) ?>
-                </div>
-            </div>
+            <div class="d-flex flex-wrap gap-3 small">
+
+    <div>
+        <span class="text-muted">Emplacement:</span>
+        <span class="fw-medium"><?= e($a['location']) ?></span>
+    </div>
+
+    <div>
+        <span class="text-muted">Avion:</span>
+        <span class="fw-medium"><?= e($a['plane']) ?></span>
+    </div>
+
+    <div>
+        <span class="text-muted">OF:</span>
+        <span class="fw-medium"><?= e($a['of']) ?></span>
+    </div>
+
+    <div>
+        <span class="text-muted">OE:</span>
+        <span class="fw-medium"><?= e($a['oe']) ?></span>
+    </div>
+
+</div>
 
         </div>
     </td>
