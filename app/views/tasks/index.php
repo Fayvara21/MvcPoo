@@ -42,6 +42,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 + Nouvelle demande
             </a>
             <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher titre, OF, Avion, PN" style="max-width:300px;">
+            <button id="toggle-wrap" class="btn btn-sm btn-outline-secondary">Cacher / Montrer tout</button>
         </div>
     </div>
 
@@ -125,7 +126,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="fw-semibold"><?= e($task['title']) ?></div>
+                        <div class="fw-semibold task-title"><?= e($task['title']) ?></div>
                         <div class="small description" style="display:block; font-size:1rem;"><?= e($task['description']) ?></div>
                     </td>
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
@@ -228,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Search function
+    // Search function with default wrapping
     const searchInput = document.getElementById('task-search');
     searchInput.addEventListener('input', function() {
         const query = searchInput.value.toLowerCase();
@@ -246,9 +247,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (match) {
                 taskRow.style.display = '';
-                // Unwrap matched task
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                     subRow.style.display = 'table-row';
+                    subRow.style.whiteSpace = 'normal'; // wrap text by default
                 });
                 const actions = taskRow.querySelector('.actions');
                 if (actions) {
@@ -262,6 +263,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
+    });
+
+    // Toggle wrap/un-wrap all tasks
+    const toggleWrapBtn = document.getElementById('toggle-wrap');
+    let isWrapped = true;
+    toggleWrapBtn.addEventListener('click', function() {
+        document.querySelectorAll('.task-row, .sub-task-row, tbody tr').forEach(function(row) {
+            row.querySelectorAll('td').forEach(td => {
+                td.style.whiteSpace = isWrapped ? 'nowrap' : 'normal';
+            });
+        });
+        isWrapped = !isWrapped;
     });
 });
 </script>
