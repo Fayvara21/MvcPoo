@@ -191,7 +191,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                         </div>
 
                         <div class="small text-muted mb-1">
-                            <div><strong>Désignation:</strong><?= e($a['designation']) ?>
+                            <div><strong>Désignation:</strong><?= e($a['designation']) ?></div>
                         </div>
 
                         <div class="small text-muted d-flex flex-wrap gap-3">
