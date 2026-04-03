@@ -138,7 +138,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                   class="btn btn-sm btn-outline-primary">
+                                   class="btn btn-sm btn-primary">
                                     Modifier
                                 </a>
                             <?php endif; ?>
@@ -147,7 +147,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                                 <form method="POST"
                                       action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                       onsubmit="return confirm('Confirmer la suppression ?');">
-                                    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    <button class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             <?php endif; ?>
 
@@ -170,7 +170,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                 <tr>
                     <td></td>
                     <td colspan="6">
-                        <div class="p-3 rounded-3 border-start border-4 border-success bg-success bg-opacity-10 mb-2">
+                        <div class="p-3 rounded-3 border-start border-4 bg-opacity-10 mb-2">
                             <div class="fw-bold text-success mb-1">APPRO PN</div>
                             <div class="small">
                                 <strong>PN:</strong> <?= e($a['pn']) ?> |
