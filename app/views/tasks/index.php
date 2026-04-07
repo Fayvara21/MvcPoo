@@ -220,11 +220,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Toggle actions column
-            if (actions) {
-                const isVisible = actions.style.display !== 'none';
-                actions.style.display = isVisible ? 'none' : 'table-cell';
-                if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
-            }
+            // Check if subtasks are currently visible
+const subRows = document.querySelectorAll('.sub-task-' + taskId);
+const isExpanded = [...subRows].some(row => row.style.display === 'table-row');
+
+// Opposite logic:
+// expanded → hide actions
+// collapsed → show actions
+if (actions) {
+    actions.style.display = isExpanded ? 'none' : 'table-cell';
+    if (firstActionsHeader) {
+        firstActionsHeader.style.display = isExpanded ? 'none' : 'table-cell';
+    }
+}
         });
     });
 
@@ -252,12 +260,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const actions = taskRow.querySelector('.actions');
                 if (actions) {
-                    actions.style.display = 'none';
+                    actions.style.display = 'table-cell';
                     if (firstActionsHeader) firstActionsHeader.style.display = 'table-cell';
                 }
             } else {
                 taskRow.style.display = 'none';
-                actions.style.display = 'table-cell';
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                     subRow.style.display = 'none';
                 });
