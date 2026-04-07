@@ -81,7 +81,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <th>État</th>
                     <th>Créé</th>
                     <th>Deadline</th>
-                    <th class="actions-header" style="display:none;">Actions</th>
+                    <th class="actions-header" style="">Actions</th>
                 </tr>
             </thead>
 
