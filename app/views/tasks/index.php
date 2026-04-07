@@ -131,7 +131,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
                     <td class="small text-muted"><?= e($task['due_date']) ?></td>
-                    <td class="actions" style="display:none;">
+                    <td class="actions" style=";">
                         <div class="d-flex gap-1 flex-wrap">
                             <?php if ($canEdit): ?>
                                 <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
