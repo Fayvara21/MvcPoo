@@ -252,11 +252,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const actions = taskRow.querySelector('.actions');
                 if (actions) {
-                    actions.style.display = 'table-cell';
+                    actions.style.display = 'none';
                     if (firstActionsHeader) firstActionsHeader.style.display = 'table-cell';
                 }
             } else {
                 taskRow.style.display = 'none';
+                actions.style.display = 'table-cell';
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                     subRow.style.display = 'none';
                 });
