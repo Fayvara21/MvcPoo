@@ -220,11 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Toggle actions column
-            if (actions) {
-                const isVisible = actions.style.display !== 'table-cell';
-                actions.style.display = isVisible ? 'none' : 'table-cell';
-                if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
-            }
+
         });
     });
 
@@ -250,11 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
                     subRow.style.display = 'table-row';
                 });
-                const actions = taskRow.querySelector('.actions');
-                if (actions) {
-                    actions.style.display = 'table-cell';
-                    if (firstActionsHeader) firstActionsHeader.style.display = 'table-cell';
-                }
+                
             } else {
                 taskRow.style.display = 'none';
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function(subRow) {
