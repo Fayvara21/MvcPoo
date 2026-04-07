@@ -220,19 +220,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Toggle actions column
-            // Check if subtasks are currently visible
-const subRows = document.querySelectorAll('.sub-task-' + taskId);
-const isExpanded = [...subRows].some(row => row.style.display === 'table-row');
-
-// Opposite logic:
-// expanded → hide actions
-// collapsed → show actions
-if (actions) {
-    actions.style.display = isExpanded ? 'none' : 'table-cell';
-    if (firstActionsHeader) {
-        firstActionsHeader.style.display = isExpanded ? 'none' : 'table-cell';
-    }
-}
+            if (actions) {
+                const isVisible = actions.style.display !== 'table-cell';
+                actions.style.display = isVisible ? 'none' : 'table-cell';
+                if (firstActionsHeader) firstActionsHeader.style.display = isVisible ? 'none' : 'table-cell';
+            }
         });
     });
 
