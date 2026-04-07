@@ -181,7 +181,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
 
                 <?php foreach ($retourList as $r): ?>
                     <?php $subIndex++; ?>
-                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                    <tr class="bg-light sub-task-<?= $taskId ?>" style="">
                         <td><?= $subIndex ?></td>
                         <td colspan="6">
                             <div class="small fw-semibold mb-1 text-dark">RETOUR</div>

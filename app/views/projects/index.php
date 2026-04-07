@@ -143,4 +143,51 @@
 
     <?php endif; ?>
 
+<div class="container my-4">
+  <div class="p-4 border rounded shadow-sm bg-light">
+
+    <h4 class="mb-3 text-primary">Compte rendu – Points à venir</h4>
+
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item">Changelog et roadmap</li>
+      <li class="list-group-item">OF obligatoire</li>
+      <li class="list-group-item">
+        Ouvrir de nouveaux groupes de travail :
+        <ul class="mt-2">
+          <li>BE</li>
+          <li>Qualité</li>
+        </ul>
+      </li>
+      <li class="list-group-item">Ajouter une partie Qualité pour la métrologie</li>
+      <li class="list-group-item">Liste déroulante</li>
+      <li class="list-group-item">
+        Recherche de stock à ADV avec :
+        <ul class="mt-2">
+          <li>Réponse écrite (stock vrai, faux ou partiel)</li>
+          <li>Quantité</li>
+          <li>Documents en pièce jointe</li>
+        </ul>
+      </li>
+      <li class="list-group-item">Recherche globale dans toute la base de données</li>
+      <li class="list-group-item">Statuts « en achat » et « en sous-traitance »</li>
+      <li class="list-group-item">Ajout de nouvelles couleurs</li>
+      <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
+      <li class="list-group-item">Ajouter l’heure de clôture dans l’historique</li>
+      <li class="list-group-item">Ajouter le demandeur et la personne ayant soldé</li>
+      <li class="list-group-item">Ajouter un onglet contact pour les rapports d’incident</li>
+      <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
+      <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
+    </ul>
+
+    <h4 class="mb-3 text-success">Modules futurs envisagés</h4>
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Demande d’achat indirect avec notification au responsable</li>
+      <li class="list-group-item">Demande moyens généraux (ex : location de voiture)</li>
+      <li class="list-group-item">Demande d’achat direct (à traiter en dernier car plus complexe)</li>
+    </ul>
+
+  </div>
+</div>
+
 </div>
