@@ -36,23 +36,19 @@ function e($str)
                         <h5 class="fw-semibold mb-3">Informations générales</h5>
 
                         <div class="mb-3">
-                            <label class="form-label fw-medium">BP (titre, référence): <span
-                                    class="text-danger">*</span></label>
-                            <input class="form-control form-control-lg" type="text" name="title"
-                                value="<?= e($task['title']) ?>" required>
+                            <label class="form-label fw-medium">BP (titre, référence): <span class="text-danger">*</span></label>
+                            <input class="form-control form-control-lg" type="text" name="title" value="<?= e($task['title']) ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-medium">Description :</label>
-                            <textarea class="form-control" name="desc"
-                                rows="3"><?= e($task['description']) ?></textarea>
+                            <textarea class="form-control" name="desc" rows="3"><?= e($task['description']) ?></textarea>
                         </div>
 
                         <div class="row g-3">
                             <div class="col-md-6 col-lg-8">
                                 <label class="form-label fw-medium">Date limite</label>
-                                <input type="datetime-local" class="form-control" name="dueDate"
-                                    value="<?= $task['due_date'] ? date('Y-m-d\TH:i', strtotime($task['due_date'])) : '' ?>">
+                                <input type="datetime-local" class="form-control" name="dueDate" value="<?= $task['due_date'] ? date('Y-m-d\TH:i', strtotime($task['due_date'])) : '' ?>">
                             </div>
 
                             <div class="col-md-6 col-lg-4">
@@ -60,17 +56,14 @@ function e($str)
                                 <select class="form-select" name="type" id="taskType" required>
                                     <option value="">Sélectionner un type</option>
                                     <option value="appro" <?= $selectedType === 'appro' ? 'selected' : '' ?>>Appro</option>
-                                    <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>Retour
-                                    </option>
+                                    <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>Retour</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="d-flex gap-2 justify-content-end border-top pt-4 mt-4">
-                            <a href="javascript:history.back()" class="btn btn-outline-secondary px-4"><i
-                                    class="bi bi-x-lg me-2"></i>Annuler</a>
-                            <button type="submit" class="btn btn-primary px-5"><i
-                                    class="bi bi-check-lg me-2"></i>Enregistrer</button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary px-4"><i class="bi bi-x-lg me-2"></i>Annuler</a>
+                            <button type="submit" class="btn btn-primary px-5"><i class="bi bi-check-lg me-2"></i>Enregistrer</button>
                         </div>
                     </div>
                 </div>
@@ -94,28 +87,39 @@ function e($str)
                             <?php foreach ($approList as $i => $a): ?>
                                 <div class="appro-item border rounded p-2 mb-2">
                                     <div class="d-flex flex-column gap-2">
-                                        <input class="form-control" name="appro[<?= $i ?>][pn]" placeholder="PN"
-                                            value="<?= e($a['pn'] ?? '') ?>" required>
-                                        <input class="form-control" type="number" name="appro[<?= $i ?>][nb]"
-                                            value="<?= (int) ($a['nb'] ?? 1) ?>">
-                                        <input class="form-control" name="appro[<?= $i ?>][designation]"
-                                            placeholder="Désignation" value="<?= e($a['designation'] ?? '') ?>">
-                                        <input class="form-control" name="appro[<?= $i ?>][of]" placeholder="OF"
-                                            value="<?= e($a['of'] ?? '') ?>">
-                                        <input class="form-control" name="appro[<?= $i ?>][location]"
-                                            placeholder="Emplacement" value="<?= e($a['location'] ?? '') ?>">
-                                        <input class="form-control" name="appro[<?= $i ?>][plane]" placeholder="Avion"
-                                            value="<?= e($a['plane'] ?? '') ?>">
-                                        <input class="form-control" name="appro[<?= $i ?>][oe]" placeholder="OE"
-                                            value="<?= e($a['oe'] ?? '') ?>">
-                                        <button type="button"
-                                            class="btn btn-danger remove-appro mt-1 align-self-start">✕</button>
+                                        <div>
+                                            <label class="form-label fw-medium">PN</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][pn]" value="<?= e($a['pn'] ?? '') ?>" required>
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Quantité</label>
+                                            <input class="form-control" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)($a['nb'] ?? 1) ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Désignation</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][designation]" value="<?= e($a['designation'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">OF</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][of]" value="<?= e($a['of'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Emplacement</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][location]" value="<?= e($a['location'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Avion</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][plane]" value="<?= e($a['plane'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">OE</label>
+                                            <input class="form-control" name="appro[<?= $i ?>][oe]" value="<?= e($a['oe'] ?? '') ?>">
+                                        </div>
+                                        <button type="button" class="btn btn-danger remove-appro mt-1 align-self-start">✕</button>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -127,26 +131,30 @@ function e($str)
                             <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
                         </div>
 
-                        <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">+ Ajouter
-                            retour</button>
-
-                        <!-- REPEATER for RETOUR rows -->
+                        <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">+ Ajouter retour</button>
 
                         <!-- REPEATER for RETOUR rows -->
                         <div id="retourList">
                             <?php foreach ($retourList as $i => $r): ?>
                                 <div class="retour-item border rounded p-2 mb-2">
                                     <div class="d-flex flex-column gap-2">
-                                        <input class="form-control" name="retour[<?= $i ?>][pn]" placeholder="PN"
-                                            value="<?= e($r['pn'] ?? '') ?>">
-                                        <input class="form-control" type="number" name="retour[<?= $i ?>][nb]"
-                                            value="<?= (int) ($r['nb'] ?? 1) ?>">
-                                        <input class="form-control" name="retour[<?= $i ?>][sn]" placeholder="SN"
-                                            value="<?= e($r['sn'] ?? '') ?>">
-                                        <input class="form-control" name="retour[<?= $i ?>][certif]"
-                                            placeholder="Certification" value="<?= e($r['certif'] ?? '') ?>">
-                                        <button type="button"
-                                            class="btn btn-danger remove-retour mt-1 align-self-start">✕</button>
+                                        <div>
+                                            <label class="form-label fw-medium">PN</label>
+                                            <input class="form-control" name="retour[<?= $i ?>][pn]" value="<?= e($r['pn'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Quantité</label>
+                                            <input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)($r['nb'] ?? 1) ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">SN</label>
+                                            <input class="form-control" name="retour[<?= $i ?>][sn]" value="<?= e($r['sn'] ?? '') ?>">
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Certification</label>
+                                            <input class="form-control" name="retour[<?= $i ?>][certif]" value="<?= e($r['certif'] ?? '') ?>">
+                                        </div>
+                                        <button type="button" class="btn btn-danger remove-retour mt-1 align-self-start">✕</button>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -194,13 +202,13 @@ function e($str)
             div.className = 'appro-item border rounded p-2 mb-2';
             div.innerHTML = `
             <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
-                <input class="form-control w-100" name="appro[${index}][pn]" placeholder="PN">
-                <input class="form-control w-100" type="number" name="appro[${index}][nb]" value="1">
-                <input class="form-control w-100" name="appro[${index}][designation]" placeholder="Désignation">
-                <input class="form-control w-100" name="appro[${index}][of]" placeholder="OF">
-                <input class="form-control w-100" name="appro[${index}][location]" placeholder="Emplacement">
-                <input class="form-control w-100" name="appro[${index}][plane]" placeholder="Avion">
-                <input class="form-control w-100" name="appro[${index}][oe]" placeholder="OE">
+                <div><label class="form-label fw-medium">PN</label><input class="form-control w-100" name="appro[${index}][pn]" placeholder="PN"></div>
+                <div><label class="form-label fw-medium">Quantité</label><input class="form-control w-100" type="number" name="appro[${index}][nb]" value="1"></div>
+                <div><label class="form-label fw-medium">Désignation</label><input class="form-control w-100" name="appro[${index}][designation]" placeholder="Désignation"></div>
+                <div><label class="form-label fw-medium">OF</label><input class="form-control w-100" name="appro[${index}][of]" placeholder="OF"></div>
+                <div><label class="form-label fw-medium">Emplacement</label><input class="form-control w-100" name="appro[${index}][location]" placeholder="Emplacement"></div>
+                <div><label class="form-label fw-medium">Avion</label><input class="form-control w-100" name="appro[${index}][plane]" placeholder="Avion"></div>
+                <div><label class="form-label fw-medium">OE</label><input class="form-control w-100" name="appro[${index}][oe]" placeholder="OE"></div>
                 <button type="button" class="btn btn-danger remove-appro">✕</button>
             </div>`;
             container.appendChild(div);
@@ -214,10 +222,10 @@ function e($str)
             div.className = 'retour-item border rounded p-2 mb-2';
             div.innerHTML = `
             <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
-                <input class="form-control w-100" name="retour[${index}][pn]" placeholder="PN">
-                <input class="form-control w-100" type="number" name="retour[${index}][nb]" value="1">
-                <input class="form-control w-100" name="retour[${index}][sn]" placeholder="SN">
-                <input class="form-control w-100" name="retour[${index}][certif]" placeholder="Certification">
+                <div><label class="form-label fw-medium">PN</label><input class="form-control w-100" name="retour[${index}][pn]" placeholder="PN"></div>
+                <div><label class="form-label fw-medium">Quantité</label><input class="form-control w-100" type="number" name="retour[${index}][nb]" value="1"></div>
+                <div><label class="form-label fw-medium">SN</label><input class="form-control w-100" name="retour[${index}][sn]" placeholder="SN"></div>
+                <div><label class="form-label fw-medium">Certification</label><input class="form-control w-100" name="retour[${index}][certif]" placeholder="Certification"></div>
                 <button type="button" class="btn btn-danger remove-retour">✕</button>
             </div>`;
             container.appendChild(div);
