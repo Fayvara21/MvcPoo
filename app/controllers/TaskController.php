@@ -40,50 +40,25 @@ class TaskController extends BaseController
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {
-
-                $shared = [
-                    'designation' => $_POST['appro_designation'] ?? null,
-                    'of' => $_POST['appro_of'] ?? null,
-                    'location' => $_POST['appro_location'] ?? null,
-                    'plane' => $_POST['appro_plane'] ?? null,
-                    'oe' => $_POST['appro_oe'] ?? null,
-                ];
-
-                foreach ($_POST['appro'] as $row) {
-
-                    if (empty(trim($row['pn'] ?? ''))) continue;
-
-                    Appro::create(
-                        $taskId,
-                        $row['pn'],
-                        $row['nb'] ?? 1,
-                        $shared['designation'],
-                        $shared['of'],
-                        $shared['location'],
-                        $shared['plane'],
-                        $shared['oe']
-                    );
-                }
+                Appro::createMultiple(
+                    $taskId,
+                    $_POST['appro'],
+                    $_POST['appro_designation'] ?? null,
+                    $_POST['appro_of'] ?? null,
+                    $_POST['appro_location'] ?? null,
+                    $_POST['appro_plane'] ?? null,
+                    $_POST['appro_oe'] ?? null
+                );
             }
 
             // === RETOUR ===
             if ($type === 'retour' && !empty($_POST['retour'])) {
-
-                $sn = $_POST['retour_sn'] ?? null;
-                $certif = $_POST['retour_certif'] ?? null;
-
-                foreach ($_POST['retour'] as $row) {
-
-                    if (empty(trim($row['PN'] ?? ''))) continue;
-
-                    Retour::create(
-                        $taskId,
-                        $row['PN'], // ✅ keep uppercase
-                        $row['nb'] ?? 1,
-                        $sn,
-                        $certif
-                    );
-                }
+                Retour::createMultiple(
+                    $taskId,
+                    $_POST['retour'],
+                    $_POST['retour_sn'] ?? null,
+                    $_POST['retour_certif'] ?? null
+                );
             }
 
             header("Location: /projects/$id/tasks");
@@ -125,114 +100,32 @@ class TaskController extends BaseController
 
             $type = $_POST['type'] ?? '';
 
-            // =========================
-            // ======== APPRO ==========
-            // =========================
+            // === APPRO ===
             if ($type === 'appro') {
+                Appro::editMultiple(
+                    $task['id'],
+                    $_POST['appro'] ?? [],
+                    $_POST['appro_designation'] ?? null,
+                    $_POST['appro_of'] ?? null,
+                    $_POST['appro_location'] ?? null,
+                    $_POST['appro_plane'] ?? null,
+                    $_POST['appro_oe'] ?? null
+                );
 
-                $existing = Appro::findByTaskId($task['id']);
-                $existingIds = array_column($existing, 'ID');
-                $submittedIds = [];
-
-                $shared = [
-                    'designation' => $_POST['appro_designation'] ?? null,
-                    'of' => $_POST['appro_of'] ?? null,
-                    'location' => $_POST['appro_location'] ?? null,
-                    'plane' => $_POST['appro_plane'] ?? null,
-                    'oe' => $_POST['appro_oe'] ?? null,
-                ];
-
-                foreach ($_POST['appro'] ?? [] as $row) {
-
-                    if (empty(trim($row['pn'] ?? ''))) continue;
-
-                    if (!empty($row['id'])) {
-                        // UPDATE
-                        Appro::update(
-                            $row['id'],
-                            $row['pn'],
-                            $row['nb'] ?? 1,
-                            $shared['designation'],
-                            $shared['of'],
-                            $shared['location'],
-                            $shared['plane'],
-                            $shared['oe']
-                        );
-
-                        $submittedIds[] = $row['id'];
-
-                    } else {
-                        // INSERT
-                        Appro::create(
-                            $task['id'],
-                            $row['pn'],
-                            $row['nb'] ?? 1,
-                            $shared['designation'],
-                            $shared['of'],
-                            $shared['location'],
-                            $shared['plane'],
-                            $shared['oe']
-                        );
-                    }
-                }
-
-                // DELETE removed
-                $toDelete = array_diff($existingIds, $submittedIds);
-                foreach ($toDelete as $id) {
-                    Appro::delete($id);
-                }
-
-                // clean opposite table
+                // Ensure RETOUR is cleared
                 Retour::deleteByTaskId($task['id']);
             }
 
-            // =========================
-            // ======== RETOUR =========
-            // =========================
+            // === RETOUR ===
             if ($type === 'retour') {
+                Retour::editMultiple(
+                    $task['id'],
+                    $_POST['retour'] ?? [],
+                    $_POST['retour_sn'] ?? null,
+                    $_POST['retour_certif'] ?? null
+                );
 
-                $existing = Retour::findByTaskId($task['id']);
-                $existingIds = array_column($existing, 'ID');
-                $submittedIds = [];
-
-                $sn = $_POST['retour_sn'] ?? null;
-                $certif = $_POST['retour_certif'] ?? null;
-
-                foreach ($_POST['retour'] ?? [] as $row) {
-
-                    if (empty(trim($row['PN'] ?? ''))) continue;
-
-                    if (!empty($row['id'])) {
-                        // UPDATE
-                        Retour::update(
-                            $row['id'],
-                            $row['PN'], // ✅ keep uppercase
-                            $row['nb'] ?? 1,
-                            $sn,
-                            $certif
-                        );
-
-                        $submittedIds[] = $row['id'];
-
-                    } else {
-                        // INSERT
-                        Retour::create(
-                            $task['id'],
-                            $row['PN'],
-                            $row['nb'] ?? 1,
-                            $sn,
-                            $certif
-                        );
-                    }
-                }
-
-                // DELETE removed
-                $toDelete = array_diff($existingIds, $submittedIds);
-                foreach ($toDelete as $id) {
-                    Retour::delete($id);
-                }
-
-                // clean opposite table
+                // Ensure APPRO is cleared
                 Appro::deleteByTaskId($task['id']);
             }
 
