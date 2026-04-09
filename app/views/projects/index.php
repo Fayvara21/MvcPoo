@@ -171,9 +171,9 @@
       <li class="list-group-item">Statuts « en achat » et « en sous-traitance »</li>
       <li class="list-group-item">Ajout de nouvelles couleurs</li>
       <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
-      <li class="list-group-item">Ajouter l’heure de clôture dans l’historique</li>
-      <li class="list-group-item">Ajouter le demandeur et la personne ayant soldé</li>
-      <li class="list-group-item">Ajouter un onglet contact pour les rapports d’incident</li>
+      <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
+      <li class="list-group-item">Ajout du demandeur et de la personne ayant soldé</li>
+      <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
       <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
       <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
     </ul>
