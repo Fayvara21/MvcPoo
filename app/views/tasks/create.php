@@ -104,27 +104,27 @@
                         <hr>
 
                         <!-- SHARED APPRO FIELDS -->
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">Désignation :</label>
                             <input class="form-control" name="appro_designation" placeholder="Designation">
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">OF : <span class="text-danger">*</span></label>
                             <input class="form-control" name="appro_of" placeholder="OF" required>
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">Emplacement :</label>
                             <input class="form-control" name="appro_location" placeholder="Emplacement">
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">Avion :</label>
                             <input class="form-control" name="appro_plane" placeholder="Avion">
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">OE :</label>
                             <input class="form-control" name="appro_oe" placeholder="OE">
                         </div>
@@ -151,12 +151,12 @@
 
                         <hr>
                         <!-- SHARED RETOUR FIELDS -->
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">SN :</label>
                             <input class="form-control" name="retour_sn" placeholder="SN">
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label fw-medium">Certification :</label>
                             <input class="form-control" name="retour_certif" placeholder="Certification">
                         </div>
