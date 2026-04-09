@@ -19,82 +19,82 @@ class TaskController extends BaseController
     }
 
     public function create($id)
-{
-    $this->requireAuth();
+    {
+        $this->requireAuth();
 
-    $project = Project::find($id);
-    if (!str_contains($project["groups"], $_SESSION["group"])) {
-        http_response_code(403);
-        echo json_encode(["error" => "Unauthorized"]);
-        return;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $title   = htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8');
-        $desc    = htmlspecialchars($_POST['desc'], ENT_QUOTES, 'UTF-8');
-        $dueDate = htmlspecialchars($_POST['dueDate'], ENT_QUOTES, 'UTF-8');
-        $type    = $_POST['type'] ?? '';
-
-        // Create the main task
-        $taskId = Task::create($title, $desc, $id, $dueDate);
-
-        // === APPRO ===
-        if ($type === 'appro' && !empty($_POST['appro'])) {
-            $approRows = $_POST['appro'];
-
-            // Shared fields
-            $sharedFields = [
-                'designation' => $_POST['appro_designation'] ?? null,
-                'of'          => $_POST['appro_of'] ?? null,
-                'location'    => $_POST['appro_location'] ?? null,
-                'plane'       => $_POST['appro_plane'] ?? null,
-                'oe'          => $_POST['appro_oe'] ?? null,
-            ];
-
-            foreach ($approRows as $row) {
-                $data = array_merge($row, $sharedFields); // merge shared fields
-                Appro::create(
-                    $taskId,
-                    $data['pn'] ?? null,
-                    $data['nb'] ?? 1,
-                    $data['designation'] ?? null,
-                    $data['of'] ?? null,
-                    $data['location'] ?? null,
-                    $data['plane'] ?? null,
-                    $data['oe'] ?? null
-                );
-            }
+        $project = Project::find($id);
+        if (!str_contains($project["groups"], $_SESSION["group"])) {
+            http_response_code(403);
+            echo json_encode(["error" => "Unauthorized"]);
+            return;
         }
 
-        // === RETOUR ===
-        if ($type === 'retour') {
-            $retourRows = $_POST['retour'] ?? [];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8');
+            $desc = htmlspecialchars($_POST['desc'], ENT_QUOTES, 'UTF-8');
+            $dueDate = htmlspecialchars($_POST['dueDate'], ENT_QUOTES, 'UTF-8');
+            $type = $_POST['type'] ?? '';
 
-            // Shared fields
-            $sharedSn     = $_POST['retour_sn'] ?? null;
-            $sharedCertif = $_POST['retour_certif'] ?? null;
+            // Create the main task
+            $taskId = Task::create($title, $desc, $id, $dueDate);
 
-            foreach ($retourRows as $row) {
-                $data = array_merge($row, [
-                    'sn'     => $sharedSn,
-                    'certif' => $sharedCertif
-                ]);
-                Retour::create(
-                    $taskId,
-                    $data['pn'] ?? null,
-                    $data['nb'] ?? 1,
-                    $data['sn'] ?? null,
-                    $data['certif'] ?? null
-                );
+            // === APPRO ===
+            if ($type === 'appro' && !empty($_POST['appro'])) {
+                $approRows = $_POST['appro'];
+
+                // Shared fields
+                $sharedFields = [
+                    'designation' => $_POST['appro_designation'] ?? null,
+                    'of' => $_POST['appro_of'] ?? null,
+                    'location' => $_POST['appro_location'] ?? null,
+                    'plane' => $_POST['appro_plane'] ?? null,
+                    'oe' => $_POST['appro_oe'] ?? null,
+                ];
+
+                foreach ($approRows as $row) {
+                    $data = array_merge($row, $sharedFields); // merge shared fields
+                    Appro::create(
+                        $taskId,
+                        $data['pn'] ?? null,
+                        $data['nb'] ?? 1,
+                        $data['designation'] ?? null,
+                        $data['of'] ?? null,
+                        $data['location'] ?? null,
+                        $data['plane'] ?? null,
+                        $data['oe'] ?? null
+                    );
+                }
             }
+
+            // === RETOUR ===
+            if ($type === 'retour') {
+                $retourRows = $_POST['retour'] ?? [];
+
+                // Shared fields
+                $sharedSn = $_POST['retour_sn'] ?? null;
+                $sharedCertif = $_POST['retour_certif'] ?? null;
+
+                foreach ($retourRows as $row) {
+                    $data = array_merge($row, [
+                        'sn' => $sharedSn,
+                        'certif' => $sharedCertif
+                    ]);
+                    Retour::create(
+                        $taskId,
+                        $data['pn'] ?? null,
+                        $data['nb'] ?? 1,
+                        $data['sn'] ?? null,
+                        $data['certif'] ?? null
+                    );
+                }
+            }
+
+            header("Location: /projects/$id/tasks");
+            exit;
         }
 
-        header("Location: /projects/$id/tasks");
-        exit;
+        include __DIR__ . '/../views/tasks/create.php';
     }
-
-    include __DIR__ . '/../views/tasks/create.php';
-}
     public function edit($taskId)
     {
         $this->requireAuth();
@@ -117,73 +117,53 @@ class TaskController extends BaseController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Update basic task info
-    Task::edit(
-        $_POST['title'] ?? '',
-        $_POST['desc'] ?? '',
-        $task['id'],
-        $_POST['dueDate'] ?: null
-    );
-
-    $type = $_POST['type'] ?? '';
-
-    // Clear existing entries first
-    Appro::deleteByTaskId($task['id']);
-    Retour::deleteByTaskId($task['id']);
-
-    // === APPRO ===
-    if ($type === 'appro' && !empty($_POST['appro'])) {
-        $approRows = $_POST['appro'];
-
-        // Shared info fields from form
-        $sharedFields = [
-            'designation' => $_POST['appro_designation'] ?? null,
-            'of'          => $_POST['appro_of'] ?? null,
-            'location'    => $_POST['appro_location'] ?? null,
-            'plane'       => $_POST['appro_plane'] ?? null,
-            'oe'          => $_POST['appro_oe'] ?? null,
-        ];
-
-        foreach ($approRows as $row) {
-            $data = array_merge($row, $sharedFields); // merge per-row with shared info
-            Appro::create(
+            // Update basic task info
+            Task::edit(
+                $_POST['title'] ?? '',
+                $_POST['desc'] ?? '',
                 $task['id'],
-                $data['pn'] ?? null,
-                $data['nb'] ?? 1,
-                $data['designation'] ?? null,
-                $data['of'] ?? null,
-                $data['location'] ?? null,
-                $data['plane'] ?? null,
-                $data['oe'] ?? null
+                $_POST['dueDate'] ?: null
             );
+
+            $type = $_POST['type'] ?? '';
+
+            // Clear existing
+            Appro::deleteByTaskId($task['id']);
+            Retour::deleteByTaskId($task['id']);
+
+            // APPRO
+            if ($type === 'appro') {
+                if (!empty($_POST['appro_pn'])) {
+                    Appro::create(
+                        $task['id'],
+                        $_POST['appro_pn'],
+                        $_POST['appro_nb'] ?? 1,
+                        $_POST['appro_designation'] ?? null,
+                        $_POST['appro_of'] ?? null,
+                        $_POST['appro_location'] ?? null,
+                        $_POST['appro_plane'] ?? null,
+                        $_POST['appro_oe'] ?? null
+                    );
+                }
+            }
+
+            // RETOUR
+            if ($type === 'retour') {
+                if (!empty($_POST['retour_pn'])) {
+                    Retour::create(
+                        $task['id'],
+                        $_POST['retour_pn'],
+                        $_POST['retour_nb'] ?? 1,
+                        $_POST['retour_sn'] ?? null,
+                        $_POST['retour_certif'] ?? null
+                    );
+                }
+            }
+
+            // Redirect to avoid duplicate POST
+            header("Location: /projects/{$task['project_id']}/tasks");
+            exit;
         }
-    }
-
-    // === RETOUR ===
-if ($type === 'retour') {
-
-    $retourRows = $_POST['retour'] ?? [];
-
-    // Ensure at least one row exists
-    if (empty($retourRows)) {
-        $retourRows = [[]];
-    }
-
-    $sharedSn     = $_POST['retour_sn'] ?? null;
-    $sharedCertif = $_POST['retour_certif'] ?? null;
-
-    Retour::createMultiple(
-        $task['id'],
-        $retourRows,
-        $sharedSn,
-        $sharedCertif
-    );
-}
-
-    // Redirect to avoid duplicate POST
-    header("Location: /projects/{$task['project_id']}/tasks");
-    exit;
-}
         include __DIR__ . '/../views/tasks/edit.php';
     }
 
