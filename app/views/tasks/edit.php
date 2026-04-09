@@ -16,7 +16,7 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
 <div class="row g-4">
 
     <!-- LEFT: MAIN FORM -->
-    <div class="col-10 col-lg-5">
+    <div class="col-12 col-lg-5">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white border-0 pt-4 px-4 px-xl-5">
                 <div class="d-flex align-items-center gap-3">
@@ -67,7 +67,7 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
     </div>
 
     <!-- RIGHT PANEL -->
-    <div class="col-12 col-lg-4">
+    <div class="col-12 col-lg-7">
 
         <!-- APPRO FIELDS -->
         <div id="approFields" style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
@@ -83,15 +83,15 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
                 <div id="approList">
                     <?php foreach ($approList as $i => $a): ?>
                         <div class="appro-item border rounded p-2 mb-2">
-                            <div class="row g-2 align-items-center">
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][pn]" placeholder="PN" value="<?= e($a['pn'] ?? '') ?>" required></div>
-                                <div class="col"><input class="form-control" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)($a['nb'] ?? 1) ?>"></div>
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][designation]" placeholder="Désignation" value="<?= e($a['designation'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][of]" placeholder="OF" value="<?= e($a['of'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][location]" placeholder="Emplacement" value="<?= e($a['location'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][plane]" placeholder="Avion" value="<?= e($a['plane'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][oe]" placeholder="OE" value="<?= e($a['oe'] ?? '') ?>"></div>
-                                <div class="col-auto"><button type="button" class="btn btn-danger remove-appro">✕</button></div>
+                            <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][pn]" placeholder="PN" value="<?= e($a['pn'] ?? '') ?>" required>
+                                <input class="form-control w-100" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)($a['nb'] ?? 1) ?>">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][designation]" placeholder="Désignation" value="<?= e($a['designation'] ?? '') ?>">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][of]" placeholder="OF" value="<?= e($a['of'] ?? '') ?>">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][location]" placeholder="Emplacement" value="<?= e($a['location'] ?? '') ?>">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][plane]" placeholder="Avion" value="<?= e($a['plane'] ?? '') ?>">
+                                <input class="form-control w-100" name="appro[<?= $i ?>][oe]" placeholder="OE" value="<?= e($a['oe'] ?? '') ?>">
+                                <button type="button" class="btn btn-danger remove-appro">✕</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -113,12 +113,12 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
                 <div id="retourList">
                     <?php foreach ($retourList as $i => $r): ?>
                         <div class="retour-item border rounded p-2 mb-2">
-                            <div class="row g-2 align-items-center">
-                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][pn]" placeholder="PN" value="<?= e($r['pn'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)($r['nb'] ?? 1) ?>"></div>
-                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][sn]" placeholder="SN" value="<?= e($r['sn'] ?? '') ?>"></div>
-                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][certif]" placeholder="Certification" value="<?= e($r['certif'] ?? '') ?>"></div>
-                                <div class="col-auto"><button type="button" class="btn btn-danger remove-retour">✕</button></div>
+                            <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
+                                <input class="form-control w-100" name="retour[<?= $i ?>][pn]" placeholder="PN" value="<?= e($r['pn'] ?? '') ?>">
+                                <input class="form-control w-100" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)($r['nb'] ?? 1) ?>">
+                                <input class="form-control w-100" name="retour[<?= $i ?>][sn]" placeholder="SN" value="<?= e($r['sn'] ?? '') ?>">
+                                <input class="form-control w-100" name="retour[<?= $i ?>][certif]" placeholder="Certification" value="<?= e($r['certif'] ?? '') ?>">
+                                <button type="button" class="btn btn-danger remove-retour">✕</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -165,15 +165,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'appro-item border rounded p-2 mb-2';
         div.innerHTML = `
-            <div class="row g-2 align-items-center">
-                <div class="col"><input class="form-control" name="appro[${index}][pn]" placeholder="PN"></div>
-                <div class="col"><input class="form-control" type="number" name="appro[${index}][nb]" value="1"></div>
-                <div class="col"><input class="form-control" name="appro[${index}][designation]" placeholder="Désignation"></div>
-                <div class="col"><input class="form-control" name="appro[${index}][of]" placeholder="OF"></div>
-                <div class="col"><input class="form-control" name="appro[${index}][location]" placeholder="Emplacement"></div>
-                <div class="col"><input class="form-control" name="appro[${index}][plane]" placeholder="Avion"></div>
-                <div class="col"><input class="form-control" name="appro[${index}][oe]" placeholder="OE"></div>
-                <div class="col-auto"><button type="button" class="btn btn-danger remove-appro">✕</button></div>
+            <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
+                <input class="form-control w-100" name="appro[${index}][pn]" placeholder="PN">
+                <input class="form-control w-100" type="number" name="appro[${index}][nb]" value="1">
+                <input class="form-control w-100" name="appro[${index}][designation]" placeholder="Désignation">
+                <input class="form-control w-100" name="appro[${index}][of]" placeholder="OF">
+                <input class="form-control w-100" name="appro[${index}][location]" placeholder="Emplacement">
+                <input class="form-control w-100" name="appro[${index}][plane]" placeholder="Avion">
+                <input class="form-control w-100" name="appro[${index}][oe]" placeholder="OE">
+                <button type="button" class="btn btn-danger remove-appro">✕</button>
             </div>`;
         container.appendChild(div);
     });
@@ -185,12 +185,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'retour-item border rounded p-2 mb-2';
         div.innerHTML = `
-            <div class="row g-2 align-items-center">
-                <div class="col"><input class="form-control" name="retour[${index}][pn]" placeholder="PN"></div>
-                <div class="col"><input class="form-control" type="number" name="retour[${index}][nb]" value="1"></div>
-                <div class="col"><input class="form-control" name="retour[${index}][sn]" placeholder="SN"></div>
-                <div class="col"><input class="form-control" name="retour[${index}][certif]" placeholder="Certification"></div>
-                <div class="col-auto"><button type="button" class="btn btn-danger remove-retour">✕</button></div>
+            <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
+                <input class="form-control w-100" name="retour[${index}][pn]" placeholder="PN">
+                <input class="form-control w-100" type="number" name="retour[${index}][nb]" value="1">
+                <input class="form-control w-100" name="retour[${index}][sn]" placeholder="SN">
+                <input class="form-control w-100" name="retour[${index}][certif]" placeholder="Certification">
+                <button type="button" class="btn btn-danger remove-retour">✕</button>
             </div>`;
         container.appendChild(div);
     });
