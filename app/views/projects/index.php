@@ -146,22 +146,21 @@
 <div class="container my-4">
   <div class="p-4 border rounded shadow-sm bg-light">
 
-    <h4 class="mb-3 text-primary">Compte rendu – Points à venir</h4>
+    <h4 class="mb-3 text-primary">Mises à jour à venir:</h4>
 
     <ul class="list-group list-group-flush mb-4">
-      <li class="list-group-item">Changelog et roadmap</li>
       <li class="list-group-item">OF obligatoire</li>
       <li class="list-group-item">
-        Ouvrir de nouveaux groupes de travail :
+        Ouverture de nouveaux groupes de travail :
         <ul class="mt-2">
           <li>BE</li>
           <li>Qualité</li>
         </ul>
       </li>
-      <li class="list-group-item">Ajouter une partie Qualité pour la métrologie</li>
-      <li class="list-group-item">Liste déroulante</li>
+      <li class="list-group-item">Ajout de la partie partie Qualité pour la métrologie</li>
+      <li class="list-group-item">Liste déroulante pour la création de taches</li>
       <li class="list-group-item">
-        Recherche de stock à ADV avec :
+        Recherche de stock pour l'ADV avec :
         <ul class="mt-2">
           <li>Réponse écrite (stock vrai, faux ou partiel)</li>
           <li>Quantité</li>
