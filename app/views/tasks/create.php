@@ -7,7 +7,8 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/projects" class="text-decoration-none">Projets</a></li>
-                <li class="breadcrumb-item"><a href="/projects/<?= $_GET['project_id'] ?? '' ?>" class="text-decoration-none">Projet</a></li>
+                <li class="breadcrumb-item"><a href="/projects/<?= $_GET['project_id'] ?? '' ?>"
+                        class="text-decoration-none">Projet</a></li>
                 <li class="breadcrumb-item active">Nouvelle tâche</li>
             </ol>
         </nav>
@@ -53,10 +54,8 @@
                         <div class="row g-3">
                             <div class="col-md-6 col-lg-8">
                                 <label class="form-label fw-medium">Date limite</label>
-                                <input type="datetime-local"
-                                       class="form-control"
-                                       name="dueDate"
-                                       min="<?= date('Y-m-d\TH:i') ?>">
+                                <input type="datetime-local" class="form-control" name="dueDate"
+                                    min="<?= date('Y-m-d\TH:i') ?>">
                             </div>
 
                             <div class="col-md-6 col-lg-4">
@@ -94,22 +93,20 @@
                             <h5 class="fw-semibold mb-0">Informations APPRO</h5>
                         </div>
 
-			<!-- MULTI ROW -->
-<button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">
+                        <!-- MULTI ROW -->
+                        <button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">
                             + Ajouter PN
                         </button>
                         <div id="approList"></div>
 
-                        
+
 
                         <hr>
 
                         <!-- SHARED -->
                         <input class="form-control mb-2" name="appro_designation" placeholder="Designation">
-                        <div>
-                            <input class="form-control mb-2" name="appro_of" placeholder="OF" required> 
-                            <span class="text-danger">*</span>
-                        </div>
+                        <span class="text-danger">*</span>
+                        <input class="form-control mb-2" name="appro_of" placeholder="OF" required>
                         <input class="form-control mb-2" name="appro_location" placeholder="Emplacement">
                         <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
                         <input class="form-control" name="appro_oe" placeholder="OE">
@@ -124,15 +121,15 @@
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="badge bg-warning text-dark">RETOUR</span>
                             <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
-			</div>
-<button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">
+                        </div>
+                        <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">
                             + Ajouter retour
                         </button>
 
                         <!-- MULTI ROW -->
                         <div id="retourList"></div>
 
-                        
+
 
                         <hr>
 
@@ -152,27 +149,27 @@
 </div>
 
 <script>
-const typeSelect = document.getElementById("taskType");
-const approFields = document.getElementById("approFields");
-const retourFields = document.getElementById("retourFields");
+    const typeSelect = document.getElementById("taskType");
+    const approFields = document.getElementById("approFields");
+    const retourFields = document.getElementById("retourFields");
 
-typeSelect.addEventListener("change", function() {
-    approFields.style.display = "none";
-    retourFields.style.display = "none";
+    typeSelect.addEventListener("change", function () {
+        approFields.style.display = "none";
+        retourFields.style.display = "none";
 
-    if (this.value === "appro") approFields.style.display = "block";
-    if (this.value === "retour") retourFields.style.display = "block";
-});
+        if (this.value === "appro") approFields.style.display = "block";
+        if (this.value === "retour") retourFields.style.display = "block";
+    });
 
-// === APPRO REPEATER ===
-document.getElementById('addAppro').addEventListener('click', function () {
-    const container = document.getElementById('approList');
-    const index = container.children.length;
+    // === APPRO REPEATER ===
+    document.getElementById('addAppro').addEventListener('click', function () {
+        const container = document.getElementById('approList');
+        const index = container.children.length;
 
-    const div = document.createElement('div');
-    div.className = 'border rounded p-2 mb-2';
+        const div = document.createElement('div');
+        div.className = 'border rounded p-2 mb-2';
 
-    div.innerHTML = `
+        div.innerHTML = `
         <div class="row g-2">
             <div class="col">
                 <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
@@ -186,18 +183,18 @@ document.getElementById('addAppro').addEventListener('click', function () {
         </div>
     `;
 
-    container.appendChild(div);
-});
+        container.appendChild(div);
+    });
 
-// === RETOUR REPEATER ===
-document.getElementById('addRetour').addEventListener('click', function () {
-    const container = document.getElementById('retourList');
-    const index = container.children.length;
+    // === RETOUR REPEATER ===
+    document.getElementById('addRetour').addEventListener('click', function () {
+        const container = document.getElementById('retourList');
+        const index = container.children.length;
 
-    const div = document.createElement('div');
-    div.className = 'border rounded p-2 mb-2';
+        const div = document.createElement('div');
+        div.className = 'border rounded p-2 mb-2';
 
-    div.innerHTML = `
+        div.innerHTML = `
         <div class="row g-2">
             <div class="col">
                 <input class="form-control" name="retour[${index}][pn]" placeholder="PN" required>
@@ -211,15 +208,15 @@ document.getElementById('addRetour').addEventListener('click', function () {
         </div>
     `;
 
-    container.appendChild(div);
-});
+        container.appendChild(div);
+    });
 
-// REMOVE BUTTON
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('remove')) {
-        e.target.closest('.border').remove();
-    }
-});
+    // REMOVE BUTTON
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove')) {
+            e.target.closest('.border').remove();
+        }
+    });
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
