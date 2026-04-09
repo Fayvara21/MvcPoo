@@ -1,9 +1,5 @@
 <?php
 
-require_once '../core/Database.php';
-require_once 'Appro.php';
-require_once 'Retour.php';
-
 class Task
 {
     public static function all()
@@ -35,13 +31,114 @@ class Task
         return $db->lastInsertId();
     }
 
+    public static function markAsCompleted($id, $state)
+    {
+        $db = Database::getInstance()->getPdo();
+        $stmt = $db->prepare("UPDATE tasks SET is_completed = :state WHERE id = :id");
+        $stmt->execute(['id' => $id, 'state' => $state]);
+    }
+
+    public static function delete($id)
+    {
+        $db = Database::getInstance()->getPdo();
+
+        // Delete related APPRO and RETOUR entries first
+        $stmt = $db->prepare("DELETE FROM appro WHERE TaskID = :id");
+        $stmt->execute(['id' => $id]);
+
+        $stmt = $db->prepare("DELETE FROM retour WHERE TaskID = :id");
+        $stmt->execute(['id' => $id]);
+
+        // Then delete task
+        $stmt = $db->prepare("DELETE FROM tasks WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+    }
+
+    public static function getAuthorizedTasksForAllProjects()
+    {
+        $db = Database::getInstance()->getPdo();
+
+        $userGroups = isset($_SESSION['group'])
+            ? array_map('trim', explode(',', $_SESSION['group']))
+            : [];
+
+        if (empty($userGroups)) return [];
+
+        $conditions = array_map(fn($g) => "FIND_IN_SET('$g', p.`groups`)", $userGroups);
+        $where = '(' . implode(' OR ', $conditions) . ')';
+
+        $sql = "
+            SELECT 
+                t.id,
+                t.title,
+                t.description,
+                t.created_at,
+                t.due_date,
+                t.project_id,
+                t.is_completed,
+                p.title AS project_title
+            FROM tasks t
+            INNER JOIN projects p ON t.project_id = p.id
+            WHERE {$where} 
+            AND t.is_completed = 0
+            ORDER BY t.due_date IS NULL, t.due_date ASC
+        ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return self::attachApproRetour($tasks);
+    }
+
+    public static function getAuthorizedProjects()
+    {
+        $db = Database::getInstance()->getPdo();
+
+        $userGroups = isset($_SESSION['group'])
+            ? array_map('trim', explode(',', $_SESSION['group']))
+            : [];
+
+        if (empty($userGroups)) return [];
+
+        $conditions = array_map(fn($g) => "FIND_IN_SET('$g', `groups`)", $userGroups);
+        $where = '(' . implode(' OR ', $conditions) . ')';
+
+        $stmt = $db->query("
+            SELECT id, title
+            FROM projects
+            WHERE {$where}
+            ORDER BY title ASC
+        ");
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function findTask($taskID)
+    {
+        $db = Database::getInstance()->getPdo();
+
+        $stmt = $db->prepare("SELECT * FROM tasks WHERE id = ?");
+        $stmt->execute([$taskID]);
+        $task = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($task) {
+            $tasksWithData = self::attachApproRetour([$task]);
+            return $tasksWithData[0] ?? $task;
+        }
+
+        return null;
+    }
+
     public static function edit($title, $desc, $taskId, $dueDate = null)
     {
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
             UPDATE tasks 
-            SET title = :title, description = :description, due_date = :due_date
+            SET title = :title, 
+                description = :description, 
+                due_date = :due_date
             WHERE id = :id
         ");
 
@@ -53,84 +150,40 @@ class Task
         ]);
     }
 
-    public static function markAsCompleted($id, $state)
+    public static function getAllProjects()
     {
         $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("UPDATE tasks SET is_completed = :state WHERE id = :id");
-        $stmt->execute(['id' => $id, 'state' => $state]);
-    }
-
-    public static function delete($id)
-    {
-        Appro::deleteByTaskId($id);
-        Retour::deleteByTaskId($id);
-
-        $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("DELETE FROM tasks WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-    }
-
-    public static function findTask($taskID)
-    {
-        $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("SELECT * FROM tasks WHERE id = ?");
-        $stmt->execute([$taskID]);
-        $task = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($task) {
-            $tasksWithData = self::attachApproRetour([$task]);
-            return $tasksWithData[0] ?? $task;
-        }
-        return null;
-    }
-
-    public static function getAuthorizedTasksByProject($projectId)
-    {
-        $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("SELECT * FROM tasks WHERE project_id = ? ORDER BY created_at DESC");
-        $stmt->execute([$projectId]);
-        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return self::attachApproRetour($tasks);
+        $stmt = $db->query("SELECT id, title FROM projects ORDER BY title ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getAllTasksForAllProjects()
     {
         $db = Database::getInstance()->getPdo();
+
         $stmt = $db->query("
-            SELECT t.*, p.title AS project_title
+            SELECT t.id, t.title, t.description, t.created_at, t.due_date, t.project_id, t.is_completed, p.title AS project_title
             FROM tasks t
             INNER JOIN projects p ON t.project_id = p.id
             ORDER BY t.due_date IS NULL, t.due_date ASC
         ");
+
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return self::attachApproRetour($tasks);
     }
 
-    public static function getAuthorizedTasksForAllProjects()
+    public static function getAuthorizedTasksByProject($projectId)
     {
         $db = Database::getInstance()->getPdo();
-        $userGroups = isset($_SESSION['group']) ? array_map('trim', explode(',', $_SESSION['group'])) : [];
-        if (empty($userGroups)) return [];
 
-        $conditions = array_map(fn($g) => "FIND_IN_SET('$g', p.`groups`)", $userGroups);
-        $where = '(' . implode(' OR ', $conditions) . ')';
-
-        $sql = "
-            SELECT t.*, p.title AS project_title
-            FROM tasks t
-            INNER JOIN projects p ON t.project_id = p.id
-            WHERE {$where} AND t.is_completed = 0
-            ORDER BY t.due_date IS NULL, t.due_date ASC
-        ";
-
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
+        $stmt = $db->prepare("SELECT * FROM tasks WHERE project_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$projectId]);
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return self::attachApproRetour($tasks);
     }
 
-    // Attach APPRO & RETOUR to tasks
+    // Helper: attach multiple APPRO and RETOUR to tasks
     private static function attachApproRetour(array $tasks): array
     {
         if (empty($tasks)) return [];
@@ -140,7 +193,11 @@ class Task
         $placeholders = implode(',', array_fill(0, count($taskIds), '?'));
 
         // APPRO
-        $stmt = $db->prepare("SELECT TaskID, pn, nb, designation, location, plane, `of`, oe FROM appro WHERE TaskID IN ($placeholders)");
+        $stmt = $db->prepare("
+            SELECT TaskID, pn, nb, designation, location, plane, `of`, oe
+            FROM appro
+            WHERE TaskID IN ($placeholders)
+        ");
         $stmt->execute($taskIds);
         $approRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -150,7 +207,11 @@ class Task
         }
 
         // RETOUR
-        $stmt = $db->prepare("SELECT TaskID, PN, nb, sn, certif FROM retour WHERE TaskID IN ($placeholders)");
+        $stmt = $db->prepare("
+            SELECT TaskID, PN, nb, sn, certif
+            FROM retour
+            WHERE TaskID IN ($placeholders)
+        ");
         $stmt->execute($taskIds);
         $retourRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -159,6 +220,7 @@ class Task
             $retourByTask[$row['TaskID']][] = $row;
         }
 
+        // Attach
         foreach ($tasks as &$task) {
             $id = $task['id'];
             $task['appro'] = $approByTask[$id] ?? [];
