@@ -103,13 +103,31 @@
 
                         <hr>
 
-                        <!-- SHARED -->
-                        <input class="form-control mb-2" name="appro_designation" placeholder="Designation">
-                        <span class="text-danger">Obligatoire:</span>
-                        <input class="form-control mb-2" name="appro_of" placeholder="OF" required>
-                        <input class="form-control mb-2" name="appro_location" placeholder="Emplacement">
-                        <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
-                        <input class="form-control" name="appro_oe" placeholder="OE">
+                        <!-- SHARED APPRO FIELDS -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Désignation :</label>
+                            <input class="form-control" name="appro_designation" placeholder="Designation">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">OF : <span class="text-danger">*</span></label>
+                            <input class="form-control" name="appro_of" placeholder="OF" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Emplacement :</label>
+                            <input class="form-control" name="appro_location" placeholder="Emplacement">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Avion :</label>
+                            <input class="form-control" name="appro_plane" placeholder="Avion">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">OE :</label>
+                            <input class="form-control" name="appro_oe" placeholder="OE">
+                        </div>
 
                     </div>
                 </div>
@@ -132,10 +150,16 @@
 
 
                         <hr>
+                        <!-- SHARED RETOUR FIELDS -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">SN :</label>
+                            <input class="form-control" name="retour_sn" placeholder="SN">
+                        </div>
 
-                        <!-- SHARED -->
-                        <input class="form-control mb-2" name="retour_sn" placeholder="SN">
-                        <input class="form-control" name="retour_certif" placeholder="Certification">
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Certification :</label>
+                            <input class="form-control" name="retour_certif" placeholder="Certification">
+                        </div>
 
                     </div>
                 </div>
