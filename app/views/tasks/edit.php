@@ -4,6 +4,9 @@
 $approList = Appro::findByTaskId($task['id']) ?? [];
 $retourList = Retour::findByTaskId($task['id']) ?? [];
 
+$approShared = $approList[0] ?? [];
+$retourShared = $retourList[0] ?? [];
+
 function e($str) {
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
 }
@@ -24,73 +27,69 @@ function e($str) {
                 <textarea class="form-control mb-3" name="desc"><?= e($task['description']) ?></textarea>
                 <input type="datetime-local" class="form-control mb-3" name="dueDate"
                     value="<?= $task['due_date'] ? date('Y-m-d\TH:i', strtotime($task['due_date'])) : '' ?>">
+                <select class="form-select mb-3" name="type" id="taskType">
+                    <option value="">Type</option>
+                    <option value="appro" <?= count($approList) > 0 ? 'selected' : '' ?>>Appro</option>
+                    <option value="retour" <?= count($retourList) > 0 ? 'selected' : '' ?>>Retour</option>
+                </select>
                 <button class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT: Dedicated Appro/Retour cards -->
+    <!-- RIGHT: APPRO / RETOUR -->
     <div class="col-12 col-lg-5">
 
-        <!-- APPRO Cards -->
-        <?php foreach ($approList as $i => $a): ?>
-        <div class="card mb-3 appro-item border p-3 position-relative">
-            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-appro">X</button>
-            <input type="hidden" name="appro[<?= $i ?>][id]" value="<?= $a['ID'] ?>">
-            <div class="mb-2">
-                <label>PN</label>
-                <input class="form-control" name="appro[<?= $i ?>][pn]" value="<?= e($a['pn']) ?>">
+        <!-- APPRO -->
+        <div id="approFields" style="display: <?= count($approList) > 0 ? 'block' : 'none' ?>;">
+            <div id="approList">
+                <?php foreach ($approList as $i => $a): ?>
+                <div class="card mb-3 appro-item border p-3 position-relative">
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-appro">X</button>
+                    <input type="hidden" name="appro[<?= $i ?>][id]" value="<?= $a['ID'] ?>">
+                    <div class="mb-2">
+                        <label>PN</label>
+                        <input class="form-control" name="appro[<?= $i ?>][pn]" value="<?= e($a['pn']) ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label>Quantity</label>
+                        <input class="form-control" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)$a['nb'] ?>">
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
-            <div class="mb-2">
-                <label>Quantity</label>
-                <input class="form-control" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)$a['nb'] ?>">
-            </div>
-            <div class="mb-2">
-                <label>Designation</label>
-                <input class="form-control" name="appro[<?= $i ?>][designation]" value="<?= e($a['designation'] ?? '') ?>">
-            </div>
-            <div class="mb-2">
-                <label>Of</label>
-                <input class="form-control" name="appro[<?= $i ?>][of]" value="<?= e($a['of'] ?? '') ?>">
-            </div>
-            <div class="mb-2">
-                <label>Location</label>
-                <input class="form-control" name="appro[<?= $i ?>][location]" value="<?= e($a['location'] ?? '') ?>">
-            </div>
-            <div class="mb-2">
-                <label>Plane</label>
-                <input class="form-control" name="appro[<?= $i ?>][plane]" value="<?= e($a['plane'] ?? '') ?>">
-            </div>
-            <div>
-                <label>OE</label>
-                <input class="form-control" name="appro[<?= $i ?>][oe]" value="<?= e($a['oe'] ?? '') ?>">
-            </div>
+            <hr>
+            <!-- Shared fields -->
+            <input class="form-control mb-2" name="appro_designation" value="<?= e($approShared['designation'] ?? '') ?>">
+            <input class="form-control mb-2" name="appro_of" value="<?= e($approShared['of'] ?? '') ?>">
+            <input class="form-control mb-2" name="appro_location" value="<?= e($approShared['location'] ?? '') ?>">
+            <input class="form-control mb-2" name="appro_plane" value="<?= e($approShared['plane'] ?? '') ?>">
+            <input class="form-control" name="appro_oe" value="<?= e($approShared['oe'] ?? '') ?>">
         </div>
-        <?php endforeach; ?>
 
-        <!-- RETOUR Cards -->
-        <?php foreach ($retourList as $i => $r): ?>
-        <div class="card mb-3 retour-item border p-3 position-relative">
-            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-retour">X</button>
-            <input type="hidden" name="retour[<?= $i ?>][id]" value="<?= $r['ID'] ?>">
-            <div class="mb-2">
-                <label>PN</label>
-                <input class="form-control" name="retour[<?= $i ?>][PN]" value="<?= e($r['PN']) ?>">
+        <!-- RETOUR -->
+        <div id="retourFields" style="display: <?= count($retourList) > 0 ? 'block' : 'none' ?>;">
+            <div id="retourList">
+                <?php foreach ($retourList as $i => $r): ?>
+                <div class="card mb-3 retour-item border p-3 position-relative">
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-retour">X</button>
+                    <input type="hidden" name="retour[<?= $i ?>][id]" value="<?= $r['ID'] ?>">
+                    <div class="mb-2">
+                        <label>PN</label>
+                        <input class="form-control" name="retour[<?= $i ?>][PN]" value="<?= e($r['PN']) ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label>Quantity</label>
+                        <input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)$r['nb'] ?>">
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
-            <div class="mb-2">
-                <label>Quantity</label>
-                <input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)$r['nb'] ?>">
-            </div>
-            <div class="mb-2">
-                <label>SN</label>
-                <input class="form-control" name="retour[<?= $i ?>][sn]" value="<?= e($r['sn'] ?? '') ?>">
-            </div>
-            <div>
-                <label>Certif</label>
-                <input class="form-control" name="retour[<?= $i ?>][certif]" value="<?= e($r['certif'] ?? '') ?>">
-            </div>
+            <hr>
+            <!-- Shared fields -->
+            <input class="form-control mb-2" name="retour_sn" value="<?= e($retourShared['sn'] ?? '') ?>">
+            <input class="form-control" name="retour_certif" value="<?= e($retourShared['certif'] ?? '') ?>">
         </div>
-        <?php endforeach; ?>
 
     </div>
 
