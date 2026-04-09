@@ -111,7 +111,7 @@
 
                         <div class="mb-1">
                             <label class="form-label fw-medium">OF : <span class="text-danger">*</span></label>
-                            <input class="form-control" name="appro_of" placeholder="OF" required>
+                            <input class="form-control" name="appro_of" placeholder="OF">
                         </div>
 
                         <div class="mb-1">
