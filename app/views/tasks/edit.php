@@ -222,7 +222,7 @@ function e($str)
             div.className = 'retour-item border rounded p-2 mb-2';
             div.innerHTML = `
             <div class="d-flex flex-column flex-md-row gap-2 align-items-start">
-                <div><label class="form-label fw-medium">PN</label><input class="form-control w-100" name="retour[${index}][pn]" placeholder="PN"></div>
+                <div><label class="form-label fw-medium">PN</label><input class="form-control w-100" name="retour[${index}][PN]" placeholder="PN"></div>
                 <div><label class="form-label fw-medium">Quantité</label><input class="form-control w-100" type="number" name="retour[${index}][nb]" value="1"></div>
                 <div><label class="form-label fw-medium">SN</label><input class="form-control w-100" name="retour[${index}][sn]" placeholder="SN"></div>
                 <div><label class="form-label fw-medium">Certification</label><input class="form-control w-100" name="retour[${index}][certif]" placeholder="Certification"></div>
