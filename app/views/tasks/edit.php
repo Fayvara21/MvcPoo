@@ -70,10 +70,10 @@ function e($str)
             </div>
 
             <!-- RIGHT PANEL -->
-            <div class="col-12 col-lg-7">
+            <div class="col-10 col-lg-5">
 
                 <!-- APPRO FIELDS -->
-                <div id="approFields" style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
+                <div id="approFields"  style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
                     <div class="card shadow-sm border-0 mb-3 p-3">
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="badge bg-primary">APPRO</span>
@@ -140,7 +140,7 @@ function e($str)
                                     <div class="d-flex flex-column gap-2">
                                         <div>
                                             <label class="form-label fw-medium">PN</label>
-                                            <input class="form-control" name="retour[<?= $i ?>][pn]" value="<?= e($r['pn'] ?? '') ?>">
+                                            <input class="form-control" name="retour[<?= $i ?>][PN]" value="<?= e($r['PN'] ?? '') ?>">
                                         </div>
                                         <div>
                                             <label class="form-label fw-medium">Quantité</label>
