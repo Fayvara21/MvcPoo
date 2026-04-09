@@ -1,7 +1,5 @@
 <?php
 require_once '../app/controllers/BaseController.php';
-// require_once '../app/models/Appro.php';
-// require_once '../app/models/Retour.php';
 
 class TaskController extends BaseController
 {
@@ -9,11 +7,13 @@ class TaskController extends BaseController
     {
         $this->requireAuth();
         $project = Project::find($id);
+
         if (!str_contains($project["groups"], $_SESSION["group"])) {
             http_response_code(403);
             echo json_encode(["error" => "Unauthorized"]);
             return;
         }
+
         $tasks = Task::getAuthorizedTasksByProject($id);
         include __DIR__ . "/../views/tasks/index.php";
     }
@@ -30,20 +30,18 @@ class TaskController extends BaseController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title = htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8');
-            $desc = htmlspecialchars($_POST['desc'], ENT_QUOTES, 'UTF-8');
-            $dueDate = htmlspecialchars($_POST['dueDate'], ENT_QUOTES, 'UTF-8');
+
+            $title = $_POST['title'] ?? '';
+            $desc = $_POST['desc'] ?? '';
+            $dueDate = $_POST['dueDate'] ?? null;
             $type = $_POST['type'] ?? '';
 
-            // Create the main task
             $taskId = Task::create($title, $desc, $id, $dueDate);
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {
-                $approRows = $_POST['appro'];
 
-                // Shared fields
-                $sharedFields = [
+                $shared = [
                     'designation' => $_POST['appro_designation'] ?? null,
                     'of' => $_POST['appro_of'] ?? null,
                     'location' => $_POST['appro_location'] ?? null,
@@ -51,40 +49,39 @@ class TaskController extends BaseController
                     'oe' => $_POST['appro_oe'] ?? null,
                 ];
 
-                foreach ($approRows as $row) {
-                    $data = array_merge($row, $sharedFields); // merge shared fields
+                foreach ($_POST['appro'] as $row) {
+
+                    if (empty(trim($row['pn'] ?? ''))) continue;
+
                     Appro::create(
                         $taskId,
-                        $data['pn'] ?? null,
-                        $data['nb'] ?? 1,
-                        $data['designation'] ?? null,
-                        $data['of'] ?? null,
-                        $data['location'] ?? null,
-                        $data['plane'] ?? null,
-                        $data['oe'] ?? null
+                        $row['pn'],
+                        $row['nb'] ?? 1,
+                        $shared['designation'],
+                        $shared['of'],
+                        $shared['location'],
+                        $shared['plane'],
+                        $shared['oe']
                     );
                 }
             }
 
             // === RETOUR ===
-            if ($type === 'retour') {
-                $retourRows = $_POST['retour'] ?? [];
+            if ($type === 'retour' && !empty($_POST['retour'])) {
 
-                // Shared fields
-                $sharedSn = $_POST['retour_sn'] ?? null;
-                $sharedCertif = $_POST['retour_certif'] ?? null;
+                $sn = $_POST['retour_sn'] ?? null;
+                $certif = $_POST['retour_certif'] ?? null;
 
-                foreach ($retourRows as $row) {
-                    $data = array_merge($row, [
-                        'sn' => $sharedSn,
-                        'certif' => $sharedCertif
-                    ]);
+                foreach ($_POST['retour'] as $row) {
+
+                    if (empty(trim($row['PN'] ?? ''))) continue;
+
                     Retour::create(
                         $taskId,
-                        $data['pn'] ?? null,
-                        $data['nb'] ?? 1,
-                        $data['sn'] ?? null,
-                        $data['certif'] ?? null
+                        $row['PN'], // ✅ keep uppercase
+                        $row['nb'] ?? 1,
+                        $sn,
+                        $certif
                     );
                 }
             }
@@ -95,6 +92,7 @@ class TaskController extends BaseController
 
         include __DIR__ . '/../views/tasks/create.php';
     }
+
     public function edit($taskId)
     {
         $this->requireAuth();
@@ -117,7 +115,7 @@ class TaskController extends BaseController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // Update basic task info
+            // === UPDATE TASK ===
             Task::edit(
                 $_POST['title'] ?? '',
                 $_POST['desc'] ?? '',
@@ -127,43 +125,121 @@ class TaskController extends BaseController
 
             $type = $_POST['type'] ?? '';
 
-            // Clear existing
-            Appro::deleteByTaskId($task['id']);
-            Retour::deleteByTaskId($task['id']);
-
-            // APPRO
+            // =========================
+            // ======== APPRO ==========
+            // =========================
             if ($type === 'appro') {
-                if (!empty($_POST['appro_pn'])) {
-                    Appro::create(
-                        $task['id'],
-                        $_POST['appro_pn'],
-                        $_POST['appro_nb'] ?? 1,
-                        $_POST['appro_designation'] ?? null,
-                        $_POST['appro_of'] ?? null,
-                        $_POST['appro_location'] ?? null,
-                        $_POST['appro_plane'] ?? null,
-                        $_POST['appro_oe'] ?? null
-                    );
+
+                $existing = Appro::findByTaskId($task['id']);
+                $existingIds = array_column($existing, 'ID');
+                $submittedIds = [];
+
+                $shared = [
+                    'designation' => $_POST['appro_designation'] ?? null,
+                    'of' => $_POST['appro_of'] ?? null,
+                    'location' => $_POST['appro_location'] ?? null,
+                    'plane' => $_POST['appro_plane'] ?? null,
+                    'oe' => $_POST['appro_oe'] ?? null,
+                ];
+
+                foreach ($_POST['appro'] ?? [] as $row) {
+
+                    if (empty(trim($row['pn'] ?? ''))) continue;
+
+                    if (!empty($row['id'])) {
+                        // UPDATE
+                        Appro::update(
+                            $row['id'],
+                            $row['pn'],
+                            $row['nb'] ?? 1,
+                            $shared['designation'],
+                            $shared['of'],
+                            $shared['location'],
+                            $shared['plane'],
+                            $shared['oe']
+                        );
+
+                        $submittedIds[] = $row['id'];
+
+                    } else {
+                        // INSERT
+                        Appro::create(
+                            $task['id'],
+                            $row['pn'],
+                            $row['nb'] ?? 1,
+                            $shared['designation'],
+                            $shared['of'],
+                            $shared['location'],
+                            $shared['plane'],
+                            $shared['oe']
+                        );
+                    }
                 }
+
+                // DELETE removed
+                $toDelete = array_diff($existingIds, $submittedIds);
+                foreach ($toDelete as $id) {
+                    Appro::delete($id);
+                }
+
+                // clean opposite table
+                Retour::deleteByTaskId($task['id']);
             }
 
-            // RETOUR
+            // =========================
+            // ======== RETOUR =========
+            // =========================
             if ($type === 'retour') {
-                if (!empty($_POST['retour_pn'])) {
-                    Retour::create(
-                        $task['id'],
-                        $_POST['retour_pn'],
-                        $_POST['retour_nb'] ?? 1,
-                        $_POST['retour_sn'] ?? null,
-                        $_POST['retour_certif'] ?? null
-                    );
+
+                $existing = Retour::findByTaskId($task['id']);
+                $existingIds = array_column($existing, 'ID');
+                $submittedIds = [];
+
+                $sn = $_POST['retour_sn'] ?? null;
+                $certif = $_POST['retour_certif'] ?? null;
+
+                foreach ($_POST['retour'] ?? [] as $row) {
+
+                    if (empty(trim($row['PN'] ?? ''))) continue;
+
+                    if (!empty($row['id'])) {
+                        // UPDATE
+                        Retour::update(
+                            $row['id'],
+                            $row['PN'], // ✅ keep uppercase
+                            $row['nb'] ?? 1,
+                            $sn,
+                            $certif
+                        );
+
+                        $submittedIds[] = $row['id'];
+
+                    } else {
+                        // INSERT
+                        Retour::create(
+                            $task['id'],
+                            $row['PN'],
+                            $row['nb'] ?? 1,
+                            $sn,
+                            $certif
+                        );
+                    }
                 }
+
+                // DELETE removed
+                $toDelete = array_diff($existingIds, $submittedIds);
+                foreach ($toDelete as $id) {
+                    Retour::delete($id);
+                }
+
+                // clean opposite table
+                Appro::deleteByTaskId($task['id']);
             }
 
-            // Redirect to avoid duplicate POST
             header("Location: /projects/{$task['project_id']}/tasks");
             exit;
         }
+
         include __DIR__ . '/../views/tasks/edit.php';
     }
 
@@ -187,11 +263,13 @@ class TaskController extends BaseController
     {
         $this->requireAuth();
         $project = Project::find($id);
+
         if (!str_contains($project["groups"], $_SESSION["group"])) {
             http_response_code(403);
             echo json_encode(["error" => "Unauthorized"]);
             return;
         }
+
         $tasks = Task::getAuthorizedTasksByProject($id);
         include __DIR__ . "/../views/tasks/view.php";
     }
