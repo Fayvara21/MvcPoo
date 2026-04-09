@@ -41,7 +41,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
             <a href="/projects/<?= (int)$project['id'] ?>/tasks/create" class="btn btn-primary btn-sm">
                 + Nouvelle demande
             </a>
-            <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher titre, OF, Avion, PN" style="max-width:300px;">
+            <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher dans les demandes" style="max-width:300px;">
         </div>
     </div>
 

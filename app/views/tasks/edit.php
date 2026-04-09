@@ -4,10 +4,6 @@
 $approList = Appro::findByTaskId($task['id']) ?? [[]];
 $retourList = Retour::findByTaskId($task['id']) ?? [[]];
 
-// Shared fields for APPRO and RETOUR
-$approShared = !empty($approList) ? $approList[0] : [];
-$retourShared = !empty($retourList) ? $retourList[0] : [];
-
 // Determine task type
 $selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : '');
 
@@ -79,32 +75,27 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <span class="badge bg-primary">APPRO</span>
                     <h5 class="fw-semibold mb-0">Informations APPRO</h5>
-		</div>
+                </div>
 
-<button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">+ Ajouter PN</button>
+                <button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">+ Ajouter PN</button>
 
-
-                <!-- REPEATER for PN rows -->
+                <!-- REPEATER for APPRO rows -->
                 <div id="approList">
                     <?php foreach ($approList as $i => $a): ?>
                         <div class="appro-item border rounded p-2 mb-2">
                             <div class="row g-2 align-items-center">
                                 <div class="col"><input class="form-control" name="appro[<?= $i ?>][pn]" placeholder="PN" value="<?= e($a['pn'] ?? '') ?>" required></div>
                                 <div class="col"><input class="form-control" type="number" name="appro[<?= $i ?>][nb]" value="<?= (int)($a['nb'] ?? 1) ?>"></div>
+                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][designation]" placeholder="Désignation" value="<?= e($a['designation'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][of]" placeholder="OF" value="<?= e($a['of'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][location]" placeholder="Emplacement" value="<?= e($a['location'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][plane]" placeholder="Avion" value="<?= e($a['plane'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="appro[<?= $i ?>][oe]" placeholder="OE" value="<?= e($a['oe'] ?? '') ?>"></div>
                                 <div class="col-auto"><button type="button" class="btn btn-danger remove-appro">✕</button></div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
-
-                
-                <hr>
-                <!-- Shared fields applied to all PN rows -->
-                <input class="form-control mb-2" name="appro_designation" placeholder="Désignation" value="<?= e($approShared['designation'] ?? '') ?>">
-                <input class="form-control mb-2" name="appro_of" placeholder="OF" value="<?= e($approShared['of'] ?? '') ?>">
-                <input class="form-control mb-2" name="appro_location" placeholder="Emplacement" value="<?= e($approShared['location'] ?? '') ?>">
-                <input class="form-control mb-2" name="appro_plane" placeholder="Avion" value="<?= e($approShared['plane'] ?? '') ?>">
-                <input class="form-control" name="appro_oe" placeholder="OE" value="<?= e($approShared['oe'] ?? '') ?>">
             </div>
         </div>
 
@@ -114,29 +105,24 @@ function e($str) { return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8'); }
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <span class="badge bg-warning text-dark">RETOUR</span>
                     <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
-		</div>
+                </div>
 
-<button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">+ Ajouter retour</button>
+                <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">+ Ajouter retour</button>
 
-
-                <!-- REPEATER for PN/NB only -->
+                <!-- REPEATER for RETOUR rows -->
                 <div id="retourList">
                     <?php foreach ($retourList as $i => $r): ?>
                         <div class="retour-item border rounded p-2 mb-2">
                             <div class="row g-2 align-items-center">
-                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][PN]" placeholder="PN" value="<?= e($r['PN'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][pn]" placeholder="PN" value="<?= e($r['pn'] ?? '') ?>"></div>
                                 <div class="col"><input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)($r['nb'] ?? 1) ?>"></div>
+                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][sn]" placeholder="SN" value="<?= e($r['sn'] ?? '') ?>"></div>
+                                <div class="col"><input class="form-control" name="retour[<?= $i ?>][certif]" placeholder="Certification" value="<?= e($r['certif'] ?? '') ?>"></div>
                                 <div class="col-auto"><button type="button" class="btn btn-danger remove-retour">✕</button></div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
-
-                
-                <hr>
-                <!-- Shared fields applied to all PN/NB rows -->
-                <input class="form-control mb-2" name="retour_sn" placeholder="SN" value="<?= e($retourShared['sn'] ?? '') ?>">
-                <input class="form-control" name="retour_certif" placeholder="Certification" value="<?= e($retourShared['certif'] ?? '') ?>">
             </div>
         </div>
 
@@ -153,22 +139,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const retourFields = document.getElementById('retourFields');
 
     function updateFields() {
-    approFields.style.display = 'none';
-    retourFields.style.display = 'none';
+        approFields.style.display = 'none';
+        retourFields.style.display = 'none';
+        approFields.querySelectorAll('input').forEach(i => i.disabled = true);
+        retourFields.querySelectorAll('input').forEach(i => i.disabled = true);
 
-    approFields.querySelectorAll('input').forEach(i => i.disabled = true);
-    retourFields.querySelectorAll('input').forEach(i => i.disabled = true);
+        if (typeSelect.value === 'appro') {
+            approFields.style.display = 'block';
+            approFields.querySelectorAll('input').forEach(i => i.disabled = false);
+        }
 
-    if (typeSelect.value === 'appro') {
-        approFields.style.display = 'block';
-        approFields.querySelectorAll('input').forEach(i => i.disabled = false);
+        if (typeSelect.value === 'retour') {
+            retourFields.style.display = 'block';
+            retourFields.querySelectorAll('input').forEach(i => i.disabled = false);
+        }
     }
-
-    if (typeSelect.value === 'retour') {
-        retourFields.style.display = 'block';
-        retourFields.querySelectorAll('input').forEach(i => i.disabled = false);
-    }
-}
 
     typeSelect.addEventListener('change', updateFields);
     updateFields();
@@ -183,12 +168,17 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="row g-2 align-items-center">
                 <div class="col"><input class="form-control" name="appro[${index}][pn]" placeholder="PN"></div>
                 <div class="col"><input class="form-control" type="number" name="appro[${index}][nb]" value="1"></div>
+                <div class="col"><input class="form-control" name="appro[${index}][designation]" placeholder="Désignation"></div>
+                <div class="col"><input class="form-control" name="appro[${index}][of]" placeholder="OF"></div>
+                <div class="col"><input class="form-control" name="appro[${index}][location]" placeholder="Emplacement"></div>
+                <div class="col"><input class="form-control" name="appro[${index}][plane]" placeholder="Avion"></div>
+                <div class="col"><input class="form-control" name="appro[${index}][oe]" placeholder="OE"></div>
                 <div class="col-auto"><button type="button" class="btn btn-danger remove-appro">✕</button></div>
             </div>`;
         container.appendChild(div);
     });
 
-    // RETOUR repeater (PN/NB only)
+    // RETOUR repeater
     document.getElementById('addRetour').addEventListener('click', function () {
         const container = document.getElementById('retourList');
         const index = container.children.length;
@@ -196,8 +186,10 @@ document.addEventListener('DOMContentLoaded', function() {
         div.className = 'retour-item border rounded p-2 mb-2';
         div.innerHTML = `
             <div class="row g-2 align-items-center">
-                <div class="col"><input class="form-control" name="retour[${index}][PN]" placeholder="PN"></div>
+                <div class="col"><input class="form-control" name="retour[${index}][pn]" placeholder="PN"></div>
                 <div class="col"><input class="form-control" type="number" name="retour[${index}][nb]" value="1"></div>
+                <div class="col"><input class="form-control" name="retour[${index}][sn]" placeholder="SN"></div>
+                <div class="col"><input class="form-control" name="retour[${index}][certif]" placeholder="Certification"></div>
                 <div class="col-auto"><button type="button" class="btn btn-danger remove-retour">✕</button></div>
             </div>`;
         container.appendChild(div);
