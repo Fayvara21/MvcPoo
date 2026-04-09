@@ -152,7 +152,7 @@ class TaskController extends BaseController
                 foreach ($_POST['retour'] as $row) {
                     Retour::create(
                         $task['id'],
-                        $row['pn'] ?? null,
+                        $row['PN'] ?? null,
                         $row['nb'] ?? 1,
                         $row['sn'] ?? null,
                         $row['certif'] ?? null
