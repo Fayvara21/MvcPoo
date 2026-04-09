@@ -143,6 +143,20 @@
 
     <?php endif; ?>
 
+
+<div class="container my-4">
+    <div class="p-4 border rounded shadow-sm bg-light">
+        <h4 class="mb-3 text-primary">Mise à jour v260409:</h4>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
+            <li class="list-group-item">les demandes peuvent êtres cachées / déroulées en cliquant sur le titre</li> 
+            <li class="list-group-item">Les appro / retours peuvent être modifiés indépendamment après leur création</li>
+            <li class="list-group-item">Ajout d'une barre de recherche pour filtrer les demandes (recherche PN, SN, Avion, etc.)</li>
+        </ul>
+
+</div>
+
 <div class="container my-4">
   <div class="p-4 border rounded shadow-sm bg-light">
 
