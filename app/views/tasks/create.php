@@ -105,7 +105,7 @@
 
                         <!-- SHARED -->
                         <input class="form-control mb-2" name="appro_designation" placeholder="Designation">
-                        <span class="text-danger">*</span>
+                        <span class="text-danger">Obligatoire:</span>
                         <input class="form-control mb-2" name="appro_of" placeholder="OF" required>
                         <input class="form-control mb-2" name="appro_location" placeholder="Emplacement">
                         <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
