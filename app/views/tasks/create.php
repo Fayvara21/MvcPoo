@@ -103,7 +103,7 @@
                                         <input class="form-control" name="appro[0][pn]" placeholder="PN" required>
                                     </div>
                                     <div class="col">
-                                        <input class="form-control" name="appro[0][location]" placeholder="Emplacement" required>
+                                        <input class="form-control" name="appro[0][location]" placeholder="Emplacement">
                                     </div>
                                     <div class="col">
                                         <input class="form-control" type="number" name="appro[0][nb]" value="1">
@@ -260,7 +260,7 @@
                 <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
             </div>
             <div class="col">
-                <input class="form-control" name="appro[${index}][of]" placeholder="OF" required>
+                <input class="form-control" name="appro[${index}][location]" placeholder="Emplacement">
             </div>
             <div class="col">
                 <input class="form-control" type="number" name="appro[${index}][nb]" value="1">
