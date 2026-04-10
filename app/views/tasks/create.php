@@ -124,10 +124,6 @@
                             <input class="form-control" name="appro_designation" placeholder="Designation">
                         </div>
 
-                        <div class="mb-1">
-                            <label class="form-label fw-medium">OF : <span class="text-danger">*</span></label>
-                            <input class="form-control" name="appro_of" placeholder="OF">
-                        </div>
 
                         <div class="mb-1">
                             <label class="form-label fw-medium">Emplacement :</label>
@@ -160,7 +156,19 @@
                         </button>
 
                         <!-- MULTI ROW -->
-                        <div id="retourList"></div>
+                        <div id="retourList">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <input class="form-control" name="retour[${index}][pn]" placeholder="PN" required>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" name="retour[${index}][nb]" value="1">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove">✕</button>
+                                </div>
+                            </div>
+                        </div>
 
 
 
