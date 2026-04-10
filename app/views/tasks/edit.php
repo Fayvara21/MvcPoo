@@ -137,7 +137,7 @@ function e($str)
                         <div id="retourList">
                             <?php foreach ($retourList as $i => $r): ?>
                                 <div class="retour-item border rounded p-2 mb-2">
-                                    <div class="gap-2">
+                                    <div class="d-flex flex-column gap-2">
                                         <div>
                                             <label class="form-label fw-medium">PN</label>
                                             <input class="form-control" name="retour[<?= $i ?>][PN]" value="<?= e($r['PN'] ?? '') ?>">

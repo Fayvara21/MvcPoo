@@ -81,7 +81,7 @@
             </div>
 
             <!-- RIGHT -->
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-5">
 
                 <!-- APPRO -->
                 <div id="approFields" class="card shadow-sm border-0 mb-3" style="display:none;">
@@ -164,7 +164,7 @@
                             <div class="border rounded p-2 mb-2">
                                 <div class="row g-2">
                                     <div class="col">
-                                        <input class="form-control" name="retour[0][pn]" placeholder="PN">
+                                        <input class="form-control" name="retour[0][pn]" placeholder="PN" required>
                                     </div>
                                     <div class="col">
                                         <input class="form-control" type="number" name="retour[0][nb]" value="1">

@@ -145,6 +145,20 @@
 
 
 <div class="container my-4">
+
+    <div class="p-4 border rounded shadow-sm bg-light">
+        <h4 class="mb-3 text-primary">Mise à jour v260410:</h4>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Ajout de l'emplacement lors de la création récursive des demandes d'appro</li>
+            <li class="list-group-item">Correction d'un bug d'affichage du champ OF dans les demandes d'appro</li>
+            <li class="list-group-item">Correction d'un bug d'affichage lors de la modification d'une appro</li>
+            <li class="list-group-item">Un appro / retour sera desormais inseré par défaut lors d'une demande</li>
+
+            
+        </ul>
+    </div>
+
     <div class="p-4 border rounded shadow-sm bg-light">
         <h4 class="mb-3 text-primary">Mise à jour v260409:</h4>
 
@@ -153,8 +167,9 @@
             <li class="list-group-item">Les demandes peuvent êtres cachées / déroulées en cliquant sur le titre</li> 
             <li class="list-group-item">Les appro / retours peuvent être modifiés indépendamment après leur création</li>
             <li class="list-group-item">Ajout d'une barre de recherche pour filtrer les demandes (recherche PN, SN, Avion, etc.)</li>
-            <li class="list-group-item"></li>
+            <li class="list-group-item">Correction de l'horodatage des demandes sur le fuseau horaire Europe/Paris</li>
         </ul>
+    </div>
 
 </div>
 
