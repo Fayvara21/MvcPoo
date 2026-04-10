@@ -103,7 +103,7 @@
                                         <input class="form-control" name="appro[0][pn]" placeholder="PN" required>
                                     </div>
                                     <div class="col">
-                                        <input class="form-control" name="appro[0][of]" placeholder="OF" required>
+                                        <input class="form-control" name="appro[0][location]" placeholder="Emplacement" required>
                                     </div>
                                     <div class="col">
                                         <input class="form-control" type="number" name="appro[0][nb]" value="1">
@@ -124,12 +124,15 @@
                             <label class="form-label fw-medium">Désignation :</label>
                             <input class="form-control" name="appro_designation" placeholder="Designation">
                         </div>
-
-
                         <div class="mb-1">
+                            <label class="form-label fw-medium">OF <span class="text-danger">*</span> :</label>
+                            <input class="form-control" name="appro_of" placeholder="Designation" required>
+                        </div>
+
+                        <!-- <div class="mb-1">
                             <label class="form-label fw-medium">Emplacement :</label>
                             <input class="form-control" name="appro_location" placeholder="Emplacement">
-                        </div>
+                        </div> -->
 
                         <div class="mb-1>
                             <label class=" form-label fw-medium">Avion :</label>
