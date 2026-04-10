@@ -45,7 +45,7 @@ class TaskController extends BaseController
                 // Shared fields
                 $sharedFields = [
                     'designation' => $_POST['appro_designation'] ?? null,
-                    'of' => $_POST['appro_of'] ?? null,
+                    //'of' => $_POST['appro_of'] ?? null,
                     'location' => $_POST['appro_location'] ?? null,
                     'plane' => $_POST['appro_plane'] ?? null,
                     'oe' => $_POST['appro_oe'] ?? null,

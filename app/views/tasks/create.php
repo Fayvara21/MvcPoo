@@ -97,7 +97,22 @@
                         <button type="button" id="addAppro" class="btn btn-sm btn-primary mb-3">
                             + Ajouter PN
                         </button>
-                        <div id="approList"></div>
+                        <div id="approList">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" name="appro[${index}][of]" placeholder="OF" required>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" name="appro[${index}][nb]" value="1">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove">✕</button>
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -120,11 +135,11 @@
                         </div>
 
                         <div class="mb-1>
-                            <label class="form-label fw-medium">Avion :</label>
+                            <label class=" form-label fw-medium">Avion :</label>
                             <input class="form-control" name="appro_plane" placeholder="Avion">
                         </div>
 
-                        <div class="mb-"1>
+                        <div class="mb-" 1>
                             <label class="form-label fw-medium">OE :</label>
                             <input class="form-control" name="appro_oe" placeholder="OE">
                         </div>
@@ -197,6 +212,9 @@
         <div class="row g-2">
             <div class="col">
                 <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
+            </div>
+            <div class="col">
+                <input class="form-control" name="appro[${index}][of]" placeholder="OF" required>
             </div>
             <div class="col">
                 <input class="form-control" type="number" name="appro[${index}][nb]" value="1">

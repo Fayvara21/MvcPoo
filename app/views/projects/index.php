@@ -150,9 +150,10 @@
 
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
-            <li class="list-group-item">les demandes peuvent êtres cachées / déroulées en cliquant sur le titre</li> 
+            <li class="list-group-item">Les demandes peuvent êtres cachées / déroulées en cliquant sur le titre</li> 
             <li class="list-group-item">Les appro / retours peuvent être modifiés indépendamment après leur création</li>
             <li class="list-group-item">Ajout d'une barre de recherche pour filtrer les demandes (recherche PN, SN, Avion, etc.)</li>
+            <li class="list-group-item"></li>
         </ul>
 
 </div>
