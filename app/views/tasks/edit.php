@@ -86,7 +86,7 @@ function e($str)
                         <div id="approList">
                             <?php foreach ($approList as $i => $a): ?>
                                 <div class="appro-item border rounded p-2 mb-2">
-                                    <div class="gap-2">
+                                    <div class="d-flex flex-column gap-2">
                                         <div>
                                             <label class="form-label fw-medium">PN</label>
                                             <input class="form-control" name="appro[<?= $i ?>][pn]" value="<?= e($a['pn'] ?? '') ?>" required>
