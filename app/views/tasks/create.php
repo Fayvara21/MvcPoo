@@ -126,7 +126,7 @@
                         </div>
                         <div class="mb-1">
                             <label class="form-label fw-medium">OF <span class="text-danger">*</span> :</label>
-                            <input class="form-control" name="appro_of" placeholder="Designation" required>
+                            <input class="form-control" name="appro_of" placeholder="OF" required>
                         </div>
 
                         <!-- <div class="mb-1">
