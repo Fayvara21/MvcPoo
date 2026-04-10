@@ -100,12 +100,10 @@
                             <div class="border rounded p-2 mb-2">
                                 <div class="row g-2">
                                     <div class="col">
-                                        <input class="form-control" name="appro[0][pn]" placeholder="PN"
-                                            required>
+                                        <input class="form-control" name="appro[0][pn]" placeholder="PN" required>
                                     </div>
                                     <div class="col">
-                                        <input class="form-control" name="appro[0][of]" placeholder="OF"
-                                            required>
+                                        <input class="form-control" name="appro[0][of]" placeholder="OF" required>
                                     </div>
                                     <div class="col">
                                         <input class="form-control" type="number" name="appro[0][nb]" value="1">
@@ -160,15 +158,17 @@
 
                         <!-- MULTI ROW -->
                         <div id="retourList">
-                            <div class="row g-2">
-                                <div class="col">
-                                    <input class="form-control" name="retour[0][pn]" placeholder="PN">
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="number" name="retour[0][nb]" value="1">
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-danger remove">✕</button>
+                            <div class="border rounded p-2 mb-2">
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input class="form-control" name="retour[0][pn]" placeholder="PN">
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="number" name="retour[0][nb]" value="1">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-danger remove">✕</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -197,24 +197,56 @@
     </form>
 
 </div>
-
 <script>
     const typeSelect = document.getElementById("taskType");
     const approFields = document.getElementById("approFields");
     const retourFields = document.getElementById("retourFields");
 
-    typeSelect.addEventListener("change", function () {
+    const approList = document.getElementById('approList');
+    const retourList = document.getElementById('retourList');
+
+    function clearContainer(container) {
+        container.innerHTML = "";
+    }
+
+    function toggleFields() {
+        // Hide both
         approFields.style.display = "none";
         retourFields.style.display = "none";
 
-        if (this.value === "appro") approFields.style.display = "block";
-        if (this.value === "retour") retourFields.style.display = "block";
-    });
+        if (typeSelect.value === "appro") {
+            // Clear retour
+            clearContainer(retourList);
+
+            // Show appro
+            approFields.style.display = "block";
+
+            // Add one entry if empty
+            if (approList.children.length === 0) {
+                addApproItem();
+            }
+        }
+
+        if (typeSelect.value === "retour") {
+            // Clear appro
+            clearContainer(approList);
+
+            // Show retour
+            retourFields.style.display = "block";
+
+            // Add one entry if empty
+            if (retourList.children.length === 0) {
+                addRetourItem();
+            }
+        }
+    }
+
+    typeSelect.addEventListener("change", toggleFields);
+    toggleFields(); // run on load
 
     // === APPRO REPEATER ===
-    document.getElementById('addAppro').addEventListener('click', function () {
-        const container = document.getElementById('approList');
-        const index = container.children.length;
+    function addApproItem() {
+        const index = Date.now(); // unique index
 
         const div = document.createElement('div');
         div.className = 'border rounded p-2 mb-2';
@@ -234,15 +266,16 @@
                 <button type="button" class="btn btn-danger remove">✕</button>
             </div>
         </div>
-    `;
+        `;
 
-        container.appendChild(div);
-    });
+        approList.appendChild(div);
+    }
+
+    document.getElementById('addAppro').addEventListener('click', addApproItem);
 
     // === RETOUR REPEATER ===
-    document.getElementById('addRetour').addEventListener('click', function () {
-        const container = document.getElementById('retourList');
-        const index = container.children.length;
+    function addRetourItem() {
+        const index = Date.now(); // unique index
 
         const div = document.createElement('div');
         div.className = 'border rounded p-2 mb-2';
@@ -259,19 +292,19 @@
                 <button type="button" class="btn btn-danger remove">✕</button>
             </div>
         </div>
-    `;
+        `;
 
-        container.appendChild(div);
-    });
+        retourList.appendChild(div);
+    }
 
-    // REMOVE BUTTON
+    document.getElementById('addRetour').addEventListener('click', addRetourItem);
+
+    // === REMOVE BUTTON ===
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove')) {
             e.target.closest('.border').remove();
         }
     });
-
-    
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
