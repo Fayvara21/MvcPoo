@@ -151,9 +151,10 @@
 
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Ajout de l'emplacement lors de la création récursive des demandes d'appro</li>
+            <li class="list-group-item">Un appro / retour sera desormais inseré par défaut lors d'une demande</li>
+            <li class="list-group-item">Ajustements mineurs l'ors de la modification d'une demande d'appro</li>
             <li class="list-group-item">Correction d'un bug d'affichage du champ OF dans les demandes d'appro</li>
             <li class="list-group-item">Correction d'un bug d'affichage lors de la modification d'une appro</li>
-            <li class="list-group-item">Un appro / retour sera desormais inseré par défaut lors d'une demande</li>
 
             
         </ul>
