@@ -162,7 +162,7 @@
                         <div id="retourList">
                             <div class="row g-2">
                                 <div class="col">
-                                    <input class="form-control" name="retour[0][pn]" placeholder="PN" required>
+                                    <input class="form-control" name="retour[0][pn]" placeholder="PN">
                                 </div>
                                 <div class="col">
                                     <input class="form-control" type="number" name="retour[0][nb]" value="1">
