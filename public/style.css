@@ -12,6 +12,12 @@
   color: #fff;
 }
 
+.btn-outline-blue {
+  background-color: transparent;
+  border: 1px solid #0d6efd;
+  color: #0d6efd;
+}
+
 .btn-blue:hover {
   filter: brightness(90%);
 }
@@ -28,6 +34,12 @@
   background-color: #6610f2;
   border-color: #6610f2;
   color: #fff;
+}
+
+.btn-outline-indigo {
+  background-color: transparent;
+  border: 1px solid #6610f2;
+  color: #6610f2;
 }
 
 .btn-indigo:hover {
@@ -48,6 +60,12 @@
   color: #fff;
 }
 
+.btn-outline-purple {
+  background-color: transparent;
+  border: 1px solid #6f42c1;
+  color: #6f42c1;
+}
+
 .btn-purple:hover {
   filter: brightness(90%);
 }
@@ -64,6 +82,12 @@
   background-color: #d63384;
   border-color: #d63384;
   color: #fff;
+}
+
+.btn-outline-pink {
+  background-color: transparent;
+  border: 1px solid #d63384;
+  color: #d63384;
 }
 
 .btn-pink:hover {
@@ -84,6 +108,12 @@
   color: #fff;
 }
 
+.btn-outline-red {
+  background-color: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
 .btn-red:hover {
   filter: brightness(90%);
 }
@@ -100,6 +130,12 @@
   background-color: #fd7e14;
   border-color: #fd7e14;
   color: #fff;
+}
+
+.btn-outline-orange {
+  background-color: transparent;
+  border: 1px solid #fd7e14;
+  color: #fd7e14;
 }
 
 .btn-orange:hover {
@@ -120,6 +156,12 @@
   color: #000;
 }
 
+.btn-outline-yellow {
+  background-color: transparent;
+  border: 1px solid #ffc107;
+  color: #ffc107;
+}
+
 .btn-yellow:hover {
   filter: brightness(90%);
 }
@@ -136,6 +178,12 @@
   background-color: #198754;
   border-color: #198754;
   color: #fff;
+}
+
+.btn-outline-green {
+  background-color: transparent;
+  border: 1px solid #198754;
+  color: #198754;
 }
 
 .btn-green:hover {
@@ -156,6 +204,12 @@
   color: #fff;
 }
 
+.btn-outline-teal {
+  background-color: transparent;
+  border: 1px solid #20c997;
+  color: #20c997;
+}
+
 .btn-teal:hover {
   filter: brightness(90%);
 }
@@ -172,6 +226,12 @@
   background-color: #0dcaf0;
   border-color: #0dcaf0;
   color: #fff;
+}
+
+.btn-outline-cyan {
+  background-color: transparent;
+  border: 1px solid #0dcaf0;
+  color: #0dcaf0;
 }
 
 .btn-cyan:hover {
@@ -192,6 +252,12 @@
   color: #000;
 }
 
+.btn-outline-gray {
+  background-color: transparent;
+  border: 1px solid #adb5bd;
+  color: #adb5bd;
+}
+
 .btn-gray:hover {
   filter: brightness(90%);
 }
@@ -208,6 +274,12 @@
   background-color: #000000;
   border-color: #000000;
   color: #fff;
+}
+
+.btn-outline-black {
+  background-color: transparent;
+  border: 1px solid #000000;
+  color: #000000;
 }
 
 .btn-black:hover {
@@ -228,62 +300,57 @@
   color: #000;
 }
 
+.btn-outline-white {
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
 .btn-white:hover {
   filter: brightness(90%);
 }
 
 #taskContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  /* use relative units */
-  padding: 0 1rem;
-  /* avoid horizontal overflow */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem; /* use relative units */
+    padding: 0 1rem; /* avoid horizontal overflow */
 }
 
 form {
-  margin: 0 1rem;
-  /* relative margin for small screens */
+    margin: 0 1rem; /* relative margin for small screens */
 }
 
-.login,
-.register {
-  min-height: 100vh;
-  padding: 1rem 0;
-  /* prevent cut-off on tall narrow screens */
-  flex-direction: column;
-  /* stack elements on portrait */
+.login, .register {
+    min-height: 100vh;
+    padding: 1rem 0; /* prevent cut-off on tall narrow screens */
+    flex-direction: column; /* stack elements on portrait */
 }
 
 @media (max-width: 700px) {
+    .login, .register {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 3rem; /* space below navbar */
+    }
 
-  .login,
-  .register {
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 3rem;
-    /* space below navbar */
-  }
-
-  #taskContainer {
-    gap: 0.25rem;
-  }
+    #taskContainer {
+        gap: 0.25rem;
+    }
 
 
 }
 
-.login::before,
-.register::before {
-  background-size: contain;
-  /* or try 'cover' with responsive adjustments */
-  background-position: center top;
+.login::before, .register::before {
+    background-size: contain; /* or try 'cover' with responsive adjustments */
+    background-position: center top;
 }
 
 .custom-navbar {
   background-color: #013966;
   padding: 0.8rem 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -400,12 +467,12 @@ form {
   outline: none !important;
 }
 
-.task-row {
-  cursor: pointer;
+.task-row{
+    cursor: pointer;
 }
 
 .task-row:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Form alignment in navbar */
@@ -462,41 +529,32 @@ form {
   outline: 2px solid white;
   outline-offset: 2px;
 }
-
 .navbar .logo {
-  height: 40px;
-  /* Fits standard navbar height */
-  width: auto;
-  /* Maintains aspect ratio */
-  max-height: 100%;
-  /* Never exceeds navbar */
-  object-fit: contain;
-  /* Ensures full logo visible */
-  display: block;
+    height: 40px;        /* Fits standard navbar height */
+    width: auto;         /* Maintains aspect ratio */
+    max-height: 100%;    /* Never exceeds navbar */
+    object-fit: contain; /* Ensures full logo visible */
+    display: block;
 }
 
 /* Responsive for smaller screens */
 @media (max-width: 768px) {
-  .navbar .logo {
-    height: 32px;
-    /* Smaller on mobile */
-  }
+    .navbar .logo {
+        height: 32px;    /* Smaller on mobile */
+    }
 }
 
 @media (max-width: 576px) {
-  .navbar .logo {
-    height: 28px;
-    /* Even smaller on XS */
-  }
+    .navbar .logo {
+        height: 28px;    /* Even smaller on XS */
+    }
 }
 
-body:has(.login),
-body:has(.register) {
+body:has(.login), body:has(.register) {
   position: relative;
 }
 
-body:has(.login)::before,
-body:has(.register)::before {
+body:has(.login)::before, body:has(.register)::before{
   content: "";
   position: fixed;
   top: 0;
@@ -508,7 +566,6 @@ body:has(.register)::before {
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  filter: blur(6px);
-  /* Add blur effect */
+  filter: blur(6px); /* Add blur effect */
   z-index: -1;
 }

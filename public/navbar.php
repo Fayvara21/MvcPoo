@@ -60,7 +60,7 @@
   </div>
 </nav>
 
-<!--
+
 <script>
 
 // Generate CSS for color classes based on a color palette
@@ -99,6 +99,12 @@ for (const [name, value] of Object.entries(colors)) {
   color: ${name === "yellow" || name === "white" || name === "gray" ? "#000" : "#fff"};
 }
 
+.btn-outline-${name} {
+  background-color: transparent;
+  border: 1px solid ${value};
+  color: ${value};
+}
+
 .btn-${name}:hover {
   filter: brightness(90%);
 }
@@ -107,4 +113,4 @@ for (const [name, value] of Object.entries(colors)) {
 
 console.log(css);
 </script>
--->
+
