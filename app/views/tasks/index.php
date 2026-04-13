@@ -88,7 +88,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                     </a>
                 <?php endforeach; ?>
 
-                <div class="ms-auto">
+                <div class="">
                     <a href="?" class="btn btn-sm btn-outline-dark">
                         <?= $totalTasks ?> total
                     </a>
@@ -99,7 +99,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4">
+    <div class="card shadow-sm border-0">
 
         <!-- TABLE -->
         <div class="table-responsive">
