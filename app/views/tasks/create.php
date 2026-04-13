@@ -156,7 +156,7 @@
                             <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
                         </div>
                         <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3">
-                            + Ajouter retour
+                            + Ajouter PN
                         </button>
 
                         <!-- MULTI ROW -->
