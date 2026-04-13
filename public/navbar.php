@@ -59,6 +59,8 @@
 	
   </div>
 </nav>
+
+<!--
 <script>
 
 // Generate CSS for color classes based on a color palette
@@ -105,3 +107,4 @@ for (const [name, value] of Object.entries(colors)) {
 
 console.log(css);
 </script>
+-->

@@ -1,44 +1,289 @@
+.bg-blue {
+  background-color: #0d6efd !important;
+}
+
+.text-blue {
+  color: #0d6efd !important;
+}
+
+.btn-blue {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+.btn-blue:hover {
+  filter: brightness(90%);
+}
+
+.bg-indigo {
+  background-color: #6610f2 !important;
+}
+
+.text-indigo {
+  color: #6610f2 !important;
+}
+
+.btn-indigo {
+  background-color: #6610f2;
+  border-color: #6610f2;
+  color: #fff;
+}
+
+.btn-indigo:hover {
+  filter: brightness(90%);
+}
+
+.bg-purple {
+  background-color: #6f42c1 !important;
+}
+
+.text-purple {
+  color: #6f42c1 !important;
+}
+
+.btn-purple {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  color: #fff;
+}
+
+.btn-purple:hover {
+  filter: brightness(90%);
+}
+
+.bg-pink {
+  background-color: #d63384 !important;
+}
+
+.text-pink {
+  color: #d63384 !important;
+}
+
+.btn-pink {
+  background-color: #d63384;
+  border-color: #d63384;
+  color: #fff;
+}
+
+.btn-pink:hover {
+  filter: brightness(90%);
+}
+
+.bg-red {
+  background-color: #dc3545 !important;
+}
+
+.text-red {
+  color: #dc3545 !important;
+}
+
+.btn-red {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.btn-red:hover {
+  filter: brightness(90%);
+}
+
+.bg-orange {
+  background-color: #fd7e14 !important;
+}
+
+.text-orange {
+  color: #fd7e14 !important;
+}
+
+.btn-orange {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+  color: #fff;
+}
+
+.btn-orange:hover {
+  filter: brightness(90%);
+}
+
+.bg-yellow {
+  background-color: #ffc107 !important;
+}
+
+.text-yellow {
+  color: #ffc107 !important;
+}
+
+.btn-yellow {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #000;
+}
+
+.btn-yellow:hover {
+  filter: brightness(90%);
+}
+
+.bg-green {
+  background-color: #198754 !important;
+}
+
+.text-green {
+  color: #198754 !important;
+}
+
+.btn-green {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.btn-green:hover {
+  filter: brightness(90%);
+}
+
+.bg-teal {
+  background-color: #20c997 !important;
+}
+
+.text-teal {
+  color: #20c997 !important;
+}
+
+.btn-teal {
+  background-color: #20c997;
+  border-color: #20c997;
+  color: #fff;
+}
+
+.btn-teal:hover {
+  filter: brightness(90%);
+}
+
+.bg-cyan {
+  background-color: #0dcaf0 !important;
+}
+
+.text-cyan {
+  color: #0dcaf0 !important;
+}
+
+.btn-cyan {
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+  color: #fff;
+}
+
+.btn-cyan:hover {
+  filter: brightness(90%);
+}
+
+.bg-gray {
+  background-color: #adb5bd !important;
+}
+
+.text-gray {
+  color: #adb5bd !important;
+}
+
+.btn-gray {
+  background-color: #adb5bd;
+  border-color: #adb5bd;
+  color: #000;
+}
+
+.btn-gray:hover {
+  filter: brightness(90%);
+}
+
+.bg-black {
+  background-color: #000000 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.btn-black {
+  background-color: #000000;
+  border-color: #000000;
+  color: #fff;
+}
+
+.btn-black:hover {
+  filter: brightness(90%);
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.text-white {
+  color: #ffffff !important;
+}
+
+.btn-white {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #000;
+}
+
+.btn-white:hover {
+  filter: brightness(90%);
+}
+
 #taskContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem; /* use relative units */
-    padding: 0 1rem; /* avoid horizontal overflow */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  /* use relative units */
+  padding: 0 1rem;
+  /* avoid horizontal overflow */
 }
 
 form {
-    margin: 0 1rem; /* relative margin for small screens */
+  margin: 0 1rem;
+  /* relative margin for small screens */
 }
 
-.login, .register {
-    min-height: 100vh;
-    padding: 1rem 0; /* prevent cut-off on tall narrow screens */
-    flex-direction: column; /* stack elements on portrait */
+.login,
+.register {
+  min-height: 100vh;
+  padding: 1rem 0;
+  /* prevent cut-off on tall narrow screens */
+  flex-direction: column;
+  /* stack elements on portrait */
 }
 
 @media (max-width: 700px) {
-    .login, .register {
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 3rem; /* space below navbar */
-    }
 
-    #taskContainer {
-        gap: 0.25rem;
-    }
+  .login,
+  .register {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 3rem;
+    /* space below navbar */
+  }
+
+  #taskContainer {
+    gap: 0.25rem;
+  }
 
 
 }
 
-.login::before, .register::before {
-    background-size: contain; /* or try 'cover' with responsive adjustments */
-    background-position: center top;
+.login::before,
+.register::before {
+  background-size: contain;
+  /* or try 'cover' with responsive adjustments */
+  background-position: center top;
 }
 
 .custom-navbar {
   background-color: #013966;
   padding: 0.8rem 2rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -155,12 +400,12 @@ form {
   outline: none !important;
 }
 
-.task-row{
-    cursor: pointer;
+.task-row {
+  cursor: pointer;
 }
 
 .task-row:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Form alignment in navbar */
@@ -217,32 +462,41 @@ form {
   outline: 2px solid white;
   outline-offset: 2px;
 }
+
 .navbar .logo {
-    height: 40px;        /* Fits standard navbar height */
-    width: auto;         /* Maintains aspect ratio */
-    max-height: 100%;    /* Never exceeds navbar */
-    object-fit: contain; /* Ensures full logo visible */
-    display: block;
+  height: 40px;
+  /* Fits standard navbar height */
+  width: auto;
+  /* Maintains aspect ratio */
+  max-height: 100%;
+  /* Never exceeds navbar */
+  object-fit: contain;
+  /* Ensures full logo visible */
+  display: block;
 }
 
 /* Responsive for smaller screens */
 @media (max-width: 768px) {
-    .navbar .logo {
-        height: 32px;    /* Smaller on mobile */
-    }
+  .navbar .logo {
+    height: 32px;
+    /* Smaller on mobile */
+  }
 }
 
 @media (max-width: 576px) {
-    .navbar .logo {
-        height: 28px;    /* Even smaller on XS */
-    }
+  .navbar .logo {
+    height: 28px;
+    /* Even smaller on XS */
+  }
 }
 
-body:has(.login), body:has(.register) {
+body:has(.login),
+body:has(.register) {
   position: relative;
 }
 
-body:has(.login)::before, body:has(.register)::before{
+body:has(.login)::before,
+body:has(.register)::before {
   content: "";
   position: fixed;
   top: 0;
@@ -254,6 +508,7 @@ body:has(.login)::before, body:has(.register)::before{
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  filter: blur(6px); /* Add blur effect */
+  filter: blur(6px);
+  /* Add blur effect */
   z-index: -1;
 }
