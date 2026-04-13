@@ -164,7 +164,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <?php $subIndex++; ?>
                     <tr class="bg-light sub-task-<?= $taskId ?>" style="">
                         <td><?= $subIndex ?></td>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="small fw-semibold mb-1 text-primary">APPRO</div>
                             <div class="d-flex gap-4 mb-1">
                                 <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
