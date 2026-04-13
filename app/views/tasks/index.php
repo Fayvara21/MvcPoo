@@ -71,7 +71,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                 <?php
                 $labels = [0 => 'Envoyé', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé', 4 => 'en achat', 5 => 'en sous-traitance'];
-                $filterColors = [0 => 'primary', 1 => 'warning', 2 => 'info', 3 => 'success', 4 => 'secondary', 5 => 'danger'];
 
                 foreach ($labels as $state => $label):
                     $count = $stateCounts[$state] ?? 0;
@@ -87,7 +86,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                     $query = http_build_query(['states' => $newStates]);
                     ?>
                     <a href="?<?= e($query) ?>"
-                        class="btn btn-sm <?= $isActive ? 'btn-' . $filterColors[$state] : 'btn-outline-' . $filterColors[$state] ?> d-flex align-items-center gap-1">
+                        class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
                         <span><?= e($label) ?></span>
                         <span class="badge bg-light text-dark"><?= $count ?></span>
                     </a>
@@ -132,12 +131,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                         $s = (int) ($task['is_completed'] ?? 0);
 
                         $stateClass = [
-                            0 => 'secondary',
-                            1 => 'warning',
-                            2 => 'info',
-                            3 => 'success',
-                            4 => 'secondary',
-                            5 => 'danger'
+                            0 => 'blue',
+                            1 => 'red',
+                            2 => 'orange',
+                            3 => 'yellow',
+                            4 => 'indigo',
+                            5 => 'pink'
                         ];
 
                         // WORKFLOW (correct branching model)
@@ -171,6 +170,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                         $taskId = (int) $task['id'];
 
                         $nextStates = $transitions[$s] ?? [];
+                        $nextColor = $stateClass[$nextStates[0]] ?? 'secondary';
                         ?>
 
                         <!-- MAIN TASK ROW -->
@@ -181,9 +181,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                             <td>
                                 <?php if (!empty($approList)): ?>
-                                    <span class="badge bg-primary">APPRO</span>
+                                    <span class="badge bg-blue">APPRO</span>
                                 <?php elseif (!empty($retourList)): ?>
-                                    <span class="badge bg-warning">RETOUR</span>
+                                    <span class="badge bg-yellow">RETOUR</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
@@ -245,7 +245,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                                                 <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
-                                                <button type="submit" class="btn btn-sm btn-success">
+                                                <button type="submit" class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
                                                     → <?= e($labels[$nextState]) ?>
                                                 </button>
                                             </form>

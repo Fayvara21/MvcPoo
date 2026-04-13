@@ -59,3 +59,49 @@
 	
   </div>
 </nav>
+<script>
+
+// Generate CSS for color classes based on a color palette
+  const colors = {
+  blue: "#0d6efd",
+  indigo: "#6610f2",
+  purple: "#6f42c1",
+  pink: "#d63384",
+  red: "#dc3545",
+  orange: "#fd7e14",
+  yellow: "#ffc107",
+  green: "#198754",
+  teal: "#20c997",
+  cyan: "#0dcaf0",
+  gray: "#adb5bd",
+  black: "#000000",
+  white: "#ffffff"
+};
+
+let css = "";
+
+// BG classes
+for (const [name, value] of Object.entries(colors)) {
+  css += `
+.bg-${name} {
+  background-color: ${value} !important;
+}
+
+.text-${name} {
+  color: ${value} !important;
+}
+
+.btn-${name} {
+  background-color: ${value};
+  border-color: ${value};
+  color: ${name === "yellow" || name === "white" || name === "gray" ? "#000" : "#fff"};
+}
+
+.btn-${name}:hover {
+  filter: brightness(90%);
+}
+`;
+}
+
+console.log(css);
+</script>
