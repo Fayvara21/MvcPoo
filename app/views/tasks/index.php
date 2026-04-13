@@ -52,11 +52,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 </div>
 
                 <div class="d-flex gap-2 align-items-center flex-wrap">
-                    <input type="text" id="task-search" class="form-control form-control-sm" placeholder="Rechercher..."
+                    <input type="text" id="task-search" class="form-control" placeholder="Rechercher..."
                         style="width: 220px;">
 
                     <a href="/projects/<?= (int) $project['id'] ?>/tasks/create"
-                        class="btn btn-primary btn-sm fw-semibold">
+                        class="btn btn-primary fw-semibold">
                         + Nouvelle demande
                     </a>
                 </div>
@@ -159,7 +159,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <div class="fw-semibold"><?= e($task['title']) ?></div>
+                                <div class="fw-semibold task-title"><?= e($task['title']) ?></div>
                                 <div class="small description" style="display:block; font-size:1rem;">
                                     <?= e($task['description']) ?>
                                 </div>
@@ -272,7 +272,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 const taskId = taskRow.dataset.task;
 
                 // Get all relevant main row text
-                const title = taskRow.querySelector('.fw-semibold')?.textContent.toLowerCase() || '';
+                const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
                 const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
                 const requester = taskRow.querySelector('td:nth-child(7)')?.textContent.toLowerCase() || '';
 
