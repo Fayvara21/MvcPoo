@@ -155,7 +155,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                             <?php endif; ?>
                         </div>
                     </td>
-                    <td class="sender"><?= e($task["user_name"]) ?></td>
+                    <td class="small text-muted"><?= e($task["user_name"]) ?></td>
                 </tr>
 
                 <!-- SUB-TASK ROWS -->
