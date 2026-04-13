@@ -133,6 +133,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                     <td class="small text-muted"><?= e($task['created_at']) ?></td>
                     <td class="small text-muted"><?= e($task['due_date']) ?></td>
+                    <td class="small text-muted"><?= e($task["user_name"]) ?></td>
                     <td class="actions" style=";">
                         <div class="d-flex gap-1 flex-wrap">
                             <?php if ($canEdit): ?>
@@ -155,7 +156,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                             <?php endif; ?>
                         </div>
                     </td>
-                    <td class="small text-muted"><?= e($task["user_name"]) ?></td>
+                    
                 </tr>
 
                 <!-- SUB-TASK ROWS -->
