@@ -139,145 +139,147 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 </thead>
 
                 <tbody>
-                    <?php foreach ($tasks as $taskIndex => $task): ?>
 
-                        <?php
-                        $approList = $task['appro'] ?? [];
-                        $retourList = $task['retour'] ?? [];
+                <?php foreach ($tasks as $taskIndex => $task): ?>
 
-                        $s = (int) ($task['is_completed'] ?? 0);
+                    <?php
+                    $approList = $task['appro'] ?? [];
+                    $retourList = $task['retour'] ?? [];
 
-                        $stateClass = [
-                            0 => 'secondary',
-                            1 => 'warning',
-                            2 => 'info',
-                            3 => 'success',
-                            4 => 'secondary',
-                            5 => 'danger'
-                        ];
+                    $s = (int) ($task['is_completed'] ?? 0);
 
-                        // WORKFLOW TRANSITIONS (IMPORTANT FIX)
-                        $transitions = [
-                            0 => [1],
-                            1 => [2],
-                            2 => [3, 4, 5],
-                            3 => [],
-                            4 => [3],
-                            5 => [3]
-                        ];
+                    $stateClass = [
+                        0 => 'secondary',
+                        1 => 'warning',
+                        2 => 'info',
+                        3 => 'success',
+                        4 => 'secondary',
+                        5 => 'danger'
+                    ];
 
-                        $canEdit = false;
-                        $canSetState = false;
+                    // WORKFLOW (correct branching model)
+                    $transitions = [
+                        0 => [1],
+                        1 => [2],
+                        2 => [3, 4, 5],
+                        3 => [],
+                        4 => [3],
+                        5 => [3]
+                    ];
 
-                        if ($currentUserGroup === 'admin') {
-                            $canEdit = true;
-                            $canSetState = true;
-                        } elseif ($currentUserGroup === 'magasin' && in_array($s, [1, 2])) {
-                            $canSetState = true;
-                        } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
-                            $canEdit = true;
-                        } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3, 4, 5])) {
-                            $canSetState = true;
-                        }
+                    $canEdit = false;
+                    $canSetState = false;
 
-                        $subIndex = 0;
-                        $taskId = (int) $task['id'];
-                        ?>
+                    if ($currentUserGroup === 'admin') {
+                        $canEdit = true;
+                        $canSetState = true;
+                    } elseif ($currentUserGroup === 'magasin' && in_array($s, [1, 2])) {
+                        $canSetState = true;
+                    } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
+                        $canEdit = true;
+                    } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3, 4, 5])) {
+                        $canSetState = true;
+                    }
 
-                        <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
-                            data-task="<?= $taskId ?>">
+                    $subIndex = 0;
+                    $taskId = (int) $task['id'];
+                    ?>
 
-                            <td class="fw-semibold"><?= $taskId ?></td>
+                    <!-- MAIN ROW -->
+                    <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
+                        data-task="<?= $taskId ?>">
 
-                            <td>
-                                <?php if (!empty($approList)): ?>
-                                    <span class="badge bg-primary">APPRO</span>
-                                <?php elseif (!empty($retourList)): ?>
-                                    <span class="badge bg-warning">RETOUR</span>
-                                <?php else: ?>
-                                    <span class="text-muted">-</span>
+                        <td class="fw-semibold"><?= $taskId ?></td>
+
+                        <td>
+                            <?php if (!empty($approList)): ?>
+                                <span class="badge bg-primary">APPRO</span>
+                            <?php elseif (!empty($retourList)): ?>
+                                <span class="badge bg-warning">RETOUR</span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold task-title"><?= e($task['title']) ?></div>
+                            <div class="small description"><?= e($task['description']) ?></div>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-<?= $stateClass[$s] ?? 'secondary' ?>">
+                                <?= e($labels[$s] ?? 'Unknown') ?>
+                            </span>
+                        </td>
+
+                        <td class="small text-muted"><?= e($task['created_at']) ?></td>
+                        <td class="small text-muted"><?= e($task['due_date']) ?></td>
+                        <td class="small text-muted task-requester"><?= e($task['user_name']) ?></td>
+
+                        <td class="actions">
+                            <div class="d-flex gap-1 flex-wrap">
+
+                                <?php if ($canEdit): ?>
+                                    <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
+                                        class="btn btn-sm btn-primary">Modifier</a>
                                 <?php endif; ?>
-                            </td>
 
-                            <td>
-                                <div class="fw-semibold task-title"><?= e($task['title']) ?></div>
-                                <div class="small description">
-                                    <?= e($task['description']) ?>
-                                </div>
-                            </td>
+                                <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                    <form method="POST"
+                                        action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                        onsubmit="return confirm('Confirmer la suppression ?');">
+                                        <button class="btn btn-sm btn-danger">Supprimer</button>
+                                    </form>
+                                <?php endif; ?>
 
-                            <td>
-                                <span class="badge bg-<?= $stateClass[$s] ?? 'secondary' ?>">
-                                    <?= e($labels[$s] ?? 'Unknown') ?>
-                                </span>
-                            </td>
-
-                            <td class="small text-muted"><?= e($task['created_at']) ?></td>
-                            <td class="small text-muted"><?= e($task['due_date']) ?></td>
-                            <td class="small text-muted task-requester"><?= e($task["user_name"]) ?></td>
-
-                            <td class="actions">
-                                <div class="d-flex gap-1 flex-wrap">
-
-                                    <?php if ($canEdit): ?>
-                                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary">Modifier</a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                <!-- STATE ACTIONS (FIXED) -->
+                                <?php if (!empty($transitions[$s]) && $canSetState): ?>
+                                    <?php foreach ($transitions[$s] as $next): ?>
                                         <form method="POST"
-                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
-                                            onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+
+                                            <input type="hidden" name="state" value="<?= $next ?>">
+
+                                            <button class="btn btn-sm btn-success">
+                                                → <?= $labels[$next] ?>
+                                            </button>
                                         </form>
-                                    <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
 
-                                    <!-- FIXED STATE TRANSITIONS -->
-                                    <?php if (!empty($transitions[$s]) && $canSetState): ?>
-                                        <?php foreach ($transitions[$s] as $next): ?>
-                                            <form method="POST"
-                                                action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                            </div>
+                        </td>
+                    </tr>
 
-                                                <input type="hidden" name="state" value="<?= $next ?>">
-
-                                                <button class="btn btn-sm btn-success">
-                                                    → <?= $labels[$next] ?>
-                                                </button>
-                                            </form>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-
+                    <!-- SUBTASKS -->
+                    <?php foreach ($approList as $a): $subIndex++; ?>
+                        <tr class="bg-light sub-task-<?= $taskId ?>">
+                            <td><?= $subIndex ?></td>
+                            <td colspan="7">
+                                <div class="small fw-semibold text-primary">APPRO</div>
+                                <div class="d-flex gap-4">
+                                    <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
+                                    <div><strong>Qté:</strong> <?= (int) ($a['nb'] ?? 0) ?></div>
                                 </div>
                             </td>
                         </tr>
-
-                        <?php foreach ($approList as $a): $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>">
-                                <td><?= $subIndex ?></td>
-                                <td colspan="7">
-                                    <div class="small fw-semibold text-primary">APPRO</div>
-                                    <div class="d-flex gap-4">
-                                        <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($a['nb'] ?? 0) ?></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-
-                        <?php foreach ($retourList as $r): $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>">
-                                <td><?= $subIndex ?></td>
-                                <td colspan="7">
-                                    <div class="small fw-semibold text-dark">RETOUR</div>
-                                    <div class="d-flex gap-4">
-                                        <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-
                     <?php endforeach; ?>
+
+                    <?php foreach ($retourList as $r): $subIndex++; ?>
+                        <tr class="bg-light sub-task-<?= $taskId ?>">
+                            <td><?= $subIndex ?></td>
+                            <td colspan="7">
+                                <div class="small fw-semibold text-dark">RETOUR</div>
+                                <div class="d-flex gap-4">
+                                    <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
+                                    <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                <?php endforeach; ?>
+
                 </tbody>
 
             </table>
