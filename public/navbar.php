@@ -62,9 +62,7 @@
 
 
 <script>
-
-// Generate CSS for color classes based on a color palette
-  const colors = {
+const colors = {
   blue: "#0d6efd",
   indigo: "#6610f2",
   purple: "#6f42c1",
@@ -82,8 +80,12 @@
 
 let css = "";
 
-// BG classes
 for (const [name, value] of Object.entries(colors)) {
+  const textColor =
+    name === "yellow" || name === "white" || name === "gray"
+      ? "#000"
+      : "#fff";
+
   css += `
 .bg-${name} {
   background-color: ${value} !important;
@@ -96,13 +98,19 @@ for (const [name, value] of Object.entries(colors)) {
 .btn-${name} {
   background-color: ${value};
   border-color: ${value};
-  color: ${name === "yellow" || name === "white" || name === "gray" ? "#000" : "#fff"};
+  color: ${textColor};
 }
 
 .btn-outline-${name} {
-  background-color: transparent;
-  border: 1px solid ${value};
-  color: ${value};
+  color: ${value} !important;
+  border-color: ${value} !important;
+
+  --bs-btn-color: ${value} !important;
+  --bs-btn-border-color: ${value} !important;
+  --bs-btn-hover-border-color: ${value} !important;
+
+  --bs-btn-hover-bg: ${value};
+  --bs-btn-hover-color: ${textColor};
 }
 
 .btn-${name}:hover {
