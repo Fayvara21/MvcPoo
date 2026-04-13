@@ -161,7 +161,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             <td>
                                 <div class="fw-semibold"><?= e($task['title']) ?></div>
                                 <div class="small description" style="display:block; font-size:1rem;">
-                                    <?= e($task['description']) ?></div>
+                                    <?= e($task['description']) ?>
+                                </div>
                             </td>
                             <td><span class="badge bg-<?= $stateClass[$s] ?>"><?= $labels[$s] ?></span></td>
                             <td class="small text-muted"><?= e($task['created_at']) ?></td>
@@ -263,25 +264,40 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
         // Search function
         const searchInput = document.getElementById('task-search');
+
         searchInput.addEventListener('input', function () {
-            const query = searchInput.value.toLowerCase();
+            const query = searchInput.value.toLowerCase().trim();
 
             document.querySelectorAll('.task-row').forEach(function (taskRow) {
                 const taskId = taskRow.dataset.task;
-                const title = taskRow.querySelector('td:nth-child(3) div.fw-semibold')?.textContent.toLowerCase() || '';
+
+                // Get all relevant main row text
+                const title = taskRow.querySelector('.fw-semibold')?.textContent.toLowerCase() || '';
+                const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
+                const requester = taskRow.querySelector('td:nth-child(7)')?.textContent.toLowerCase() || '';
+
+                // Combine main fields
+                let match = (
+                    title.includes(query) ||
+                    description.includes(query) ||
+                    requester.includes(query)
+                );
 
                 // Search inside subtasks
-                let match = title.includes(query);
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                    const text = subRow.textContent.toLowerCase();
-                    if (text.includes(query)) match = true;
+                    const subText = subRow.textContent.toLowerCase();
+                    if (subText.includes(query)) {
+                        match = true;
+                    }
                 });
 
-                if (match) {
+                // Show / hide
+                if (match || query === '') {
                     taskRow.style.display = '';
-                    // Unwrap matched task
+
+                    // Show subtasks only if searching
                     document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        subRow.style.display = 'table-row';
+                        subRow.style.display = query ? 'table-row' : 'none';
                     });
 
                 } else {
