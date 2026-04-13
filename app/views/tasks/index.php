@@ -8,6 +8,7 @@ function e($value) {
 
 $currentUserGroup = $_SESSION['group'] ?? '';
 
+
 // State counts
 $stateCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
 foreach ($tasks as $t) {
@@ -81,6 +82,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                     <th>État</th>
                     <th>Créé</th>
                     <th>Deadline</th>
+                    <th>Demandeur</th>
                     <th class="actions-header" style="">Actions</th>
                 </tr>
             </thead>
@@ -153,6 +155,7 @@ $tasks = array_filter($tasks, function($task) use ($activeStates) {
                             <?php endif; ?>
                         </div>
                     </td>
+                    <td class="sender"><?= e($task["user_name"]) ?></td>
                 </tr>
 
                 <!-- SUB-TASK ROWS -->

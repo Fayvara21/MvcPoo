@@ -62,7 +62,8 @@ class Task
             ? array_map('trim', explode(',', $_SESSION['group']))
             : [];
 
-        if (empty($userGroups)) return [];
+        if (empty($userGroups))
+            return [];
 
         $conditions = array_map(fn($g) => "FIND_IN_SET('$g', p.`groups`)", $userGroups);
         $where = '(' . implode(' OR ', $conditions) . ')';
@@ -99,7 +100,8 @@ class Task
             ? array_map('trim', explode(',', $_SESSION['group']))
             : [];
 
-        if (empty($userGroups)) return [];
+        if (empty($userGroups))
+            return [];
 
         $conditions = array_map(fn($g) => "FIND_IN_SET('$g', `groups`)", $userGroups);
         $where = '(' . implode(' OR ', $conditions) . ')';
@@ -176,7 +178,14 @@ class Task
     {
         $db = Database::getInstance()->getPdo();
 
-        $stmt = $db->prepare("SELECT * FROM tasks WHERE project_id = ? ORDER BY created_at DESC");
+        $stmt = $db->prepare("
+        SELECT tasks.*, users.name AS user_name
+        FROM tasks
+        JOIN users ON tasks.user_id = users.id
+        WHERE tasks.project_id = ?
+        ORDER BY tasks.created_at DESC
+    ");
+
         $stmt->execute([$projectId]);
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -186,7 +195,8 @@ class Task
     // Helper: attach multiple APPRO and RETOUR to tasks
     private static function attachApproRetour(array $tasks): array
     {
-        if (empty($tasks)) return [];
+        if (empty($tasks))
+            return [];
 
         $db = Database::getInstance()->getPdo();
         $taskIds = array_column($tasks, 'id');
@@ -228,5 +238,12 @@ class Task
         }
 
         return $tasks;
+    }
+    private static function getUserFromID($id)
+    {
+        $db = Database::getInstance()->getPdo();
+        $stmt = $db->prepare("SELECT name FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchColumn();
     }
 }
