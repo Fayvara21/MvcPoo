@@ -19,6 +19,27 @@ foreach ($tasks as $t) {
 }
 $totalTasks = array_sum($stateCounts);
 
+//colors
+
+$stateClass = [
+    0 => 'blue',
+    1 => 'red',
+    2 => 'orange',
+    3 => 'yellow',
+    4 => 'indigo',
+    5 => 'pink'
+];
+
+// WORKFLOW (correct branching model)
+$transitions = [
+    0 => [1, 4, 5],
+    1 => [2],
+    2 => [3],
+    3 => [],
+    4 => [1],
+    5 => [1]
+];
+
 // Filters
 $activeStates = $_GET['states'] ?? [];
 if (!is_array($activeStates))
@@ -130,25 +151,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                         $s = (int) ($task['is_completed'] ?? 0);
 
-                        $stateClass = [
-                            0 => 'blue',
-                            1 => 'red',
-                            2 => 'orange',
-                            3 => 'yellow',
-                            4 => 'indigo',
-                            5 => 'pink'
-                        ];
-
-                        // WORKFLOW (correct branching model)
-                        $transitions = [
-                            0 => [1, 4, 5],
-                            1 => [2],
-                            2 => [3],
-                            3 => [],
-                            4 => [1],
-                            5 => [1]
-                        ];
-
                         $canEdit = false;
                         $canSetState = false;
 
@@ -245,7 +247,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                                                 <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
-                                                <button type="submit" class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
+                                                <button type="submit"
+                                                    class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
                                                     → <?= e($labels[$nextState]) ?>
                                                 </button>
                                             </form>
