@@ -179,7 +179,7 @@ class Task
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-        SELECT tasks.*, users.name AS user_name
+        SELECT tasks.*, users.username AS user_name
         FROM tasks
         JOIN users ON tasks.user_id = users.id
         WHERE tasks.project_id = ?
