@@ -42,7 +42,7 @@
 
         <!-- User -->
         <span class="text-white small me-lg-2">
-          👋 Bonjour <strong><?php echo $_SESSION["user"]; ?></strong>
+          Bonjour <strong><?php echo $_SESSION["user"]; ?></strong>
         </span>
 
         <!-- Actions -->
