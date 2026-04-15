@@ -1,7 +1,6 @@
 .bg-blue { background-color: #0d6efd !important; }
 .text-blue { color: #0d6efd !important; }
 
-/* SOLID BUTTON */
 .btn-blue {
   --bs-btn-color: #fff;
   --bs-btn-bg: #0d6efd;
@@ -16,11 +15,9 @@
   --bs-btn-active-border-color: rgb(10, 88, 202);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-blue {
   --bs-btn-color: #0d6efd;
   --bs-btn-border-color: #0d6efd;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #0d6efd;
@@ -34,7 +31,6 @@
 .bg-indigo { background-color: #6610f2 !important; }
 .text-indigo { color: #6610f2 !important; }
 
-/* SOLID BUTTON */
 .btn-indigo {
   --bs-btn-color: #fff;
   --bs-btn-bg: #6610f2;
@@ -49,11 +45,9 @@
   --bs-btn-active-border-color: rgb(81, 12, 193);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-indigo {
   --bs-btn-color: #6610f2;
   --bs-btn-border-color: #6610f2;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #6610f2;
@@ -67,7 +61,6 @@
 .bg-purple { background-color: #6f42c1 !important; }
 .text-purple { color: #6f42c1 !important; }
 
-/* SOLID BUTTON */
 .btn-purple {
   --bs-btn-color: #fff;
   --bs-btn-bg: #6f42c1;
@@ -82,11 +75,9 @@
   --bs-btn-active-border-color: rgb(88, 52, 154);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-purple {
   --bs-btn-color: #6f42c1;
   --bs-btn-border-color: #6f42c1;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #6f42c1;
@@ -100,7 +91,6 @@
 .bg-pink { background-color: #d63384 !important; }
 .text-pink { color: #d63384 !important; }
 
-/* SOLID BUTTON */
 .btn-pink {
   --bs-btn-color: #fff;
   --bs-btn-bg: #d63384;
@@ -115,11 +105,9 @@
   --bs-btn-active-border-color: rgb(171, 40, 105);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-pink {
   --bs-btn-color: #d63384;
   --bs-btn-border-color: #d63384;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #d63384;
@@ -133,7 +121,6 @@
 .bg-red { background-color: #dc3545 !important; }
 .text-red { color: #dc3545 !important; }
 
-/* SOLID BUTTON */
 .btn-red {
   --bs-btn-color: #fff;
   --bs-btn-bg: #dc3545;
@@ -148,11 +135,9 @@
   --bs-btn-active-border-color: rgb(176, 42, 55);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-red {
   --bs-btn-color: #dc3545;
   --bs-btn-border-color: #dc3545;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #dc3545;
@@ -166,7 +151,6 @@
 .bg-orange { background-color: #fd7e14 !important; }
 .text-orange { color: #fd7e14 !important; }
 
-/* SOLID BUTTON */
 .btn-orange {
   --bs-btn-color: #000;
   --bs-btn-bg: #fd7e14;
@@ -181,11 +165,9 @@
   --bs-btn-active-border-color: rgb(202, 100, 16);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-orange {
   --bs-btn-color: #fd7e14;
   --bs-btn-border-color: #fd7e14;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #000;
   --bs-btn-hover-bg: #fd7e14;
@@ -199,7 +181,6 @@
 .bg-yellow { background-color: #ffc107 !important; }
 .text-yellow { color: #ffc107 !important; }
 
-/* SOLID BUTTON */
 .btn-yellow {
   --bs-btn-color: #000;
   --bs-btn-bg: #ffc107;
@@ -214,11 +195,9 @@
   --bs-btn-active-border-color: rgb(204, 154, 5);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-yellow {
   --bs-btn-color: #ffc107;
   --bs-btn-border-color: #ffc107;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #000;
   --bs-btn-hover-bg: #ffc107;
@@ -232,7 +211,6 @@
 .bg-green { background-color: #198754 !important; }
 .text-green { color: #198754 !important; }
 
-/* SOLID BUTTON */
 .btn-green {
   --bs-btn-color: #fff;
   --bs-btn-bg: #198754;
@@ -247,11 +225,9 @@
   --bs-btn-active-border-color: rgb(20, 108, 67);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-green {
   --bs-btn-color: #198754;
   --bs-btn-border-color: #198754;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #198754;
@@ -265,7 +241,6 @@
 .bg-teal { background-color: #20c997 !important; }
 .text-teal { color: #20c997 !important; }
 
-/* SOLID BUTTON */
 .btn-teal {
   --bs-btn-color: #fff;
   --bs-btn-bg: #20c997;
@@ -280,11 +255,9 @@
   --bs-btn-active-border-color: rgb(25, 160, 120);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-teal {
   --bs-btn-color: #20c997;
   --bs-btn-border-color: #20c997;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #20c997;
@@ -298,7 +271,6 @@
 .bg-cyan { background-color: #0dcaf0 !important; }
 .text-cyan { color: #0dcaf0 !important; }
 
-/* SOLID BUTTON */
 .btn-cyan {
   --bs-btn-color: #fff;
   --bs-btn-bg: #0dcaf0;
@@ -313,11 +285,9 @@
   --bs-btn-active-border-color: rgb(10, 161, 192);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-cyan {
   --bs-btn-color: #0dcaf0;
   --bs-btn-border-color: #0dcaf0;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #0dcaf0;
@@ -331,7 +301,6 @@
 .bg-gray { background-color: #adb5bd !important; }
 .text-gray { color: #adb5bd !important; }
 
-/* SOLID BUTTON */
 .btn-gray {
   --bs-btn-color: #000;
   --bs-btn-bg: #adb5bd;
@@ -346,11 +315,9 @@
   --bs-btn-active-border-color: rgb(138, 144, 151);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-gray {
   --bs-btn-color: #adb5bd;
   --bs-btn-border-color: #adb5bd;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #000;
   --bs-btn-hover-bg: #adb5bd;
@@ -364,7 +331,6 @@
 .bg-black { background-color: #000000 !important; }
 .text-black { color: #000000 !important; }
 
-/* SOLID BUTTON */
 .btn-black {
   --bs-btn-color: #fff;
   --bs-btn-bg: #000000;
@@ -379,11 +345,9 @@
   --bs-btn-active-border-color: rgb(0, 0, 0);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-black {
   --bs-btn-color: #000000;
   --bs-btn-border-color: #000000;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #000000;
@@ -397,7 +361,6 @@
 .bg-white { background-color: #ffffff !important; }
 .text-white { color: #ffffff !important; }
 
-/* SOLID BUTTON */
 .btn-white {
   --bs-btn-color: #000;
   --bs-btn-bg: #ffffff;
@@ -412,11 +375,9 @@
   --bs-btn-active-border-color: rgb(204, 204, 204);
 }
 
-/* OUTLINE BUTTON */
 .btn-outline-white {
   --bs-btn-color: #ffffff;
   --bs-btn-border-color: #ffffff;
-  --bs-btn-bg: transparent;
 
   --bs-btn-hover-color: #000;
   --bs-btn-hover-bg: #ffffff;
