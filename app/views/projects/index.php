@@ -6,15 +6,12 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body py-4 px-4">
 
-            <h1 class="h4 fw-semibold mb-1">Demandes Magasin</h1>
+            <h2 class="h2 fw-semibold mb-1">Demandes Magasin</h2>
 
             <p class="text-muted mb-3">
                 Dépôt de nouvelles demandes au magasin, rangées par émetteur
             </p>
 
-            <div class="border-top pt-3">
-                <!-- future actions / filters can go here -->
-            </div>
 
         </div>
     </div>
