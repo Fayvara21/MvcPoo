@@ -251,7 +251,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                             <?php foreach ($nextStates as $nextState): ?>
                                                 <form method="POST"
                                                     action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
-                                                    class="d-inline m-0">
+                                                    class="d-inline m-1">
 
                                                     <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
