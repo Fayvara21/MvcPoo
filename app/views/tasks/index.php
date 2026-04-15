@@ -223,23 +223,27 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             <td class="actions">
                                 <div class="d-flex gap-1 flex-wrap">
 
-                                    <?php if ($canEdit): ?>
-                                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </a>
-                                    <?php endif; ?>
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
-                                    <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                                        <form method="POST"
-                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
-                                            onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button type="submit"
-                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </button>
-                                        </form>
-                                    <?php endif; ?>
+                                        <?php if ($canEdit): ?>
+                                            <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
+                                                class="btn btn-sm btn-primary d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </a>
+                                        <?php endif; ?>
+
+                                        <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                            <form method="POST"
+                                                action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                                onsubmit="return confirm('Confirmer la suppression ?');">
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-danger d-flex align-items-center justify-content-center">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                        
+                                    </div>
 
                                     <!-- STATE TRANSITIONS (FIXED: no more +1 logic) -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
