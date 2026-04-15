@@ -224,7 +224,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary">
+                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                     <?php endif; ?>
@@ -233,7 +233,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                         <form method="POST"
                                             action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                             onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                            <button type="submit" class="btn btn-sm btn-danger d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </form>
@@ -248,7 +248,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                                 <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
                                                 <button type="submit"
-                                                    class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
+                                                    class=" btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?> d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-arrow-return-right"></i> <?= e($labels[$nextState]) ?>
                                                 </button>
                                             </form>
