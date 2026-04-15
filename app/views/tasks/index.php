@@ -55,7 +55,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<div class="container-fluid py-3">
+<div class="container-fluid px-3 py-4">
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
