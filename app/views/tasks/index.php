@@ -32,8 +32,8 @@ $stateClass = [
 
 // WORKFLOW (correct branching model)
 $transitions = [
-    0 => [1, 4, 5],
-    1 => [2],
+    0 => [1],
+    1 => [2, 4, 5],
     2 => [3],
     3 => [],
     4 => [0],
