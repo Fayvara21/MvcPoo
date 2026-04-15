@@ -20,6 +20,7 @@ foreach ($tasks as $t) {
 $totalTasks = array_sum($stateCounts);
 
 //colors
+$labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
 
 $stateClass = [
     0 => 'blue',
@@ -30,7 +31,7 @@ $stateClass = [
     5 => 'pink'
 ];
 
-// WORKFLOW (correct branching model)
+// WORKFLOW (branching model)
 $transitions = [
     0 => [1],
     1 => [2, 4, 5],
@@ -91,7 +92,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 <span class="text-muted small me-2">Filtres :</span>
 
                 <?php
-                $labels = [0 => 'Envoyé', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé', 4 => 'En achat', 5 => 'En sous-traitance'];
+                
 
                 foreach ($labels as $state => $label):
                     $count = $stateCounts[$state] ?? 0;
