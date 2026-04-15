@@ -2,10 +2,13 @@
 
 <div class="container-fluid py-4">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="display-6 fw-bold mb-1">Liste des projets</h1>
-            <p class="text-muted mb-0">Tous les projets avec des demandes actives</p>
+
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="display-6 fw-bold mb-1">Liste des projets</h1>
+                <p class="text-muted mb-0">Tous les projets avec des demandes actives</p>
+            </div>
         </div>
     </div>
 
@@ -199,7 +202,6 @@
                 <h4 class="mb-3 text-primary">Mises à jour à venir:</h4>
 
                 <ul class="list-group list-group-flush mb-4">
-                    <li class="list-group-item">OF obligatoire</li>
                     <li class="list-group-item">
                         Ouverture de nouveaux groupes de travail :
                         <ul class="mt-2">
@@ -218,12 +220,7 @@
                         </ul>
                     </li>
                     <li class="list-group-item">Recherche globale dans toute la base de données</li>
-                    <li class="list-group-item">Statuts « en achat » et « en sous-traitance »</li>
-                    <li class="list-group-item">Ajout de nouvelles couleurs</li>
-                    <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)
-                    </li>
                     <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
-                    <li class="list-group-item">Ajout du demandeur et de la personne ayant soldé</li>
                     <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
                     <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
                     <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
