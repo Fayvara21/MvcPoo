@@ -64,7 +64,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
                 <div>
                     <h2 class="fw-semibold mb-1">
-                        Demandes — <?= e($project['title']) ?>
+                        Demandes - <?= e($project['title']) ?>
                     </h2>
                     <?php if (!empty($project['description'])): ?>
                         <div class="text-muted small">

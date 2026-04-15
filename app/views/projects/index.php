@@ -3,11 +3,12 @@
 <div class="container-fluid py-4">
     <!-- Header -->
 
-    <div class="card-body">
+    <div class="card shadow-sm border-0 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="display-6 fw-bold mb-1">Liste des projets</h1>
-                <p class="text-muted mb-0">Tous les projets avec des demandes actives</p>
+                <h1 class="display-6 fw-bold mb-1">Demandes Magasin</h1>
+                <p class="text-muted mb-0">Dépot de nouvelles demandes au magasin, rangé par émetteur</p>
+                <hr class="my-3">
             </div>
         </div>
     </div>
