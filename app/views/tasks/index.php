@@ -223,7 +223,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             <td class="actions">
                                 <div class="d-flex gap-1 flex-wrap">
 
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    
 
                                         <?php if ($canEdit): ?>
                                             <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
@@ -243,7 +243,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                             </form>
                                         <?php endif; ?>
 
-                                    </div>
+                                    
 
                                     <!-- STATE TRANSITIONS (FIXED: no more +1 logic) -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
