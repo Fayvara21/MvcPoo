@@ -35,8 +35,8 @@
                                 </div>
                                 <div>
                                     <h4 class="card-title fw-semibold mb-0">
-                                        <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks" 
-                                           class="text-decoration-none text-dark stretched-link">
+                                        <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
+                                            class="text-decoration-none text-dark stretched-link">
                                             <?= htmlspecialchars($project['title']) ?>
                                         </a>
                                     </h4>
@@ -123,8 +123,8 @@
 
                         <!-- Footer -->
                         <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                            <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks" 
-                               class="btn btn-sm btn-outline-primary rounded-pill w-100">
+                            <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
+                                class="btn btn-sm btn-outline-primary rounded-pill w-100">
                                 <i class="bi bi-eye me-1"></i>
                                 Voir les demandes
                             </a>
@@ -143,91 +143,102 @@
 
     <?php endif; ?>
 
+    <div class="d-flex justify-content-end mt-4">
+        <div class="container my-4">
 
-<div class="container my-4">
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-3 text-primary">Mise à jour v260415:</h4>
 
-    <div class="p-4 border rounded shadow-sm bg-light">
-        <h4 class="mb-3 text-primary">Mise à jour v260415:</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Refactorisation du système de couleurs pour integrer plus de
+                        fonctionnalitées</li>
+                    <li class="list-group-item">Ajout des statuts "en achat" et "en sous-traitance"</li>
+                    <li class="list-group-item">Correction d'un bug d'affichage des statuts dans la vue globale</li>
+                </ul>
+            </div>
 
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Refactorisation du système de couleurs pour integrer plus de fonctionnalitées</li>
-            <li class="list-group-item">Ajout des statuts "en achat" et "en sous-traitance"</li>
-            <li class="list-group-item">Correction d'un bug d'affichage des statuts dans la vue globale</li>
-        </ul>
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-3 text-primary">Mise à jour v260410:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout de l'emplacement lors de la création récursive des demandes
+                        d'appro</li>
+                    <li class="list-group-item">Un appro / retour sera desormais inseré par défaut lors d'une demande
+                    </li>
+                    <li class="list-group-item">Ajustements mineurs lors de la modification d'une demande d'appro</li>
+                    <li class="list-group-item">Correction d'un bug d'affichage du champ OF dans les demandes d'appro
+                    </li>
+                    <li class="list-group-item">Correction d'un bug d'affichage lors de la modification d'une appro</li>
+
+
+                </ul>
+            </div>
+
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-3 text-primary">Mise à jour v260409:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)
+                    </li>
+                    <li class="list-group-item">Les demandes peuvent êtres cachées / déroulées en cliquant sur le titre
+                    </li>
+                    <li class="list-group-item">Les appro / retours peuvent être modifiés indépendamment après leur
+                        création</li>
+                    <li class="list-group-item">Ajout d'une barre de recherche pour filtrer les demandes (recherche PN,
+                        SN, Avion, etc.)</li>
+                    <li class="list-group-item">Correction de l'horodatage des demandes sur le fuseau horaire
+                        Europe/Paris</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="container my-4">
+            <div class="p-4 border rounded shadow-sm bg-light">
+
+                <h4 class="mb-3 text-primary">Mises à jour à venir:</h4>
+
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">OF obligatoire</li>
+                    <li class="list-group-item">
+                        Ouverture de nouveaux groupes de travail :
+                        <ul class="mt-2">
+                            <li>BE</li>
+                            <li>Qualité</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item">Ajout de la partie partie Qualité pour la métrologie</li>
+                    <li class="list-group-item">Liste déroulante pour la création de taches</li>
+                    <li class="list-group-item">
+                        Recherche de stock pour l'ADV avec :
+                        <ul class="mt-2">
+                            <li>Réponse écrite (stock vrai, faux ou partiel)</li>
+                            <li>Quantité</li>
+                            <li>Documents en pièce jointe</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item">Recherche globale dans toute la base de données</li>
+                    <li class="list-group-item">Statuts « en achat » et « en sous-traitance »</li>
+                    <li class="list-group-item">Ajout de nouvelles couleurs</li>
+                    <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)
+                    </li>
+                    <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
+                    <li class="list-group-item">Ajout du demandeur et de la personne ayant soldé</li>
+                    <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
+                    <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
+                    <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
+                </ul>
+
+                <h4 class="mb-3 text-success">Modules futurs envisagés</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Demande d’achat indirect avec notification au responsable</li>
+                    <li class="list-group-item">Demande moyens généraux (ex : location de voiture)</li>
+                    <li class="list-group-item">Demande d’achat direct (à traiter en dernier car plus complexe)</li>
+                </ul>
+
+            </div>
+        </div>
     </div>
-
-    <div class="p-4 border rounded shadow-sm bg-light">
-        <h4 class="mb-3 text-primary">Mise à jour v260410:</h4>
-
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Ajout de l'emplacement lors de la création récursive des demandes d'appro</li>
-            <li class="list-group-item">Un appro / retour sera desormais inseré par défaut lors d'une demande</li>
-            <li class="list-group-item">Ajustements mineurs l'ors de la modification d'une demande d'appro</li>
-            <li class="list-group-item">Correction d'un bug d'affichage du champ OF dans les demandes d'appro</li>
-            <li class="list-group-item">Correction d'un bug d'affichage lors de la modification d'une appro</li>
-
-            
-        </ul>
-    </div>
-
-    <div class="p-4 border rounded shadow-sm bg-light">
-        <h4 class="mb-3 text-primary">Mise à jour v260409:</h4>
-
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
-            <li class="list-group-item">Les demandes peuvent êtres cachées / déroulées en cliquant sur le titre</li> 
-            <li class="list-group-item">Les appro / retours peuvent être modifiés indépendamment après leur création</li>
-            <li class="list-group-item">Ajout d'une barre de recherche pour filtrer les demandes (recherche PN, SN, Avion, etc.)</li>
-            <li class="list-group-item">Correction de l'horodatage des demandes sur le fuseau horaire Europe/Paris</li>
-        </ul>
-    </div>
-
-</div>
-
-<div class="container my-4">
-  <div class="p-4 border rounded shadow-sm bg-light">
-
-    <h4 class="mb-3 text-primary">Mises à jour à venir:</h4>
-
-    <ul class="list-group list-group-flush mb-4">
-      <li class="list-group-item">OF obligatoire</li>
-      <li class="list-group-item">
-        Ouverture de nouveaux groupes de travail :
-        <ul class="mt-2">
-          <li>BE</li>
-          <li>Qualité</li>
-        </ul>
-      </li>
-      <li class="list-group-item">Ajout de la partie partie Qualité pour la métrologie</li>
-      <li class="list-group-item">Liste déroulante pour la création de taches</li>
-      <li class="list-group-item">
-        Recherche de stock pour l'ADV avec :
-        <ul class="mt-2">
-          <li>Réponse écrite (stock vrai, faux ou partiel)</li>
-          <li>Quantité</li>
-          <li>Documents en pièce jointe</li>
-        </ul>
-      </li>
-      <li class="list-group-item">Recherche globale dans toute la base de données</li>
-      <li class="list-group-item">Statuts « en achat » et « en sous-traitance »</li>
-      <li class="list-group-item">Ajout de nouvelles couleurs</li>
-      <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)</li>
-      <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
-      <li class="list-group-item">Ajout du demandeur et de la personne ayant soldé</li>
-      <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
-      <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
-      <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
-    </ul>
-
-    <h4 class="mb-3 text-success">Modules futurs envisagés</h4>
-
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Demande d’achat indirect avec notification au responsable</li>
-      <li class="list-group-item">Demande moyens généraux (ex : location de voiture)</li>
-      <li class="list-group-item">Demande d’achat direct (à traiter en dernier car plus complexe)</li>
-    </ul>
-
-  </div>
-</div>
 
 </div>

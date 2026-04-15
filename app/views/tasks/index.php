@@ -260,7 +260,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                                         <i class="bi bi-arrow-return-right"></i>
                                                         <?= e($labels[$nextState]) ?>
                                                     </button>
-
                                                 </form>
                                             <?php endforeach; ?>
                                         </div>
