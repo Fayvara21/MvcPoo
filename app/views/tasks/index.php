@@ -227,7 +227,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn">
+                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                     <?php endif; ?>
@@ -237,7 +237,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                             action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                             onsubmit="return confirm('Confirmer la suppression ?');" class="m-0">
                                             <button type="submit"
-                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center square-btn">
+                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center square-btn m-1">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </form>
