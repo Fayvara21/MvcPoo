@@ -6,12 +6,11 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body py-4 px-4">
 
-            <h2 class="h2 fw-semibold mb-1">Demandes Magasin</h2>
+            <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
             <p class="text-muted mb-3">
                 Dépôt de nouvelles demandes au magasin, rangées par émetteur
             </p>
-
 
         </div>
     </div>
@@ -153,8 +152,8 @@
     <div class="d-flex justify-content-end mt-4">
         <div class="container my-4">
 
-            <div class="p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-3 text-primary">Mise à jour v260415:</h4>
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260415:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Refactorisation du système de couleurs pour integrer plus de
@@ -164,8 +163,8 @@
                 </ul>
             </div>
 
-            <div class="p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-3 text-primary">Mise à jour v260410:</h4>
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260410:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Ajout de l'emplacement lors de la création récursive des demandes
@@ -181,8 +180,8 @@
                 </ul>
             </div>
 
-            <div class="p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-3 text-primary">Mise à jour v260409:</h4>
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260409:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Amélioration de l’interface (meilleure lisibilité des lignes et statuts)
@@ -201,9 +200,9 @@
         </div>
 
         <div class="container my-4">
-            <div class="p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
 
-                <h4 class="mb-3 text-primary">Mises à jour à venir:</h4>
+                <h4 class="mb-2 text-primary">Mises à jour à venir:</h4>
 
                 <ul class="list-group list-group-flush mb-4">
                     <li class="list-group-item">
