@@ -59,30 +59,3 @@
     </div>
   </div>
 </nav>
-
-<style>
-.custom-navbar {
-  background: linear-gradient(135deg, #0d1b2a, #1b263b) !important;
-}
-
-.logo {
-  max-height: 40px !important;
-}
-
-.navbar .nav-link {
-  color: #ffffffcc;
-  transition: 0.2s !important;
-}
-
-.navbar .nav-link:hover {
-  color: #ffffff !important;
-}
-
-.btn {
-  transition: all 0.2s ease !important;
-}
-
-.btn:hover {
-  transform: translateY(-1px) !important;
-}
-</style>
