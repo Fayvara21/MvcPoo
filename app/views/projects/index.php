@@ -147,6 +147,16 @@
 <div class="container my-4">
 
     <div class="p-4 border rounded shadow-sm bg-light">
+        <h4 class="mb-3 text-primary">Mise à jour v260415:</h4>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Refactorisation du système de couleurs pour integrer plus de fonctionnalitées</li>
+            <li class="list-group-item">Ajout des statuts "en achat" et "en sous-traitance"</li>
+            <li class="list-group-item">Correction d'un bug d'affichage des statuts dans la vue globale</li>
+        </ul>
+    </div>
+
+    <div class="p-4 border rounded shadow-sm bg-light">
         <h4 class="mb-3 text-primary">Mise à jour v260410:</h4>
 
         <ul class="list-group list-group-flush">
