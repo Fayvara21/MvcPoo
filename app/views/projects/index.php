@@ -4,14 +4,18 @@
     <!-- Header -->
 
     <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
-                <div>
-                    <h1 class="display-6 fw-bold mb-1">Demandes Magasin</h1>
-                    <p class="text-muted mb-0">Dépot de nouvelles demandes au magasin, rangé par émetteur</p>
-                    <hr class="my-3">
-                </div>
+        <div class="card-body py-4 px-4">
+
+            <h1 class="h4 fw-semibold mb-1">Demandes Magasin</h1>
+
+            <p class="text-muted mb-3">
+                Dépôt de nouvelles demandes au magasin, rangées par émetteur
+            </p>
+
+            <div class="border-top pt-3">
+                <!-- future actions / filters can go here -->
             </div>
+
         </div>
     </div>
 
