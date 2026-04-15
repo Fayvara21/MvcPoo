@@ -4,7 +4,7 @@
     <!-- Header -->
 
     <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body py-4 px-4">
+        <div class="card-body">
 
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
