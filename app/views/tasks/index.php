@@ -242,15 +242,16 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                                 </button>
                                             </form>
                                         <?php endif; ?>
-                                        
+
                                     </div>
 
                                     <!-- STATE TRANSITIONS (FIXED: no more +1 logic) -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <?php foreach ($nextStates as $nextState): ?>
-                                                <form method="POST"
-                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                                        <form method="POST"
+                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <?php foreach ($nextStates as $nextState): ?>
+
 
                                                     <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
@@ -258,9 +259,10 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                                         class=" btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?> d-flex align-items-center justify-content-center">
                                                         <i class="bi bi-arrow-return-right"></i> <?= e($labels[$nextState]) ?>
                                                     </button>
-                                                </form>
-                                            <?php endforeach; ?>
-                                        </div>
+
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </form>
                                     <?php endif; ?>
                                 </div>
                             </td>
