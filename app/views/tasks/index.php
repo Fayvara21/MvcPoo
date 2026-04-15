@@ -36,8 +36,8 @@ $transitions = [
     1 => [2],
     2 => [3],
     3 => [],
-    4 => [1],
-    5 => [1]
+    4 => [0],
+    5 => [0]
 ];
 
 // Filters
@@ -91,7 +91,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 <span class="text-muted small me-2">Filtres :</span>
 
                 <?php
-                $labels = [0 => 'Envoyé', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé', 4 => 'en achat', 5 => 'en sous-traitance'];
+                $labels = [0 => 'Envoyé', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé', 4 => 'En achat', 5 => 'En sous-traitance'];
 
                 foreach ($labels as $state => $label):
                     $count = $stateCounts[$state] ?? 0;
