@@ -92,7 +92,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 <span class="text-muted small me-2">Filtres :</span>
 
                 <?php
-                
+
 
                 foreach ($labels as $state => $label):
                     $count = $stateCounts[$state] ?? 0;
@@ -234,7 +234,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                         <form method="POST"
                                             action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                             onsubmit="return confirm('Confirmer la suppression ?');">
-                                            <button type="submit" class="btn btn-sm btn-danger d-flex align-items-center justify-content-center">
+                                            <button type="submit"
+                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </form>
@@ -242,18 +243,20 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                                     <!-- STATE TRANSITIONS (FIXED: no more +1 logic) -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
-                                        <?php foreach ($nextStates as $nextState): ?>
-                                            <form method="POST"
-                                                action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <?php foreach ($nextStates as $nextState): ?>
+                                                <form method="POST"
+                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed">
 
-                                                <input type="hidden" name="state" value="<?= (int) $nextState ?>">
+                                                    <input type="hidden" name="state" value="<?= (int) $nextState ?>">
 
-                                                <button type="submit"
-                                                    class=" btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?> d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-arrow-return-right"></i> <?= e($labels[$nextState]) ?>
-                                                </button>
-                                            </form>
-                                        <?php endforeach; ?>
+                                                    <button type="submit"
+                                                        class=" btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?> d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-arrow-return-right"></i> <?= e($labels[$nextState]) ?>
+                                                    </button>
+                                                </form>
+                                            <?php endforeach; ?>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </td>
