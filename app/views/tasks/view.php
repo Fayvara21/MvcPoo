@@ -7,7 +7,7 @@
 
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="fw-bold mb-1">Vue globale</h1>
+                    <h1 class="fw-semibold mb-1">Vue globale</h1>
                     <p class="text-muted mb-3">Vue sur toutes les demandes en cours</p>
                 </div>
             </div>

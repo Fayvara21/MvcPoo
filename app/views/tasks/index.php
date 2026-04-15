@@ -221,7 +221,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             </td>
 
                             <td class="actions">
-                                <div class="d-flex gap-1 flex-wrap">
+                                <div class="d-inline-flex gap-1 flex-wrap">
 
 
 
@@ -296,7 +296,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
                                 <td><?= $subIndex ?></td>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <div class="small fw-semibold mb-1 text-yellow">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
