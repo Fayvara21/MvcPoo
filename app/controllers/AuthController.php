@@ -82,7 +82,10 @@ class AuthController
 
     public function contact()
     {
-        $this->requireAuth();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /login");
+            exit();
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // HANDLE CONTACT FORM SUBMISSION
