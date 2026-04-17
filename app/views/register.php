@@ -39,6 +39,8 @@
 					<option value="adv">ADV</option>
 					<option value="part145">PART145</option>
 					<option value="part21">PART21</option>
+					<option value="qualite">Qualité</option>
+					<option value="be">BE</option>
 
 					<?php if ($_SESSION['group'] === 'admin'): ?>
 						<option value="admin">Admin</option>
@@ -46,7 +48,7 @@
 				</select>
 			</div>
 
-			<button class="btn btn-primary w-100 mb-3" type="submit">Sign-in</button>
+			<button class="btn btn-primary w-100 mb-3" type="submit">Créer un compte</button>
 
 		</form>
 

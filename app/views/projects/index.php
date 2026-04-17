@@ -151,8 +151,20 @@
 
     <?php endif; ?>
 
+
+
     <div class="d-flex justify-content-end mt-4">
         <div class="container my-4">
+
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260417:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout des groupes "BE" et "Qualité"</li>
+                    <li class="list-group-item">Ajustements visuels de l'interface (page d'accueil, Vue des demandes)</li>
+                    <li class="list-group-item">Mise à jour de la barre de navigation</li>
+                </ul>
+            </div>
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260415:</h4>
@@ -207,14 +219,6 @@
                 <h4 class="mb-2 text-primary">Mises à jour à venir:</h4>
 
                 <ul class="list-group list-group-flush mb-4">
-                    <li class="list-group-item">
-                        Ouverture de nouveaux groupes de travail :
-                        <ul class="mt-2">
-                            <li>BE</li>
-                            <li>Qualité</li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item">Ajout de la partie partie Qualité pour la métrologie</li>
                     <li class="list-group-item">Liste déroulante pour la création de taches</li>
                     <li class="list-group-item">
                         Recherche de stock pour l'ADV avec :
