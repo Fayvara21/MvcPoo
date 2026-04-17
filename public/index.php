@@ -44,9 +44,11 @@ $router->add('/projects/{id}/tasks/create', [new TaskController(), 'create']);
 $router->add('/projects/tasks/view', [new TaskController(), 'viewall']);
 $router->add('/projects/tasks/view/json', [new TaskController(), 'jsonall']);
 
+
 // Auth
 $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
+$router->add('/contact', [new AuthController(), 'contact']);
 
 $router->dispatch();
