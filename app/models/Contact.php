@@ -2,7 +2,7 @@
 
 require_once '../core/Database.php';
 
-class Create
+class Contact
 {
     /**
      * Create a single APPRO entry
