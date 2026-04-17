@@ -208,42 +208,46 @@
     const approList = document.getElementById('approList');
     const retourList = document.getElementById('retourList');
 
+    function setDisabled(container, disabled) {
+        container.querySelectorAll('input, select, textarea')
+            .forEach(el => el.disabled = disabled);
+    }
+
     function clearContainer(container) {
         container.innerHTML = "";
     }
 
     function toggleFields() {
-        // Hide both
+        // Hide everything
         approFields.style.display = "none";
         retourFields.style.display = "none";
 
+        // Disable everything
+        setDisabled(approFields, true);
+        setDisabled(retourFields, true);
+
         if (typeSelect.value === "appro") {
-            // Clear retour
             clearContainer(retourList);
 
-            // Show appro
             approFields.style.display = "block";
+            setDisabled(approFields, false);
 
-            // Add one entry if empty
             if (approList.children.length === 0) {
                 addApproItem();
             }
         }
 
         if (typeSelect.value === "retour") {
-            // Clear appro
             clearContainer(approList);
 
-            // Show retour
             retourFields.style.display = "block";
+            setDisabled(retourFields, false);
 
-            // Add one entry if empty
             if (retourList.children.length === 0) {
                 addRetourItem();
             }
         }
     }
-
     typeSelect.addEventListener("change", toggleFields);
     toggleFields(); // run on load
 
