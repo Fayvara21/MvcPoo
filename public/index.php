@@ -4,6 +4,7 @@ require_once __DIR__ . "/../core/Router.php";
 require_once __DIR__ . "/../app/models/Task.php";
 require_once __DIR__ . "/../app/controllers/TaskController.php";
 require_once __DIR__ . '/../app/models/Project.php';
+require_once __DIR__ . '/../app/models/Contact.php';
 require_once __DIR__ . '/../app/models/Retour.php';
 require_once __DIR__ . '/../app/models/Appro.php';
 require_once __DIR__ . '/../app/controllers/ProjectController.php';
@@ -50,5 +51,6 @@ $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
 $router->add('/contact', [new AuthController(), 'contact']);
+$router->add('/contact/create', [new AuthController(), 'contactCreate']);
 
 $router->dispatch();
