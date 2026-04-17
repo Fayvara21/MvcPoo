@@ -40,9 +40,10 @@
         if (!$dueDate)
             return '';
         $diff = strtotime($dueDate) - time();
-        if ($diff <= 86400)
+        if ($diff <= 0)
             return 'table-danger';          // ≤ 1 day
-        if ($diff <= 604800)
+        //if ($diff <= 604800)
+        if ($diff <= 86400)
             return 'table-warning';       // ≤ 1 week
         return '';
     }

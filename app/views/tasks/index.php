@@ -220,7 +220,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 <?= e($task["user_name"]) ?>
                             </td>
 
-                            <td class="actions d-inline-flex">
+                            <td class="actions">
                                 <div class="d-inline-flex flex-wrap">
 
                                     <?php if ($canEdit): ?>
