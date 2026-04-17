@@ -51,6 +51,5 @@ $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
 $router->add('/contact', [new AuthController(), 'contact']);
-$router->add('/contact/create', [new AuthController(), 'contactCreate']);
 
 $router->dispatch();
