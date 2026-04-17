@@ -163,6 +163,9 @@
                     <li class="list-group-item">Ajout des groupes "BE" et "Qualité"</li>
                     <li class="list-group-item">Ajustements visuels de l'interface (page d'accueil, Vue des demandes)</li>
                     <li class="list-group-item">Mise à jour de la barre de navigation</li>
+                    <li class="list-group-item">Les  dépassées sont desormais colorées en rouge, et échéances proches en orange</li>
+                    <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un retour</li>
+                    <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un nouvel utilisateur </li>
                 </ul>
             </div>
 
@@ -174,6 +177,7 @@
                         fonctionnalitées</li>
                     <li class="list-group-item">Ajout des statuts "en achat" et "en sous-traitance"</li>
                     <li class="list-group-item">Correction d'un bug d'affichage des statuts dans la vue globale</li>
+                    
                 </ul>
             </div>
 
@@ -231,7 +235,6 @@
                     <li class="list-group-item">Recherche globale dans toute la base de données</li>
                     <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
                     <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
-                    <li class="list-group-item">Lignes dépassées en rouge, échéances proches en orange</li>
                     <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
                 </ul>
 
