@@ -6,6 +6,8 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
 
+            <h2 class="fw-semibold mb-1">CB12:w</h2>
+
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
             <p class="text-muted mb-3">
