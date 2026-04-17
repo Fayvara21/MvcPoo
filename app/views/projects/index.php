@@ -163,9 +163,10 @@
                     <li class="list-group-item">Ajout des groupes "BE" et "Qualité"</li>
                     <li class="list-group-item">Ajustements visuels de l'interface (page d'accueil, Vue des demandes)</li>
                     <li class="list-group-item">Mise à jour de la barre de navigation</li>
-                    <li class="list-group-item">Les  dépassées sont desormais colorées en rouge, et échéances proches en orange</li>
+                    <li class="list-group-item">Les demandes dépassées sont desormais colorées en rouge, et échéances proches en orange</li>
                     <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un retour</li>
                     <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un nouvel utilisateur </li>
+                    <li class="list-group-item">Le temps d'une session navigateur à été étendue de 2h à 12h</li>
                 </ul>
             </div>
 
