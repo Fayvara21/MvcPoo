@@ -39,12 +39,19 @@
     {
         if (!$dueDate)
             return '';
-        $diff = strtotime($dueDate) - time();
-        if ($diff <= 0)
-            return 'table-danger';          // ≤ 1 day
-        //if ($diff <= 604800)
-        if ($diff <= 86400)
-            return 'table-warning';       // ≤ 1 week
+
+        $due = strtotime($dueDate);
+        $todayStart = strtotime('today');
+        $tomorrowStart = strtotime('tomorrow');
+
+        if ($due < $todayStart) {
+            return 'table-danger'; // expired (past)
+        }
+
+        if ($due >= $todayStart && $due < $tomorrowStart) {
+            return 'table-warning'; // today
+        }
+
         return '';
     }
 
@@ -187,9 +194,21 @@
 
     function getDeadlineClassJS(dueDate) {
         if (!dueDate) return '';
-        const diff = new Date(dueDate) - new Date();
-        if (diff <= 86400 * 1000) return 'table-danger';
-        if (diff <= 604800 * 1000) return 'table-warning';
+
+        const due = new Date(dueDate);
+        const now = new Date();
+
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
+        if (due < todayStart) {
+            return 'table-danger'; // expired
+        }
+
+        if (due >= todayStart && due < tomorrowStart) {
+            return 'table-warning'; // today
+        }
+
         return '';
     }
 
