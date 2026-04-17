@@ -1,10 +1,12 @@
 <?php
 
 require_once '../app/models/User.php';
+require_once '../app/models/Contact.php';
 
 class AuthController
 {
     private $userModel;
+    private $contactModel;
 
     public function __construct()
     {
@@ -12,6 +14,7 @@ class AuthController
             session_start();
         }
         $this->userModel = new User();
+        $this->contactModel = new Contact();
     }
 
     public function login()
@@ -89,9 +92,14 @@ class AuthController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // HANDLE CONTACT FORM SUBMISSION
-            //$name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8'); 
-            //$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-            //$message = htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8');
+             
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+            $type = htmlspecialchars($_POST['type'], ENT_QUOTES, 'UTF-8');
+            $description = htmlspecialchars($_POST['description'], ENT_QUOTES, 'UTF-8');
+            $user = htmlspecialchars($_POST['user'], ENT_QUOTES, 'UTF-8');
+
+            $this->contactModel->create($email, $type, $description, $user);
+
 
 
             // }else {
