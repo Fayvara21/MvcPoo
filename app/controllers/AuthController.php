@@ -99,7 +99,7 @@ class AuthController
             //    require '../app/views/login.php';
             //}
         }
-        include __DIR__ . '/../app/views/contact.php';
+        include __DIR__ . '../app/views/contact.php';
     }
 
     public function logout()

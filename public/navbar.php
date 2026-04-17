@@ -51,7 +51,7 @@
         </a>
 
         <a href="/contact" class="btn btn-outline-light rounded-pill px-3">
-          <i class="bi bi-person-plus me-1"></i>Contact
+          <i class="bi bi-send-exclamation-fill me-1"></i>Contact
         </a>
 
         <a href="/logout" class="btn btn-danger rounded-pill px-3">
