@@ -128,7 +128,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                 <span class="text-muted small me-2">Filtres :</span>
 
                 <!-- TYPE FILTERS -->
-                <div class="d-flex gap-2 pe-3" style="border-right:2px solid #dee2e6;">
+                <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                     <?php
                     $typeLabels = [
                         'appro' => 'APPRO',
@@ -176,8 +176,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         }
 
                         $query = http_build_query([
-                            'states' => $newStates,   // ✅ FIXED
-                            'types' => $activeTypes   // ✅ FIXED
+                            'states' => $newStates,  
+                            'types' => $activeTypes   
                         ]);
                         ?>
                         <a href="?<?= e($query) ?>"
