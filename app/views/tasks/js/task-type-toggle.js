@@ -1,48 +1,52 @@
-const typeSelect = document.getElementById("taskType");
-const approFields = document.getElementById("approFields");
-const retourFields = document.getElementById("retourFields");
+document.addEventListener("DOMContentLoaded", function () {
 
-const approList = document.getElementById('approList');
-const retourList = document.getElementById('retourList');
+    const typeSelect = document.getElementById("taskType");
+    const approFields = document.getElementById("approFields");
+    const retourFields = document.getElementById("retourFields");
 
-function setDisabled(container, disabled) {
-    container.querySelectorAll('input, select, textarea')
-        .forEach(el => el.disabled = disabled);
-}
+    const approList = document.getElementById('approList');
+    const retourList = document.getElementById('retourList');
 
-function clearContainer(container) {
-    container.innerHTML = "";
-}
+    function setDisabled(container, disabled) {
+        container.querySelectorAll('input, select, textarea')
+            .forEach(el => el.disabled = disabled);
+    }
 
-function toggleFields() {
-    approFields.style.display = "none";
-    retourFields.style.display = "none";
+    function clearContainer(container) {
+        container.innerHTML = "";
+    }
 
-    setDisabled(approFields, true);
-    setDisabled(retourFields, true);
+    function toggleFields() {
+        approFields.style.display = "none";
+        retourFields.style.display = "none";
 
-    if (typeSelect.value === "appro") {
-        clearContainer(retourList);
+        setDisabled(approFields, true);
+        setDisabled(retourFields, true);
 
-        approFields.style.display = "block";
-        setDisabled(approFields, false);
+        if (typeSelect.value === "appro") {
+            clearContainer(retourList);
 
-        if (approList.children.length === 0) {
-            addApproItem();
+            approFields.style.display = "block";
+            setDisabled(approFields, false);
+
+            if (approList.children.length === 0) {
+                addApproItem();
+            }
+        }
+
+        if (typeSelect.value === "retour") {
+            clearContainer(approList);
+
+            retourFields.style.display = "block";
+            setDisabled(retourFields, false);
+
+            if (retourList.children.length === 0) {
+                addRetourItem();
+            }
         }
     }
 
-    if (typeSelect.value === "retour") {
-        clearContainer(approList);
+    typeSelect.addEventListener("change", toggleFields);
+    toggleFields();
 
-        retourFields.style.display = "block";
-        setDisabled(retourFields, false);
-
-        if (retourList.children.length === 0) {
-            addRetourItem();
-        }
-    }
-}
-
-typeSelect.addEventListener("change", toggleFields);
-toggleFields();
+});
