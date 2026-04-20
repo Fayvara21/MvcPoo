@@ -151,15 +151,15 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                 <thead class="table-light">
                     <tr class="text-uppercase small text-muted">
-                        <th>#</th>
-                        <th>Type</th>
-                        <th>État</th>
+                        <th class="p-2">#</th>
+                        <th class="p-2">Type</th>
+                        <th class="p-2">État</th>
                         <th>Titre</th>
                         <th>Créé</th>
                         <th>Deadline</th>
                         <th>Complétion</th>
-                        <th>Demandeur</th>
-                        <th class="actions-header" style="">Actions</th>
+                        <th class="p-2">Demandeur</th>
+                        <th class="p-2 actions-header" style="">Actions</th>
                     </tr>
                 </thead>
 
