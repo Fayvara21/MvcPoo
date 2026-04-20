@@ -211,7 +211,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 <?php endif; ?>
                             </td>
 
-                            <td>
+                            <td class="task-description">
                                 <div class="fw-semibold task-title">
                                     <?= e($task['title']) ?>
                                 </div>

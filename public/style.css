@@ -447,18 +447,14 @@ td {
     padding: .3rem !important;
 }
 
-/* fixed narrow columns */
-td.badgeState,
-td.badgeType {
-    width: 120px;
-    white-space: nowrap;
-}
 
 /* let 3rd column take remaining space */
-td:nth-child(3) {
+td.task-description {
     width: 100%;
     white-space: normal; /* allow wrapping if needed */
 }
+
+
 
 form {
     margin: 0 1rem; /* relative margin for small screens */
