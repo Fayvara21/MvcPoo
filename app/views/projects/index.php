@@ -163,6 +163,8 @@
                     <li class="list-group-item">Ajout du bouton contact dans la barre de navigation</li>
                     <li class="list-group-item">Ajout du formulaire de rapport d'incident pour les utilisateurs</li>
                     <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins</li>
+                    <li class="list-group-item">Ajout de la date de complétion lorsqu'une demande est marquée comme livrée</li>
+                    <li class="list-group-item">Les horodatages des demandes sont formatées pour être plus lisibles</li>
                     
                 </ul>
             </div>

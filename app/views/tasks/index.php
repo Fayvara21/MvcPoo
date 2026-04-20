@@ -210,15 +210,15 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             </td>
 
                             <td class="small text-muted">
-                                <?= e($task['created_at']) ?>
+                                <?= e(date('d M Y, H:i', strtotime($task['created_at']))) ?>
                             </td>
 
                             <td class="small text-muted">
-                                <?= e($task['due_date']) ?>
+                                <?= e(date('d M Y, H:i', strtotime($task['due_date']))) ?>
                             </td>
 
                             <td class="small text-muted">
-                                <?= e($task["completed_at"]) ?>
+                                <?= e(date('d M Y, H:i', strtotime($task['completed_at']))) ?>
                             </td>
 
                             <td class="small text-muted">
