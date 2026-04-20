@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-body">
-            <h1 class="mb-4 text-center">Demande de contact</h1>
+            <h1 class="mb-4 text-center">Créer un rapport d'incident</h1>
 
             <form method="POST" action="/contact">
                 

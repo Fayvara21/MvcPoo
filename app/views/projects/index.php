@@ -153,19 +153,33 @@
 
 
 
-    <div class="d-flex justify-content-end mt-4">
+    <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4">
+
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260420:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout du bouton contact dans la barre de navigation"</li>
+                    <li class="list-group-item">Ajout du formulaire de rapport d'incident pour les utilisateurs"</li>
+                    <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins"</li>
+                    
+                </ul>
+            </div>
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260417:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Ajout des groupes "BE" et "Qualité"</li>
-                    <li class="list-group-item">Ajustements visuels de l'interface (page d'accueil, Vue des demandes)</li>
+                    <li class="list-group-item">Ajustements visuels de l'interface (page d'accueil, Vue des demandes)
+                    </li>
                     <li class="list-group-item">Mise à jour de la barre de navigation</li>
-                    <li class="list-group-item">Les demandes dépassées sont desormais colorées en rouge, et échéances proches en orange</li>
+                    <li class="list-group-item">Les demandes dépassées sont desormais colorées en rouge, et échéances
+                        proches en orange</li>
                     <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un retour</li>
-                    <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un nouvel utilisateur </li>
+                    <li class="list-group-item">Correction d'un bug fonctionnel lors de la création d'un nouvel
+                        utilisateur </li>
                     <li class="list-group-item">Le temps d'une session navigateur à été étendue de 2h à 12h</li>
                 </ul>
             </div>
@@ -178,7 +192,7 @@
                         fonctionnalitées</li>
                     <li class="list-group-item">Ajout des statuts "en achat" et "en sous-traitance"</li>
                     <li class="list-group-item">Correction d'un bug d'affichage des statuts dans la vue globale</li>
-                    
+
                 </ul>
             </div>
 
