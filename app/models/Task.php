@@ -34,8 +34,22 @@ class Task
     public static function markAsCompleted($id, $state)
     {
         $db = Database::getInstance()->getPdo();
-        $stmt = $db->prepare("UPDATE tasks SET is_completed = :state WHERE id = :id");
-        $stmt->execute(['id' => $id, 'state' => $state]);
+
+        $stmt = $db->prepare("
+        UPDATE tasks 
+        SET 
+            is_completed = :state,
+            completed_at = CASE 
+                WHEN :state = 2 THEN NOW()
+                ELSE completed_at
+            END
+        WHERE id = :id
+    ");
+
+        $stmt->execute([
+            'id' => $id,
+            'state' => $state
+        ]);
     }
 
     public static function delete($id)
@@ -77,6 +91,7 @@ class Task
                 t.due_date,
                 t.project_id,
                 t.is_completed,
+                t.completed_at,
                 p.title AS project_title
             FROM tasks t
             INNER JOIN projects p ON t.project_id = p.id
@@ -164,7 +179,7 @@ class Task
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->query("
-            SELECT t.id, t.title, t.description, t.created_at, t.due_date, t.project_id, t.is_completed, p.title AS project_title
+            SELECT t.id, t.title, t.description, t.created_at, t.due_date, t.project_id, t.is_completed, t.completed_at, p.title AS project_title
             FROM tasks t
             INNER JOIN projects p ON t.project_id = p.id
             ORDER BY t.due_date IS NULL, t.due_date ASC

@@ -139,6 +139,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                         <th>État</th>
                         <th>Créé</th>
                         <th>Deadline</th>
+                        <th>Complétion</th>
                         <th>Demandeur</th>
                         <th class="actions-header" style="">Actions</th>
                     </tr>
@@ -217,8 +218,14 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             </td>
 
                             <td class="small text-muted">
+                                <?= e($task["completed_at"]) ?>
+                            </td>
+
+                            <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
                             </td>
+
+                            
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-wrap">
@@ -294,7 +301,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
                                 <td><?= $subIndex ?></td>
-                                <td colspan="7">
+                                <td colspan="8">
                                     <div class="small fw-semibold mb-1 text-yellow">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>

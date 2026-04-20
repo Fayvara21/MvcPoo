@@ -160,9 +160,9 @@
                 <h4 class="mb-2 text-primary">Mise à jour v260420:</h4>
 
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Ajout du bouton contact dans la barre de navigation"</li>
-                    <li class="list-group-item">Ajout du formulaire de rapport d'incident pour les utilisateurs"</li>
-                    <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins"</li>
+                    <li class="list-group-item">Ajout du bouton contact dans la barre de navigation</li>
+                    <li class="list-group-item">Ajout du formulaire de rapport d'incident pour les utilisateurs</li>
+                    <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins</li>
                     
                 </ul>
             </div>
@@ -249,7 +249,6 @@
                     </li>
                     <li class="list-group-item">Recherche globale dans toute la base de données</li>
                     <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
-                    <li class="list-group-item">Ajout d’un onglet contact pour les rapports d’incident</li>
                     <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
                 </ul>
 
