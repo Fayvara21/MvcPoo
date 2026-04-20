@@ -165,6 +165,7 @@
                     <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins</li>
                     <li class="list-group-item">Ajout de la date de complétion lorsqu'une demande est marquée comme livrée</li>
                     <li class="list-group-item">Les horodatages des demandes sont formatées pour être plus lisibles</li>
+                    <li class="list-group-item">Application de plusieurs ajustements de l'interface</li>
                     
                 </ul>
             </div>
