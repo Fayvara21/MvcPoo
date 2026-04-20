@@ -1,8 +1,8 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container mt-5">
-    <div class="card shaddow">
-        <div class="card-body">
+    <div class="card shadow">
+        <div class="card-body p-5">
             <?php if (!empty($contacts)): ?>
                 <h1 class="mb-4">Contacts</h1>
 
