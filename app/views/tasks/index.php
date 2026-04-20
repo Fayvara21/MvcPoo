@@ -199,9 +199,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                         <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
                             data-task="<?= $taskId ?>">
 
-                            <td class="fw-semibold"><?= $taskId ?></td>
+                            <td class="p-2 fw-semibold"><?= $taskId ?></td>
 
-                            <td class="badgeType">
+                            <td class="p-2 badgeType">
                                 <?php if (!empty($approList)): ?>
                                     <span class="badge bg-blue">APPRO</span>
                                 <?php elseif (!empty($retourList)): ?>
@@ -211,7 +211,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 <?php endif; ?>
                             </td>
 
-                            <td class="task-description">
+                            <td class="p-2 task-description">
                                 <div class="fw-semibold task-title">
                                     <?= e($task['title']) ?>
                                 </div>
@@ -221,7 +221,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 </div>
                             </td>
 
-                            <td class="badgeState">
+                            <td class="p-2 badgeState">
                                 <span class="badge bg-<?= $stateClass[$s] ?>">
                                     <?= e($labels[$s]) ?>
                                 </span>
@@ -377,7 +377,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                 // Get all relevant main row text
                 const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
                 const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
-                const requester = taskRow.querySelector('td:nth-child(7)')?.textContent.toLowerCase() || '';
+                const requester = taskRow.querySelector('td:nth-child(8)')?.textContent.toLowerCase() || '';
 
                 // Combine main fields
                 let match = (
