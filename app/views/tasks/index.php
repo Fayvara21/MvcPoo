@@ -123,11 +123,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
             <hr class="my-3">
 
             <!-- Filters -->
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
 
                 <span class="text-muted small me-2">Filtres :</span>
-                <div style="border-rignt:solid 2px #dee2e6;">
 
+                <!-- TYPE FILTERS -->
+                <div class="d-flex gap-2 pe-3" style="border-right:2px solid #dee2e6;">
                     <?php
                     $typeLabels = [
                         'appro' => 'APPRO',
@@ -159,11 +160,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                             <?= e($label) ?>
                         </a>
                     <?php endforeach; ?>
+                </div>
 
-                    <?php
-
-
-                    foreach ($labels as $state => $label):
+                <!-- STATE FILTERS -->
+                <div class="d-flex gap-2 flex-wrap">
+                    <?php foreach ($labels as $state => $label):
                         $count = $stateCounts[$state] ?? 0;
                         $isActive = in_array($state, $activeStates);
                         $newStates = $activeStates;
@@ -174,13 +175,10 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                             $newStates[] = $state;
                         }
 
-
-
                         $query = http_build_query([
-                            'states' => $activeStates,
-                            'types' => $newTypes
+                            'states' => $newStates,   // ✅ FIXED
+                            'types' => $activeTypes   // ✅ FIXED
                         ]);
-                        
                         ?>
                         <a href="?<?= e($query) ?>"
                             class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
@@ -188,12 +186,13 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                             <span class="badge bg-light text-dark"><?= $count ?></span>
                         </a>
                     <?php endforeach; ?>
+                </div>
 
-                    <div class="">
-                        <a href="?" class="btn btn-sm btn-outline-dark">
-                            <?= $totalTasks ?> total
-                        </a>
-                    </div>
+                <!-- TOTAL / RESET -->
+                <div class="ms-2">
+                    <a href="?" class="btn btn-sm btn-outline-dark">
+                        <?= $totalTasks ?> total
+                    </a>
                 </div>
 
             </div>
