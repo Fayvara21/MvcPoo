@@ -92,8 +92,8 @@
 
 </div>
 
-<script defer src="/../app/views/tasks/js/appro.js"></script>
-<script defer src="/../app/views/tasks/js/retour.js"></script>
-<script defer src="/../app/views/tasks/js/task-type-toggle.js"></script>
+<script defer src="/js/tasks/appro.js"></script>
+<script defer src="/js/tasks/retour.js"></script>
+<script defer src="/js/tasks/task-type-toggle.js"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
