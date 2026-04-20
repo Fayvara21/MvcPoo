@@ -65,9 +65,27 @@ if (!is_array($activeStates))
     $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
+// Type filters (appro / retour)
+$activeTypes = $_GET['types'] ?? [];
+if (!is_array($activeTypes)) {
+    $activeTypes = [$activeTypes];
+}
+$activeTypes = array_map('strval', $activeTypes);
+
 // Filter tasks
-$tasks = array_filter($tasks, function ($task) use ($activeStates) {
-    return empty($activeStates) || in_array((int) $task['is_completed'], $activeStates);
+$tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes) {
+
+    $stateMatch = empty($activeStates)
+        || in_array((int) $task['is_completed'], $activeStates);
+
+    $hasAppro = !empty($task['appro']);
+    $hasRetour = !empty($task['retour']);
+
+    $typeMatch = empty($activeTypes)
+        || (in_array('appro', $activeTypes) && $hasAppro)
+        || (in_array('retour', $activeTypes) && $hasRetour);
+
+    return $stateMatch && $typeMatch;
 });
 ?>
 
@@ -108,34 +126,74 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
             <div class="d-flex align-items-center gap-2">
 
                 <span class="text-muted small me-2">Filtres :</span>
+                <div style="border-rignt:solid 2px #dee2e6;">
 
-                <?php
+                    <?php
+                    $typeLabels = [
+                        'appro' => 'APPRO',
+                        'retour' => 'RETOUR'
+                    ];
+
+                    $typeColors = [
+                        'appro' => 'primary',
+                        'retour' => 'warning'
+                    ];
+
+                    foreach ($typeLabels as $type => $label):
+                        $isActive = in_array($type, $activeTypes);
+                        $newTypes = $activeTypes;
+
+                        if ($isActive) {
+                            $newTypes = array_diff($activeTypes, [$type]);
+                        } else {
+                            $newTypes[] = $type;
+                        }
+
+                        $query = http_build_query([
+                            'states' => $activeStates,
+                            'types' => $newTypes
+                        ]);
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?>">
+                            <?= e($label) ?>
+                        </a>
+                    <?php endforeach; ?>
+
+                    <?php
 
 
-                foreach ($labels as $state => $label):
-                    $count = $stateCounts[$state] ?? 0;
-                    $isActive = in_array($state, $activeStates);
-                    $newStates = $activeStates;
+                    foreach ($labels as $state => $label):
+                        $count = $stateCounts[$state] ?? 0;
+                        $isActive = in_array($state, $activeStates);
+                        $newStates = $activeStates;
 
-                    if ($isActive) {
-                        $newStates = array_diff($activeStates, [$state]);
-                    } else {
-                        $newStates[] = $state;
-                    }
+                        if ($isActive) {
+                            $newStates = array_diff($activeStates, [$state]);
+                        } else {
+                            $newStates[] = $state;
+                        }
 
-                    $query = http_build_query(['states' => $newStates]);
-                    ?>
-                    <a href="?<?= e($query) ?>"
-                        class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                        <span><?= e($label) ?></span>
-                        <span class="badge bg-light text-dark"><?= $count ?></span>
-                    </a>
-                <?php endforeach; ?>
 
-                <div class="">
-                    <a href="?" class="btn btn-sm btn-outline-dark">
-                        <?= $totalTasks ?> total
-                    </a>
+
+                        $query = http_build_query([
+                            'states' => $activeStates,
+                            'types' => $newTypes
+                        ]);
+                        
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                            <span><?= e($label) ?></span>
+                            <span class="badge bg-light text-dark"><?= $count ?></span>
+                        </a>
+                    <?php endforeach; ?>
+
+                    <div class="">
+                        <a href="?" class="btn btn-sm btn-outline-dark">
+                            <?= $totalTasks ?> total
+                        </a>
+                    </div>
                 </div>
 
             </div>
