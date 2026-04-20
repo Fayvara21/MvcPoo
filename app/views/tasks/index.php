@@ -251,7 +251,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
 
                             <td class="actions">
-                                <div class="d-inline-flex flex-wrap">
+                                <div class="d-inline-flex flex-nowrap">
 
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
