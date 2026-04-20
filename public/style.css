@@ -434,20 +434,30 @@
 }
 
 table {
-    table-layout: fixed;
     width: 100%;
 }
+
 td {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap !important;
+    white-space: nowrap;
 }
+
 .table-sm td {
     padding: .3rem !important;
 }
-td.badgeState, td.badgeType{
-  width: 120px;
-      white-space: nowrap;
+
+/* fixed narrow columns */
+td.badgeState,
+td.badgeType {
+    width: 120px;
+    white-space: nowrap;
+}
+
+/* let 3rd column take remaining space */
+td:nth-child(3) {
+    width: 100%;
+    white-space: normal; /* allow wrapping if needed */
 }
 
 form {
