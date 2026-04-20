@@ -442,6 +442,13 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.table-sm td {
+    padding: .3rem;
+}
+td.state{
+  width: 120px;
+      white-space: nowrap;
+}
 
 form {
     margin: 0 1rem; /* relative margin for small screens */
