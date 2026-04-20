@@ -1,26 +1,43 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<div class="container">
-    <h1>Demande de contact</h1>
-    <form method="POST" action="/contact">
-        <label>Votre email:</label>
-        <input type="email" name="email" required>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="mb-4 text-center">Demande de contact</h1>
 
-        <label>Type de problème:</label>
-        <select name="type" required>
-            <option value="">-- Problème --</option>
-            <option value="bug">Bug logiciel</option>
-            <option value="feature">Demande de modification</option>
-            <option value="crash">Erreur de demande</option>
-            <option value="other">Autre</option>
-        </select>
+            <form method="POST" action="/contact">
+                
+                <div class="mb-3">
+                    <label class="form-label">Votre email:</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
 
-        <label>Description:</label>
-        <textarea name="description" rows="6" required></textarea>
+                <div class="mb-3">
+                    <label class="form-label">Type de problème:</label>
+                    <select name="type" class="form-select" required>
+                        <option value="">-- Problème --</option>
+                        <option value="bug">Bug logiciel</option>
+                        <option value="feature">Demande de modification</option>
+                        <option value="crash">Erreur de demande</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
 
-        <label>Personne  ou Groupe concerné:</label>
-        <textarea name="user" rows="4"></textarea>
+                <div class="mb-3">
+                    <label class="form-label">Description:</label>
+                    <textarea name="description" rows="6" class="form-control" required></textarea>
+                </div>
 
-        <button type="submit">Submit Report</button>
-    </form>
+                <div class="mb-3">
+                    <label class="form-label">Personne ou Groupe concerné:</label>
+                    <textarea name="user" rows="4" class="form-control"></textarea>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
