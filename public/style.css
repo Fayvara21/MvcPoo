@@ -437,6 +437,11 @@ table {
     table-layout: fixed;
     width: 100%;
 }
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 form {
     margin: 0 1rem; /* relative margin for small screens */
