@@ -443,6 +443,9 @@ td {
     white-space: nowrap;
     text-align: center;
 }
+th {
+  text-align: center
+}
 
 .table-sm td {
     padding: .3rem !important;
@@ -450,6 +453,10 @@ td {
 
 
 /* let 3rd column take remaining space */
+td.task-desctiption{
+    text-align: left;
+
+}
 td.task-description {
     width: 100%;
     white-space: normal; /* allow wrapping if needed */

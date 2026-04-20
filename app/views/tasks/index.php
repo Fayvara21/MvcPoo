@@ -151,15 +151,15 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                 <thead class="table-light">
                     <tr class="text-uppercase small text-muted">
-                        <th class="p-2">#</th>
-                        <th class="p-2">Type</th>
-                        <th class="p-2">État</th>
-                        <th class="p-2">Titre</th>
-                        <th class="p-2">Créé</th>
-                        <th class="p-2">Deadline</th>
-                        <th class="p-2">Complétion</th>
-                        <th class="p-2">Demandeur</th>
-                        <th class="p-2 actions-header" style="">Actions</th>
+                        <th>#</th>
+                        <th>Type</th>
+                        <th>Titre</th>
+                        <th>État</th>
+                        <th>Créé</th>
+                        <th>Deadline</th>
+                        <th>Complétion</th>
+                        <th>Demandeur</th>
+                        <th class="actions-header" style="">Actions</th>
                     </tr>
                 </thead>
 
@@ -210,11 +210,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="p-2 badgeState">
-                                <span class="badge bg-<?= $stateClass[$s] ?>">
-                                    <?= e($labels[$s]) ?>
-                                </span>
-                            </td>
 
                             <td class="p-2 task-description">
                                 <div class="fw-semibold task-title">
@@ -226,7 +221,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 </div>
                             </td>
 
-                            
+                            <td class="p-2 badgeState">
+                                <span class="badge bg-<?= $stateClass[$s] ?>">
+                                    <?= e($labels[$s]) ?>
+                                </span>
+                            </td>
 
                             <td class="small text-muted">
                                 <?= e(formatDateFr($task['created_at'])) ?>
