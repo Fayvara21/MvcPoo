@@ -237,9 +237,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                     : e(formatDateFr($task['due_date'])) ?>
                             </td>
 
-                            <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
+                            <td class="small text-muted">
+                                <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['completed_at'])) ?>
+                            </td>
+
 
                             <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
