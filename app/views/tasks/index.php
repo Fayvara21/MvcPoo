@@ -7,6 +7,24 @@ function e($value)
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+function formatDateFr($date)
+{
+    if (empty($date)) {
+        return '—';
+    }
+
+    $dt = new DateTime($date);
+
+    $formatter = new IntlDateFormatter(
+        'fr_FR',
+        IntlDateFormatter::MEDIUM,
+        IntlDateFormatter::SHORT
+    );
+
+    return $formatter->format($dt);
+}
+
+
 $currentUserGroup = $_SESSION['group'] ?? '';
 
 
@@ -210,22 +228,24 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                             </td>
 
                             <td class="small text-muted">
-                                <?= e(date('d M Y, H:i', strtotime($task['created_at']))) ?>
+                                <?= e(formatDateFr($task['created_at'])) ?>
                             </td>
 
                             <td class="small text-muted">
-                                <?= e(date('d M Y, H:i', strtotime($task['due_date']))) ?>
+                                <?= (!isset($task['due_date']) || $task['due_date'] === '' || $task['due_date'] === null)
+                                    ? '-'
+                                    : e(formatDateFr($task['due_date'])) ?>
                             </td>
 
-                            <td class="small text-muted">
-                                <?= e(date('d M Y, H:i', strtotime($task['completed_at']))) ?>
-                            </td>
+                            <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
+                                    ? '-'
+                                    : e(formatDateFr($task['completed_at'])) ?>
 
                             <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
                             </td>
 
-                            
+
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-wrap">
