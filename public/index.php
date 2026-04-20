@@ -5,6 +5,7 @@ require_once __DIR__ . "/../app/models/Task.php";
 require_once __DIR__ . "/../app/controllers/TaskController.php";
 require_once __DIR__ . '/../app/models/Project.php';
 require_once __DIR__ . '/../app/models/Contact.php';
+require_once __DIR__ . "/../app/controllers/ContactController.php";
 require_once __DIR__ . '/../app/models/Retour.php';
 require_once __DIR__ . '/../app/models/Appro.php';
 require_once __DIR__ . '/../app/controllers/ProjectController.php';
@@ -50,6 +51,7 @@ $router->add('/projects/tasks/view/json', [new TaskController(), 'jsonall']);
 $router->add('/login', [new AuthController(), 'login']);
 $router->add('/logout', [new AuthController(), 'logout']);
 $router->add("/register", [new AuthController(), 'register']);
-$router->add('/contact', [new AuthController(), 'contact']);
+
+$router->add('/contact', [new ContactController(), 'contact']);
 
 $router->dispatch();

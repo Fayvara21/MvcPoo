@@ -20,4 +20,11 @@ class Contact
             $email, $type, $description, $user
         ]);
     }
+    public static function view(){
+        $db = Database::getInstance()->getPdo();
+        $stmt = $db->prepare("SELECt * FROM contact");
+        $stmt->execute();
+        $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $contacts;
+    }
 }
