@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 require_once '../app/models/Contact.php';
 
-class ContactController {
+class ContactController
+{
 
     private $contactModel;
 
@@ -22,9 +23,10 @@ class ContactController {
             exit();
         }
 
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // HANDLE CONTACT FORM SUBMISSION
-             
+
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $type = htmlspecialchars($_POST['type'], ENT_QUOTES, 'UTF-8');
             $description = htmlspecialchars($_POST['description'], ENT_QUOTES, 'UTF-8');
@@ -35,9 +37,14 @@ class ContactController {
             header("Location: /projects");
             exit();
 
-            
+
         }
-        require '../app/views/contacts/index.php';
+
+        if (isset($_SESSION['group']) && $_SESSION['group'] === 'admin') {
+            require "../app/views/contacts/index.php";
+        } else {
+            require '../app/views/contacts/create.php';
+        }
     }
 
 }
