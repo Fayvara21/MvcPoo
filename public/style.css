@@ -440,10 +440,10 @@ table {
 td {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: nowrap !important;
 }
 .table-sm td {
-    padding: .3rem;
+    padding: .3rem !important;
 }
 td.badgeState, td.badgeType{
   width: 120px;
