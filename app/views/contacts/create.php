@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container mt-5">
-    <div class="card shadow">
+    <div class="card shadow-sm border-0">
         <div class="card-body">
             <h1 class="mb-4 text-center">Créer un rapport d'incident</h1>
 

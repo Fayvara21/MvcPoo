@@ -1,10 +1,10 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <div class="container mt-5">
-    <div class="card shadow">
+    <div class="card shadow-sm border-0">
         <div class="card-body p-5">
             <?php if (!empty($contacts)): ?>
-                <h1 class="mb-4">Contacts</h1>
+                <h1 class="mb-4">Tous les rapports d'incidents:</h1>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover align-middle">
