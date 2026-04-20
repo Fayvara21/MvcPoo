@@ -153,8 +153,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                     <tr class="text-uppercase small text-muted">
                         <th>#</th>
                         <th>Type</th>
-                        <th>Titre</th>
                         <th>État</th>
+                        <th>Titre</th>
                         <th>Créé</th>
                         <th>Deadline</th>
                         <th>Complétion</th>
@@ -210,6 +210,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
+                            <td class="p-2 badgeState">
+                                <span class="badge bg-<?= $stateClass[$s] ?>">
+                                    <?= e($labels[$s]) ?>
+                                </span>
+                            </td>
 
                             <td class="p-2 task-description">
                                 <div class="fw-semibold task-title">
@@ -221,11 +226,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 </div>
                             </td>
 
-                            <td class="p-2 badgeState">
-                                <span class="badge bg-<?= $stateClass[$s] ?>">
-                                    <?= e($labels[$s]) ?>
-                                </span>
-                            </td>
+                            
 
                             <td class="small text-muted">
                                 <?= e(formatDateFr($task['created_at'])) ?>
