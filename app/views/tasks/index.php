@@ -105,7 +105,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
             <hr class="my-3">
 
             <!-- Filters -->
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2">
 
                 <span class="text-muted small me-2">Filtres :</span>
 
