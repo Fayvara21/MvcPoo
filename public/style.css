@@ -445,7 +445,7 @@ td {
 .table-sm td {
     padding: .3rem;
 }
-td.state{
+td.badgeState, td.badgeType{
   width: 120px;
       white-space: nowrap;
 }

@@ -201,7 +201,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
 
                             <td class="fw-semibold"><?= $taskId ?></td>
 
-                            <td>
+                            <td class="badgeType">
                                 <?php if (!empty($approList)): ?>
                                     <span class="badge bg-blue">APPRO</span>
                                 <?php elseif (!empty($retourList)): ?>
@@ -221,7 +221,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates) {
                                 </div>
                             </td>
 
-                            <td>
+                            <td class="badgeState">
                                 <span class="badge bg-<?= $stateClass[$s] ?>">
                                     <?= e($labels[$s]) ?>
                                 </span>
