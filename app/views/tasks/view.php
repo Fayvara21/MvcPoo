@@ -202,9 +202,6 @@
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
-        console.log('Due:', due, 'Today Start:', todayStart, 'Tomorrow Start:', tomorrowStart, 'Result: table-danger');
-
-
         if (due < todayStart) {
             return 'table-danger'; // expired
         }
@@ -283,6 +280,8 @@
                             : (task.isRetour ? (task.retourFirst.PN ?? '-') : '-');
 
                         const rowClass = getDeadlineClassJS(task.due_date);
+                        console.log('Due:', task.due_date, 'Now:', new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+
 
                         const loadingIcon = task.is_completed === 1
                             ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
