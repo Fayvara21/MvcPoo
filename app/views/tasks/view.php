@@ -202,9 +202,11 @@
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
+        console.log('Due:', due, 'Today Start:', todayStart, 'Tomorrow Start:', tomorrowStart, 'Result: table-danger');
+
+
         if (due < todayStart) {
             return 'table-danger'; // expired
-            console.log('Due:', due, 'Today Start:', todayStart, 'Tomorrow Start:', tomorrowStart, 'Result: table-danger');
         }
 
         if (due >= todayStart && due < tomorrowStart) {
