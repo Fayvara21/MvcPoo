@@ -280,7 +280,7 @@
                             : (task.isRetour ? (task.retourFirst.PN ?? '-') : '-');
 
                         const rowClass = getDeadlineClassJS(task.due_date);
-                        console.log('Task ID:', task.id, 'Due Date:', task.due_date, 'Row Class:', rowClass);
+                        console.log('Task ID:', task.id, 'Due Date:', task.due_date, 'Row Class:', rowClass, 'getDeadlineClassJS:', getDeadlineClassJS(task.due_date));
 
                         const loadingIcon = task.is_completed === 1
                             ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
