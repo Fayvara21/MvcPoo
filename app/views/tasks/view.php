@@ -195,18 +195,15 @@
     function getDeadlineClassJS(dueDate) {
         if (!dueDate) return '';
 
-        const due = new Date(dueDate);
         const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-
-        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-
-        if (due < todayStart) {
+        // Compare just the date part (YYYY-MM-DD)
+        if (dueDate < todayStr) {
             return 'table-danger'; // expired
         }
 
-        if (due >= todayStart && due < tomorrowStart) {
+        if (dueDate.startsWith(todayStr)) {
             return 'table-warning'; // today
         }
 
@@ -280,7 +277,6 @@
                             : (task.isRetour ? (task.retourFirst.PN ?? '-') : '-');
 
                         const rowClass = getDeadlineClassJS(task.due_date);
-                        console.log('Due:', task.due_date, 'Now:', new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
 
 
                         const loadingIcon = task.is_completed === 1
