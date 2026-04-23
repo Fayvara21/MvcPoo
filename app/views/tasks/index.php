@@ -51,8 +51,28 @@ if (!is_array($activeTypes)) {
 }
 // Remove empty values
 $activeTypes = array_filter($activeTypes, function($value) {
-    return $value !== '';
-});
+    return $value !== '';<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="fw-semibold mb-1">Vue globale</h1>
+                <p class="text-muted mb-3">Vue sur toutes les demandes en cours</p>
+            </div>
+            
+            <!-- Add urgent badge here -->
+            <div>
+                <span class="badge bg-danger rounded-pill px-3 py-2 fs-6">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    En cours: <?= $urgentCount ?>
+                </span>
+            </div>
+        </div>
+
+    </div>
+                </div>
+                });
+
 $activeTypes = array_map('strval', $activeTypes);
 
 // ============================================================
@@ -80,7 +100,12 @@ foreach ($originalTasks as $t) {
 
 $totalApproRetour = array_sum($approRetourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
-$totalTasks = $totalApproRetour + $totalVerifStock;
+                $totalTasks = $totalApproRetour + $totalVerifStock;
+
+// Calculate urgent tasks count (state 0 or 1 for both types)
+$urgentApproRetour = ($approRetourCounts[0] ?? 0) + ($approRetourCounts[1] ?? 0);
+$urgentVerifStock = ($verifStockCounts[0] ?? 0) + ($verifStockCounts[1] ?? 0);
+$totalUrgent = $urgentApproRetour + $urgentVerifStock;
 
 // ============================================================
 // 3. LABELS & WORKFLOWS
@@ -213,7 +238,14 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
 
                     <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
                         + Nouvelle demande
-                    </a>
+                </a>
+
+    <!-- Urgent tasks badge -->
+    <a href="?ar_states[]=0&ar_states[]=1&verif_states[]=0&verif_states[]=1" 
+       class="btn btn-danger d-flex align-items-center gap-1">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        Urgent: <?= $totalUrgent ?>
+    </a>
                 </div>
             </div>
 
