@@ -121,6 +121,121 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
 <div class="container-fluid px-3 py-4">
 
+    <!-- Filters -->
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+
+        <span class="text-muted small me-2">Filtres :</span>
+
+        <!-- TYPE FILTERS -->
+        <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
+            <?php
+            $typeLabels = [
+                'appro' => 'APPRO',
+                'retour' => 'RETOUR',
+                'verif_stock' => 'VERIF STOCK'
+            ];
+
+            $typeColors = [
+                'appro' => 'primary',
+                'retour' => 'warning',
+                'verif_stock' => 'success'
+            ];
+
+            foreach ($typeLabels as $type => $label):
+                $isActive = in_array($type, $activeTypes);
+                $newTypes = $activeTypes;
+
+                if ($isActive) {
+                    $newTypes = array_diff($activeTypes, [$type]);
+                } else {
+                    $newTypes[] = $type;
+                }
+
+                $query = http_build_query([
+                    'states' => $activeStates,
+                    'types' => $newTypes
+                ]);
+                ?>
+                <a href="?<?= e($query) ?>"
+                    class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?>">
+                    <?= e($label) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- STATE FILTERS -->
+        <div class="d-flex gap-2 flex-wrap">
+            <?php foreach ($labels as $state => $label):
+                $count = $stateCounts[$state] ?? 0;
+                $isActive = in_array($state, $activeStates);
+                $newStates = $activeStates;
+
+                if ($isActive) {
+                    $newStates = array_diff($activeStates, [$state]);
+                } else {
+                    $newStates[] = $state;
+                }
+
+                $query = http_build_query([
+                    'states' => $newStates,
+                    'types' => $activeTypes
+                ]);
+                ?>
+                <a href="?<?= e($query) ?>"
+                    class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                    <span><?= e($label) ?></span>
+                    <span class="badge bg-light text-dark"><?= $count ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- TOTAL / RESET -->
+        <div class="ms-2">
+            <a href="?" class="btn btn-sm btn-outline-dark">
+                <?= $totalTasks ?> total
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Divider for second filter row -->
+    <hr class="my-3">
+
+    <!-- VERIF STOCK STATE FILTERS (second row) -->
+    <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+        <span class="text-muted small me-2">Filtres VERIF STOCK :</span>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <?php
+            $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
+            foreach ($verifStockStateKeys as $state):
+                $label = $verifStockLabels[$state];
+                $count = $stateCounts[$state] ?? 0;
+                $isActive = in_array($state, $activeStates);
+                $newStates = $activeStates;
+
+                if ($isActive) {
+                    $newStates = array_diff($activeStates, [$state]);
+                } else {
+                    $newStates[] = $state;
+                }
+
+                $query = http_build_query([
+                    'states' => $newStates,
+                    'types' => $activeTypes
+                ]);
+                ?>
+                <a href="?<?= e($query) ?>"
+                    class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                    <span><?= e($label) ?></span>
+                    <span class="badge bg-light text-dark"><?= $count ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+
+
     <div class="card shadow-sm border-0">
 
         <!-- TABLE -->
