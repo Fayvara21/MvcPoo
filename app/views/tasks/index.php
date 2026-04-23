@@ -49,7 +49,7 @@ $verifStockLabels = [
     4 => 'OK Sans CC',
     5 => 'OK Avec CC',
     6 => 'OK Form1',
-    //7 => 'Soldé'
+    7 => 'Soldé'
 ];
 
 $stateClass = [
@@ -78,11 +78,11 @@ $verifStockTransitions = [
     0 => [1],
     1 => [2, 3],
     2 => [4, 5, 6],
-    3 => [],
-    4 => [],
-    5 => [],
-    6 => [],
-    //7 => []
+    3 => [7],
+    4 => [7],
+    5 => [7],
+    6 => [7],
+    7 => []
 ];
 
 // Filters - Separate for regular states and verif stock states
@@ -120,10 +120,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
     // State match - regular tasks use regular states, verif stock tasks use verif states
     $stateMatch = false;
     if ($hasVerifStock) {
-        // Verif stock task - use verif_states filter
         $stateMatch = empty($activeVerifStates) || in_array($state, $activeVerifStates);
     } else {
-        // Regular task (APPRO/RETOUR) - use regular states filter
         $stateMatch = empty($activeStates) || in_array($state, $activeStates);
     }
 
@@ -285,52 +283,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
 
             </div>
 
-            <!-- Divider for second filter row -->
-            <hr class="my-3">
-
-            <!-- VERIF STOCK STATE FILTERS (separate) -->
-            <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-                <span class="text-muted small me-2">États VERIF STOCK :</span>
-
-                <div class="d-flex gap-2 flex-wrap">
-                    <?php
-                    $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
-                    foreach ($verifStockStateKeys as $state):
-                        $label = $verifStockLabels[$state];
-                        $count = $stateCounts[$state] ?? 0;
-                        $isActive = in_array($state, $activeVerifStates);
-                        $newVerifStates = $activeVerifStates;
-
-                        if ($isActive) {
-                            $newVerifStates = array_diff($activeVerifStates, [$state]);
-                        } else {
-                            $newVerifStates[] = $state;
-                        }
-
-                        $query = http_build_query([
-                            'states' => $activeStates,
-                            'verif_states' => $newVerifStates,
-                            'types' => $activeTypes
-                        ]);
-                        ?>
-                        <a href="?<?= e($query) ?>"
-                            class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                            <span><?= e($label) ?></span>
-                            <span class="badge bg-light text-dark"><?= $count ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
         </div>
     </div>
 
     <div class="card shadow-sm border-0">
-
-        <!-- TABLE -->
         <div class="table-responsive">
             <table class="table table-sm align-middle table-bordered">
-
                 <thead class="table-light">
                     <tr class="text-uppercase small text-muted">
                         <th>#</th>
@@ -341,10 +299,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         <th>Deadline</th>
                         <th>Complétion</th>
                         <th>Demandeur</th>
-                        <th class="actions-header" style="">Actions</th>
+                        <th class="actions-header">Actions</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <?php foreach ($tasks as $taskIndex => $task): ?>
                         <?php
@@ -415,7 +372,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                 <div class="fw-semibold task-title">
                                     <?= e($task['title']) ?>
                                 </div>
-
                                 <div class="small description" style="display:block; font-size:1rem;">
                                     <?= e($task['description']) ?>
                                 </div>
@@ -427,29 +383,13 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                 </span>
                             </td>
 
-                            <td class="small text-muted">
-                                <?= e(formatDateFr($task['created_at'])) ?>
-                            </td>
-
-                            <td class="small text-muted">
-                                <?= (!isset($task['due_date']) || $task['due_date'] === '' || $task['due_date'] === null)
-                                    ? '-'
-                                    : e(formatDateFr($task['due_date'])) ?>
-                            </td>
-
-                            <td class="small text-muted">
-                                <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
-                                    ? '-'
-                                    : e(formatDateFr($task['completed_at'])) ?>
-                            </td>
-
-                            <td class="small text-muted">
-                                <?= e($task["user_name"]) ?>
-                            </td>
+                            <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
+                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?></td>
+                            <td class="small text-muted"><?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?></td>
+                            <td class="small text-muted"><?= e($task["user_name"]) ?></td>
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-nowrap">
-
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
                                             class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
@@ -468,22 +408,14 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                         </form>
                                     <?php endif; ?>
 
-                                    <!-- STATE TRANSITIONS -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
                                         <div class="btn-group">
                                             <?php foreach ($nextStates as $nextState): ?>
-                                                <?php
-                                                // Skip state 7 (Soldé) for magasin on verif_stock tasks
-                                                if ($isVerifStock && $nextState == 7 && !$canUseState7) {
-                                                    continue;
-                                                }
-                                                ?>
+                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7) continue; ?>
                                                 <form method="POST"
                                                     action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
                                                     class="d-inline m-1">
-
                                                     <input type="hidden" name="state" value="<?= (int) $nextState ?>">
-
                                                     <button type="submit"
                                                         class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
                                                         <i class="bi bi-arrow-return-right"></i>
@@ -500,7 +432,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         <!-- SUB-TASK ROWS FOR APPRO -->
                         <?php foreach ($approList as $a): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>">
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-primary">APPRO</div>
@@ -524,7 +456,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         <!-- SUB-TASK ROWS FOR RETOUR -->
                         <?php foreach ($retourList as $r): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>">
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
@@ -543,9 +475,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         <!-- SUB-TASK ROWS FOR VERIF STOCK -->
                         <?php foreach ($verifStockList as $v): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>>
-                                <td class=" p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="9">
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
+                                <td class="p-2 fw-semibold"><?= $subIndex ?></td>
+                                <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
@@ -568,9 +500,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
         // Toggle task rows on click
         document.querySelectorAll('.task-row').forEach(function (row) {
             row.addEventListener('click', function (e) {
-                // Don't toggle if clicking on a button or form element
                 if (e.target.closest('.btn') || e.target.closest('form')) return;
-
                 const taskId = row.dataset.task;
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                     subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
@@ -585,19 +515,19 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                 const query = searchInput.value.toLowerCase().trim();
                 document.querySelectorAll('.task-row').forEach(function (taskRow) {
                     const taskId = taskRow.dataset.task;
-                    const title = taskRow.querySelector('td:nth-child(3) .fw-semibold')?.textContent.toLowerCase() || '';
-                    const description = taskRow.querySelector('td:nth-child(3) .text-muted')?.textContent.toLowerCase() || '';
-
+                    const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
+                    const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
+                    
                     let match = title.includes(query) || description.includes(query);
-
+                    
                     document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                         if (subRow.textContent.toLowerCase().includes(query)) match = true;
                     });
-
+                    
                     if (match || query === '') {
                         taskRow.style.display = '';
                         document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                            subRow.style.display = 'none';
+                            subRow.style.display = 'table-row';
                         });
                     } else {
                         taskRow.style.display = 'none';
