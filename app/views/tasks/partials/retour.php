@@ -10,7 +10,7 @@
             + Ajouter PN
         </button>
 
-        <div id="retourFields" class="card shadow-sm border-0" style="display:none;">
+        <div id="retourFields" class="card shadow-sm border-0">
             <div class="card-body">
                 <div class="d-flex align-items-center gap-2 mb-3"> <span
                         class="badge bg-warning text-dark">RETOUR</span>
@@ -22,7 +22,8 @@
                         <div class="row g-2">
                             <div class="col"> <input class="form-control" name="retour[0][pn]" placeholder="PN"
                                     required> </div>
-                            <div class="col"> <input class="form-control" type="number" name="retour[0][nb]" value="1">
+                            <div class="col"> <input class="form-control" type="number" name="retour[0][nb]" value="1"
+                                    placeholder="Quantité">
                             </div>
                             <div class="col-auto"> <button type="button" class="btn btn-danger remove">✕</button> </div>
                         </div>
@@ -31,8 +32,8 @@
 
                 <hr>
 
-                <input class="form-control mb-2" name="retour_sn">
-                <input class="form-control mb-2" name="retour_certif">
+                <input class="form-control mb-2" name="retour_sn" placeholder="SN">
+                <input class="form-control mb-2" name="retour_certif" placeholder="Certification">
 
             </div>
         </div>

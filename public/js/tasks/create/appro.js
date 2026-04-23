@@ -6,18 +6,14 @@ function addApproItem() {
 
     div.innerHTML = `
         <div class="row g-2">
-            <div class="col">
-                <input class="form-control" name="appro[${index}][pn]" required>
+            <div class="col"> <input class="form-control" name="appro[0][pn]" placeholder="PN" required>
             </div>
-            <div class="col">
-                <input class="form-control" name="appro[${index}][location]">
+            <div class="col"> <input class="form-control" name="appro[0][location]"
+                    placeholder="Emplacement"> </div>
+            <div class="col"> <input class="form-control" type="number" name="appro[0][nb]" value="1"
+                    placeholder="Quantité">
             </div>
-            <div class="col">
-                <input class="form-control" type="number" name="appro[${index}][nb]" value="1">
-            </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-danger remove">✕</button>
-            </div>
+            <div class="col-auto"> <button type="button" class="btn btn-danger remove">✕</button> </div>
         </div>
     `;
 

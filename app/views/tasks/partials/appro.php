@@ -10,7 +10,7 @@
             + Ajouter PN
         </button>
 
-        <div id="approFields" class="card shadow-sm border-0 mb-3" style="display:none;">
+        <div id="approFields" class="card shadow-sm border-0 mb-3">
             <div class="card-body">
                 <div class="d-flex align-items-center gap-2 mb-3"> <span class="badge bg-primary">APPRO</span>
                     <h5 class="fw-semibold mb-0">Informations APPRO</h5>
@@ -23,7 +23,8 @@
                             </div>
                             <div class="col"> <input class="form-control" name="appro[0][location]"
                                     placeholder="Emplacement"> </div>
-                            <div class="col"> <input class="form-control" type="number" name="appro[0][nb]" value="1">
+                            <div class="col"> <input class="form-control" type="number" name="appro[0][nb]" value="1"
+                                    placeholder="Quantité">
                             </div>
                             <div class="col-auto"> <button type="button" class="btn btn-danger remove">✕</button> </div>
                         </div>
@@ -32,10 +33,10 @@
 
                 <hr>
 
-                <input class="form-control mb-2" name="appro_designation">
-                <input class="form-control mb-2" name="appro_of" required>
-                <input class="form-control mb-2" name="appro_plane">
-                <input class="form-control mb-2" name="appro_oe">
+                <input class="form-control mb-2" name="appro_designation" placeholder="Désignation">
+                <input class="form-control mb-2" name="appro_of" placeholder="OF" required>
+                <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
+                <input class="form-control mb-2" name="appro_oe" placeholder="OE">
 
             </div>
         </div>

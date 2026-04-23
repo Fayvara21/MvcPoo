@@ -20,7 +20,6 @@
     <?php if (empty($projects)): ?>
         <!-- Empty state -->
         <div class="text-center py-5">
-            <div class="display-1 text-muted mb-4">📋</div>
             <h3 class="h4 text-muted mb-3">Aucune demande en cours</h3>
             <p class="text-muted mb-4">Toutes les demandes sont traitées ou aucun projet n'est actif</p>
             <a href="/projects" class="btn btn-primary rounded-pill px-4">
@@ -251,7 +250,6 @@
                         </ul>
                     </li>
                     <li class="list-group-item">Recherche globale dans toute la base de données</li>
-                    <li class="list-group-item">Ajout de l’heure de clôture dans l’historique</li>
                     <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
                 </ul>
 
