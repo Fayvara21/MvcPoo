@@ -94,7 +94,7 @@
 
 <script defer src="/js/tasks/create/appro.js"></script>
 <script defer src="/js/tasks/create/retour.js"></script>
-<script defer src="/js/tasks/create/shared.js"></script>
-<script defer src="/js/tasks/create/task-type-toggle.js"></script>
+<script defer src="/js/tasks/shared.js"></script>
+<script defer src="/js/tasks/task-type-toggle.js"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

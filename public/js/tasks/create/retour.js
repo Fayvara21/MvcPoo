@@ -9,9 +9,6 @@ function addRetourItem() {
                 <input class="form-control" name="retour[${index}][pn]" placeholder="PN" required>
             </div>
             <div class="col">
-                <input class="form-control" name="retour[${index}][location]" placeholder="Emplacement">
-            </div>
-            <div class="col">
                 <input class="form-control" type="number" name="retour[${index}][nb]" value="1" placeholder="Quantité">
             </div>
             <div class="col-auto">
