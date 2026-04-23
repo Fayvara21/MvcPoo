@@ -180,8 +180,10 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
     return $typeMatch && $stateMatch;
 });
 
-// Determine visibility of state filter rows
+// Determine visibility of state filter rows - HIDDEN BY DEFAULT
+// Only show APPRO/RETOUR state filters if at least one of 'appro' or 'retour' is selected
 $showApproRetourFilters = !empty($activeTypes) && (in_array('appro', $activeTypes) || in_array('retour', $activeTypes));
+// Only show VERIF STOCK state filters if 'verif_stock' is selected
 $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
 ?>
 
@@ -221,7 +223,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
             <!-- Filters -->
             <div class="d-flex flex-column gap-3">
 
-                <!-- First row: Type filters + Total -->
+                <!-- First row: Type filters + Total (always visible) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">Filtres :</span>
 
@@ -259,7 +261,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                     </div>
                 </div>
 
-                <!-- Second row: APPRO/RETOUR State Filters (visible only if at least one of 'appro' or 'retour' is selected) -->
+                <!-- Second row: APPRO/RETOUR State Filters (hidden by default, appears only when APPRO or RETOUR type is selected) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showApproRetourFilters ? '' : 'style="display: none;"' ?>>
                     <span class="text-muted small me-2">États APPRO/RETOUR :</span>
                     <div class="d-flex gap-2 flex-wrap">
@@ -290,7 +292,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                     </div>
                 </div>
 
-                <!-- Third row: VERIF STOCK State Filters (visible only if 'verif_stock' is selected) -->
+                <!-- Third row: VERIF STOCK State Filters (hidden by default, appears only when VERIF STOCK type is selected) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showVerifStockFilters ? '' : 'style="display: none;"' ?>>
                     <span class="text-muted small me-2">États VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
