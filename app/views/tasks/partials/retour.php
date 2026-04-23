@@ -1,6 +1,5 @@
-<div id="retourFields" class="card shadow-sm border-0" style="display:none;">
+<div id="retourFields" class="card shadow-sm border-0" style="display: none;">
     <div class="card-body">
-
         <div class="d-flex align-items-center gap-2 mb-3">
             <span class="badge bg-warning text-dark">RETOUR</span>
             <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
@@ -10,23 +9,11 @@
             + Ajouter PN
         </button>
 
-        <div id="retourFields" class="card shadow-sm border-0">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-2 mb-3"> <span
-                        class="badge bg-warning text-dark">RETOUR</span>
-                    <h5 class="fw-semibold mb-0">Informations RETOUR</h5>
-                </div>
-                <button type="button" id="addRetour" class="btn btn-sm btn-warning mb-3" onclick="addRetourItem()">
-                    + Ajouter PN
-                </button>
-                <!-- MULTI ROW -->
-                <div id="retourList">
-                </div>
+        <div id="retourList"></div>
 
-                <hr>
+        <hr>
 
-                <input class="form-control mb-2" name="retour_sn" placeholder="SN">
-                <input class="form-control mb-2" name="retour_certif" placeholder="Certification">
-
-            </div>
-        </div>
+        <input class="form-control mb-2" name="retour_sn" placeholder="SN">
+        <input class="form-control mb-2" name="retour_certif" placeholder="Certificat">
+    </div>
+</div>

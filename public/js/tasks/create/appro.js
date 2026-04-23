@@ -6,19 +6,29 @@ function addApproItem() {
 
     div.innerHTML = `
         <div class="row g-2">
-            <div class="col"> <input class="form-control" name="appro[0][pn]" placeholder="PN" required>
+            <div class="col"> 
+                <input class="form-control" name="appro[${index}][pn]" placeholder="PN" required>
             </div>
-            <div class="col"> <input class="form-control" name="appro[0][location]"
-                    placeholder="Emplacement"> </div>
-            <div class="col"> <input class="form-control" type="number" name="appro[0][nb]" value="1"
-                    placeholder="Quantité">
+            <div class="col"> 
+                <input class="form-control" name="appro[${index}][location]" placeholder="Emplacement">
             </div>
-            <div class="col-auto"> <button type="button" class="btn btn-danger remove">✕</button> </div>
+            <div class="col"> 
+                <input class="form-control" type="number" name="appro[${index}][nb]" value="1" placeholder="Quantité">
+            </div>
+            <div class="col-auto"> 
+                <button type="button" class="btn btn-danger remove">✕</button>
+            </div>
         </div>
     `;
 
     document.getElementById('approList').appendChild(div);
 }
 
-document.getElementById('addAppro')
-    ?.addEventListener('click', addApproItem);
+// Remove existing listener and add new one
+const addApproBtn = document.getElementById('addAppro');
+if (addApproBtn) {
+    // Remove any existing listeners by cloning and replacing
+    const newBtn = addApproBtn.cloneNode(true);
+    addApproBtn.parentNode.replaceChild(newBtn, addApproBtn);
+    newBtn.addEventListener('click', addApproItem);
+}
