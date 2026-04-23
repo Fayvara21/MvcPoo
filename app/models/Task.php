@@ -108,7 +108,7 @@ class Task
         $stmt->execute();
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return self::attachApproRetour($tasks);
+        return self::attachApproRetourVerifStock($tasks);
     }
 
     public static function getAuthorizedProjects()
@@ -145,7 +145,7 @@ class Task
         $task = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($task) {
-            $tasksWithData = self::attachApproRetour([$task]);
+            $tasksWithData = self::attachApproRetourVerifStock([$task]);
             return $tasksWithData[0] ?? $task;
         }
 
@@ -191,7 +191,7 @@ class Task
         ");
 
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return self::attachApproRetour($tasks);
+        return self::attachApproRetourVerifStock($tasks);
     }
 
     public static function getAuthorizedTasksByProject($projectId)
@@ -209,7 +209,7 @@ class Task
         $stmt->execute([$projectId]);
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return self::attachApproRetour($tasks);
+        return self::attachApproRetourVerifStock($tasks);
     }
 
     // Helper: attach multiple APPRO and RETOUR to tasks
