@@ -12,10 +12,26 @@
         <div id="approList"></div>
 
         <hr>
-
-        <input class="form-control mb-2" name="appro_designation" placeholder="Désignation">
-        <input class="form-control mb-2" name="appro_of" placeholder="OF" required>
-        <input class="form-control mb-2" name="appro_plane" placeholder="Plane">
-        <input class="form-control mb-2" name="appro_oe" placeholder="OE">
+        <div class="mb-1">
+            <label class="form-label fw-medium">Désignation :</label>
+            <input class="form-control mb-2" name="appro_designation" placeholder="Désignation">
+        </div>
+        <div class="mb-1">
+            <label class="form-label fw-medium">OF<span class="text-danger">*</span> :</label>
+            <input class="form-control mb-2" name="appro_of" placeholder="OF">
+        </div>
+        <div class="mb-1">
+            <label class="form-label fw-medium">Avion :</label>
+            <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
+        </div>
+        <div class="mb-1">
+            <label class="form-label fw-medium">Avion :</label>
+            <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
+        </div>
+        <div class="mb-1">
+            <label class="form-label fw-medium">OE :</label>
+            <input class="form-control mb-2" name="appro_oe" placeholder="OE">
+        </div>
     </div>
 </div>
+

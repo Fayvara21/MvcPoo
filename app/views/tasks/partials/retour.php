@@ -13,7 +13,13 @@
 
         <hr>
 
-        <input class="form-control mb-2" name="retour_sn" placeholder="SN">
-        <input class="form-control mb-2" name="retour_certif" placeholder="Certificat">
+        <div class="mb-1">
+            <label class="form-label fw-medium">SN :</label>
+            <input class="form-control mb-2" name="retour_sn" placeholder="SN">
+        </div>
+        <div class="mb-1">
+            <label class="form-label fw-medium">Certification :</label>
+            <input class="form-control mb-2" name="retour_certif" placeholder="Certification">
+        </div>
     </div>
 </div>
