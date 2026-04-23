@@ -361,69 +361,48 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const firstActionsHeader = document.querySelector('.actions-header');
-
         // Toggle task rows on click
         document.querySelectorAll('.task-row').forEach(function (row) {
-            row.addEventListener('click', function () {
-                const taskId = row.dataset.task;
-                const actions = row.querySelector('.actions');
+            row.addEventListener('click', function (e) {
+                // Don't toggle if clicking on a button or form element
+                if (e.target.closest('.btn') || e.target.closest('form')) return;
 
-                // Toggle sub-rows
+                const taskId = row.dataset.task;
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                     subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
                 });
-
-                // Toggle actions column
-
             });
         });
 
         // Search function
         const searchInput = document.getElementById('task-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const query = searchInput.value.toLowerCase().trim();
+                document.querySelectorAll('.task-row').forEach(function (taskRow) {
+                    const taskId = taskRow.dataset.task;
+                    const title = taskRow.querySelector('td:nth-child(3) .fw-semibold')?.textContent.toLowerCase() || '';
+                    const description = taskRow.querySelector('td:nth-child(3) .text-muted')?.textContent.toLowerCase() || '';
 
-        searchInput.addEventListener('input', function () {
-            const query = searchInput.value.toLowerCase().trim();
+                    let match = title.includes(query) || description.includes(query);
 
-            document.querySelectorAll('.task-row').forEach(function (taskRow) {
-                const taskId = taskRow.dataset.task;
+                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                        if (subRow.textContent.toLowerCase().includes(query)) match = true;
+                    });
 
-                // Get all relevant main row text
-                const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
-                const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
-                const requester = taskRow.querySelector('td:nth-child(8)')?.textContent.toLowerCase() || '';
-
-                // Combine main fields
-                let match = (
-                    title.includes(query) ||
-                    description.includes(query) ||
-                    requester.includes(query)
-                );
-
-                // Search inside subtasks (APPRO, RETOUR, VERIF STOCK)
-                document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                    const subText = subRow.textContent.toLowerCase();
-                    if (subText.includes(query)) {
-                        match = true;
+                    if (match || query === '') {
+                        taskRow.style.display = '';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'none';
+                        });
+                    } else {
+                        taskRow.style.display = 'none';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'none';
+                        });
                     }
                 });
-
-                // Show / hide
-                if (match || query === '') {
-                    taskRow.style.display = '';
-
-                    // Show subtasks only if searching
-                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        subRow.style.display = query ? 'table-row' : 'none';
-                    });
-
-                } else {
-                    taskRow.style.display = 'none';
-                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        subRow.style.display = 'none';
-                    });
-                }
             });
-        });
+        }
     });
 </script>
