@@ -109,60 +109,27 @@
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Stats -->
-<?php
-// Calculate urgent count for this project from tasks
-$projectUrgentCount = 0;
-                $projectTasksCount = 0;
-                if (!empty($project['tasks'])) {
-                    $projectTasksCount = count($project['tasks']);
-                    foreach ($project['tasks'] as $task) {
-                        // Check if task is still active (state 0 = Envoyé, 1 = Traitement)
-                        // Use 'is_completed' field if available, otherwise check if task is not completed
-                        $isUrgent = false;
 
-                        if (isset($task['is_completed'])) {
-                            // If we have the state field
-                            $state = (int) $task['is_completed'];
-                            $isUrgent = ($state === 0 || $state === 1);
-                        } elseif (isset($task['status'])) {
-                            // Alternative field name
-                            $state = (int) $task['status'];
-                            $isUrgent = ($state === 0 || $state === 1);
-                        } else {
-                            // If no state field, consider all tasks as urgent
-                            $isUrgent = true;
-                        }
-
-                        if ($isUrgent) {
-                            $projectUrgentCount++;
-                        }
-                    }
-                }
-
-                var_dump($project);
-                var_dump($task);
-                ?>
-
-<?php if ($projectTasksCount > 0): ?>
+<!-- Stats -->
+<?php if (($project['tasks_count'] ?? 0) > 0): ?>
     <div class="d-flex gap-3 mt-3 pt-3 border-top">
         <div>
             <span class="text-muted small">Demandes</span>
-            <div class="fw-bold"><?= $projectTasksCount ?></div>
+            <div class="fw-bold"><?= $project['tasks_count'] ?></div>
         </div>
         
         <div>
             <span class="text-muted small">Urgentes</span>
             <div class="fw-bold">
-                <?php if ($projectUrgentCount > 0): ?>
-                    <span class="badge bg-danger"><?= $projectUrgentCount ?></span>
+                <?php if (($project['urgent_count'] ?? 0) > 0): ?>
+                    <span class="badge bg-danger"><?= $project['urgent_count'] ?></span>
                 <?php else: ?>
                     <span class="text-muted">0</span>
                 <?php endif; ?>
             </div>
         </div>
     </div>
-                    <?php endif; ?>
+<?php endif; ?>
 
                         </div>
 
