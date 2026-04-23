@@ -110,8 +110,8 @@
                                         ?>
 
                                         <tr class="<?= $deadlineClass ?>">
-                                            <td class="ps-4 fw-medium"><?= $task['id'] ?> </td>
 
+                                            <td class="ps-4 fw-medium"><?= $task['id'] ?></td>
                                             <td>
                                                 <?php if ($isAppro): ?>
                                                     <span class="badge bg-primary">APPRO</span>
@@ -123,19 +123,19 @@
                                                     <span class="badge bg-secondary">AUTRE</span>
                                                 <?php endif; ?>
                                             </td>
-
                                             <td><?= htmlspecialchars($task['title']) ?></td>
-                                            <td><?= htmlspecialchars($task['description']) ?></td>
-
+                                            <td>
+                                                <?= $isAppro
+                                                    ? ($approFirst['designation'] ?? '-')
+                                                    : ($isRetour ? ($retourFirst['sn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['name'] ?? '-') : '-')) ?>
+                                            </td>
                                             <td>
                                                 <?= $isAppro
                                                     ? ($approFirst['pn'] ?? '-')
                                                     : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : '-')) ?>
                                             </td>
-
                                             <td>
                                                 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
-
                                                 <?php if ($task['is_completed'] == 1): ?>
                                                     <span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
                                                 <?php endif; ?>
@@ -145,30 +145,29 @@
 
                                         <tr class="table <?= $deadlineClass ?>">
                                             <td colspan="6" class="p-3">
+                                                <div class="mb-2"><strong>Description:</strong>
+                                                    <?= htmlspecialchars($task['description']) ?></div>
 
                                                 <?php if ($isAppro): ?>
                                                     <div class="d-flex flex-wrap gap-4 small">
                                                         <span><strong>Quantité:</strong> <?= $approFirst['nb'] ?? '-' ?></span>
-                                                        <span><strong>Désignation:</strong>
-                                                            <?= $approFirst['designation'] ?? '-' ?></span>
                                                         <span><strong>Lieu:</strong> <?= $approFirst['location'] ?? '-' ?></span>
                                                         <span><strong>Avion:</strong> <?= $approFirst['plane'] ?? '-' ?></span>
+                                                        <span><strong>OE:</strong> <?= $approFirst['oe'] ?? '-' ?></span>
+                                                        <span><strong>OF:</strong> <?= $approFirst['of'] ?? '-' ?></span>
                                                     </div>
                                                 <?php elseif ($isRetour): ?>
                                                     <div class="d-flex flex-wrap gap-4 small">
                                                         <span><strong>Quantité:</strong> <?= $retourFirst['nb'] ?? '-' ?></span>
-                                                        <span><strong>SN:</strong> <?= $retourFirst['sn'] ?? '-' ?></span>
                                                         <span><strong>Certif:</strong> <?= $retourFirst['certif'] ?? '-' ?></span>
                                                     </div>
                                                 <?php elseif ($isVerifStock): ?>
                                                     <div class="d-flex flex-wrap gap-4 small">
                                                         <span><strong>Quantité:</strong> <?= $verifStockFirst['nb'] ?? '-' ?></span>
-                                                        <span><strong>Nom:</strong> <?= $verifStockFirst['name'] ?? '-' ?></span>
                                                     </div>
                                                 <?php else: ?>
                                                     <span class="text-muted small">-</span>
                                                 <?php endif; ?>
-
                                             </td>
                                         </tr>
 
@@ -309,7 +308,6 @@
                         if (task.isAppro) {
                             detailsHtml = `
                                 <strong>Quantité:</strong> ${task.approFirst.nb ?? '-'} |
-                                <strong>Désignation:</strong> ${task.approFirst.designation ?? '-'} |
                                 <strong>Lieu:</strong> ${task.approFirst.location ?? '-'} |
                                 <strong>Avion:</strong> ${task.approFirst.plane ?? '-'}
                             `;
@@ -328,17 +326,27 @@
                             detailsHtml = '-';
                         }
 
+                        let designationOrRef = '-';
+                        if (task.isAppro) {
+                            designationOrRef = task.approFirst.designation ?? '-';
+                        } else if (task.isRetour) {
+                            designationOrRef = task.retourFirst.sn ?? '-';
+                        } else if (task.isVerifStock) {
+                            designationOrRef = task.verifStockFirst.name ?? '-';
+                        }
+
                         html.push(`
                             <tr class="${rowClass}">
                                 <td class="ps-4 fw-medium">${task.id}</td>
                                 <td>${typeBadge}</td>
                                 <td>${task.title}</td>
-                                <td>${task.description}</td>
+                                <td>${designationOrRef}</td>
                                 <td>${reference}</td>
                                 <td>${task.due_date ?? '-'} ${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
                                 <td colspan="6" class="p-3">
+                                    <div class="mb-2"><strong>Description:</strong> ${task.description || '-'}</div>
                                     ${detailsHtml}
                                 </td>
                             </tr>
