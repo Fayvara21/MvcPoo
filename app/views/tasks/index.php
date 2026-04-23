@@ -46,10 +46,10 @@ $verifStockLabels = [
     1 => 'Traitement',
     2 => 'OK',
     3 => 'NOK',
-    4 => 'Sans CC',
-    5 => 'Avec CC',
-    6 => 'Form1',
-    7 => 'Soldé'
+    4 => 'OK Sans CC',
+    5 => 'OK Avec CC',
+    6 => 'OK Form1',
+    //7 => 'Soldé'
 ];
 
 $stateClass = [
@@ -78,42 +78,56 @@ $verifStockTransitions = [
     0 => [1],
     1 => [2, 3],
     2 => [4, 5, 6],
-    3 => [7],
-    4 => [7],
-    5 => [7],
-    6 => [7],
-    7 => []
+    3 => [],
+    4 => [],
+    5 => [],
+    6 => [],
+    //7 => []
 ];
 
-// Filters
+// Filters - Separate for regular states and verif stock states
 $activeStates = $_GET['states'] ?? [];
 if (!is_array($activeStates))
     $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
-// Type filters
+$activeVerifStates = $_GET['verif_states'] ?? [];
+if (!is_array($activeVerifStates)) {
+    $activeVerifStates = [$activeVerifStates];
+}
+$activeVerifStates = array_map('intval', $activeVerifStates);
+
+// Type filters (appro / retour / verif_stock)
 $activeTypes = $_GET['types'] ?? [];
 if (!is_array($activeTypes)) {
     $activeTypes = [$activeTypes];
 }
 $activeTypes = array_map('strval', $activeTypes);
 
-// Filter tasks
-$tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes) {
-
-    $stateMatch = empty($activeStates)
-        || in_array((int) $task['is_completed'], $activeStates);
-
+// Filter tasks - Combine both regular and verif stock state filters
+$tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifStates, $activeTypes) {
+    $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
     $hasVerifStock = !empty($task['verif_stock']);
 
+    // Type match
     $typeMatch = empty($activeTypes)
         || (in_array('appro', $activeTypes) && $hasAppro)
         || (in_array('retour', $activeTypes) && $hasRetour)
         || (in_array('verif_stock', $activeTypes) && $hasVerifStock);
 
-    return $stateMatch && $typeMatch;
+    // State match - regular tasks use regular states, verif stock tasks use verif states
+    $stateMatch = false;
+    if ($hasVerifStock) {
+        // Verif stock task - use verif_states filter
+        $stateMatch = empty($activeVerifStates) || in_array($state, $activeVerifStates);
+    } else {
+        // Regular task (APPRO/RETOUR) - use regular states filter
+        $stateMatch = empty($activeStates) || in_array($state, $activeStates);
+    }
+
+    return $typeMatch && $stateMatch;
 });
 ?>
 
@@ -192,8 +206,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                     <?php endforeach; ?>
                 </div>
 
-                <!-- STATE FILTERS (APPRO/RETOUR) -->
+                <!-- STATE FILTERS (APPRO/RETOUR only) -->
                 <div class="d-flex gap-2 flex-wrap">
+                    <span class="text-muted small me-2">États APPRO/RETOUR :</span>
                     <?php foreach ($labels as $state => $label):
                         $count = $stateCounts[$state] ?? 0;
                         $isActive = in_array($state, $activeStates);
@@ -206,8 +221,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         }
 
                         $query = http_build_query([
-                            'states' => $newStates,
-                            'types' => $activeTypes
+                            'states' => $activeStates,
+                            'verif_states' => $activeVerifStates,
+                            'types' => $newTypes
                         ]);
                         ?>
                         <a href="?<?= e($query) ?>"
@@ -230,9 +246,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
             <!-- Divider for second filter row -->
             <hr class="my-3">
 
-            <!-- VERIF STOCK STATE FILTERS (second row) -->
+            <!-- VERIF STOCK STATE FILTERS (separate) -->
             <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-                <span class="text-muted small me-2">Filtres VERIF STOCK :</span>
+                <span class="text-muted small me-2">États VERIF STOCK :</span>
 
                 <div class="d-flex gap-2 flex-wrap">
                     <?php
@@ -240,17 +256,18 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                     foreach ($verifStockStateKeys as $state):
                         $label = $verifStockLabels[$state];
                         $count = $stateCounts[$state] ?? 0;
-                        $isActive = in_array($state, $activeStates);
-                        $newStates = $activeStates;
+                        $isActive = in_array($state, $activeVerifStates);
+                        $newVerifStates = $activeVerifStates;
 
                         if ($isActive) {
-                            $newStates = array_diff($activeStates, [$state]);
+                            $newVerifStates = array_diff($activeVerifStates, [$state]);
                         } else {
-                            $newStates[] = $state;
+                            $newVerifStates[] = $state;
                         }
 
                         $query = http_build_query([
-                            'states' => $newStates,
+                            'states' => $activeStates,
+                            'verif_states' => $newVerifStates,
                             'types' => $activeTypes
                         ]);
                         ?>
@@ -485,7 +502,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <?php foreach ($verifStockList as $v): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>>
-                                <td class="p-2 fw-semibold"><?= $subIndex ?></td>
+                                <td class=" p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
                                     <div class="d-flex gap-4 mb-1">
