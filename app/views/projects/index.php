@@ -159,7 +159,9 @@ $projectUrgentCount = 0;
             </div>
         </div>
     </div>
-<?php endif; ?>
+                    <?php endif; ?>
+                    <?php var_dump($projectTasksCount);
+                var_dump($projectUrgentCount);?>
 
                         </div>
 
