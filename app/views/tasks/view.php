@@ -95,25 +95,30 @@
 
                                         $appro = $task['appro'] ?? [];
                                         $retour = $task['retour'] ?? [];
+                                        $verifStock = $task['verif_stock'] ?? [];
 
                                         $isAppro = !empty($appro);
                                         $isRetour = !empty($retour);
+                                        $isVerifStock = !empty($verifStock);
 
                                         $approFirst = $appro[0] ?? [];
                                         $retourFirst = $retour[0] ?? [];
+                                        $verifStockFirst = $verifStock[0] ?? [];
 
                                         $deadlineClass = getDeadlineClass($task['due_date']);
 
                                         ?>
 
                                         <tr class="<?= $deadlineClass ?>">
-                                            <td class="ps-4 fw-medium"><?= $task['id'] ?></td>
+                                            <td class="ps-4 fw-medium"><?= $task['id'] ?> </td>
 
                                             <td>
                                                 <?php if ($isAppro): ?>
                                                     <span class="badge bg-primary">APPRO</span>
                                                 <?php elseif ($isRetour): ?>
                                                     <span class="badge bg-warning text-dark">RETOUR</span>
+                                                <?php elseif ($isVerifStock): ?>
+                                                    <span class="badge bg-success">VERIF STOCK</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-secondary">AUTRE</span>
                                                 <?php endif; ?>
@@ -125,7 +130,7 @@
                                             <td>
                                                 <?= $isAppro
                                                     ? ($approFirst['pn'] ?? '-')
-                                                    : ($isRetour ? ($retourFirst['PN'] ?? '-') : '-') ?>
+                                                    : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : '-')) ?>
                                             </td>
 
                                             <td>
@@ -154,6 +159,11 @@
                                                         <span><strong>Quantité:</strong> <?= $retourFirst['nb'] ?? '-' ?></span>
                                                         <span><strong>SN:</strong> <?= $retourFirst['sn'] ?? '-' ?></span>
                                                         <span><strong>Certif:</strong> <?= $retourFirst['certif'] ?? '-' ?></span>
+                                                    </div>
+                                                <?php elseif ($isVerifStock): ?>
+                                                    <div class="d-flex flex-wrap gap-4 small">
+                                                        <span><strong>Quantité:</strong> <?= $verifStockFirst['nb'] ?? '-' ?></span>
+                                                        <span><strong>Nom:</strong> <?= $verifStockFirst['name'] ?? '-' ?></span>
                                                     </div>
                                                 <?php else: ?>
                                                     <span class="text-muted small">-</span>
@@ -244,12 +254,15 @@
 
                     const appro = task.appro || [];
                     const retour = task.retour || [];
+                    const verifStock = task.verif_stock || [];
 
                     task.approFirst = appro[0] || {};
                     task.retourFirst = retour[0] || {};
+                    task.verifStockFirst = verifStock[0] || {};
 
                     task.isAppro = appro.length > 0;
                     task.isRetour = retour.length > 0;
+                    task.isVerifStock = verifStock.length > 0;
 
                     if (!projects[task.project_id]) {
                         projects[task.project_id] = { title: task.project_title, tasks: [] };
@@ -266,50 +279,70 @@
                     let html = [];
 
                     projectTasks.forEach(task => {
-                        const typeBadge = task.isAppro
-                            ? '<span class="badge bg-primary">APPRO</span>'
-                            : task.isRetour
-                                ? '<span class="badge bg-warning text-dark">RETOUR</span>'
-                                : '<span class="badge bg-secondary">AUTRE</span>';
+                        let typeBadge = '';
+                        if (task.isAppro) {
+                            typeBadge = '<span class="badge bg-primary">APPRO</span>';
+                        } else if (task.isRetour) {
+                            typeBadge = '<span class="badge bg-warning text-dark">RETOUR</span>';
+                        } else if (task.isVerifStock) {
+                            typeBadge = '<span class="badge bg-success">VERIF STOCK</span>';
+                        } else {
+                            typeBadge = '<span class="badge bg-secondary">AUTRE</span>';
+                        }
 
-                        const reference = task.isAppro
-                            ? (task.approFirst.pn ?? '-')
-                            : (task.isRetour ? (task.retourFirst.PN ?? '-') : '-');
+                        let reference = '-';
+                        if (task.isAppro) {
+                            reference = task.approFirst.pn ?? '-';
+                        } else if (task.isRetour) {
+                            reference = task.retourFirst.pn ?? '-';
+                        } else if (task.isVerifStock) {
+                            reference = task.verifStockFirst.pn ?? '-';
+                        }
 
                         const rowClass = getDeadlineClassJS(task.due_date);
-
 
                         const loadingIcon = task.is_completed === 1
                             ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
                             : '';
 
+                        let detailsHtml = '';
+                        if (task.isAppro) {
+                            detailsHtml = `
+                                <strong>Quantité:</strong> ${task.approFirst.nb ?? '-'} |
+                                <strong>Désignation:</strong> ${task.approFirst.designation ?? '-'} |
+                                <strong>Lieu:</strong> ${task.approFirst.location ?? '-'} |
+                                <strong>Avion:</strong> ${task.approFirst.plane ?? '-'}
+                            `;
+                        } else if (task.isRetour) {
+                            detailsHtml = `
+                                <strong>Quantité:</strong> ${task.retourFirst.nb ?? '-'} |
+                                <strong>SN:</strong> ${task.retourFirst.sn ?? '-'} |
+                                <strong>Certif:</strong> ${task.retourFirst.certif ?? '-'}
+                            `;
+                        } else if (task.isVerifStock) {
+                            detailsHtml = `
+                                <strong>Quantité:</strong> ${task.verifStockFirst.nb ?? '-'} |
+                                <strong>Nom:</strong> ${task.verifStockFirst.name ?? '-'}
+                            `;
+                        } else {
+                            detailsHtml = '-';
+                        }
+
                         html.push(`
-<tr class="${rowClass}">
-<td>${task.id}</td>
-<td>${typeBadge}</td>
-<td>${task.title}</td>
-<td>${task.description}</td>
-<td>${reference}</td>
-<td>${task.due_date ?? '-'} ${loadingIcon}</td>
-</tr>
-
-<tr class="${rowClass}">
-<td colspan="6">
-${task.isAppro ? `
-<strong>Quantité:</strong> ${task.approFirst.nb ?? '-'} |
-<strong>Désignation:</strong> ${task.approFirst.designation ?? '-'} |
-<strong>Lieu:</strong> ${task.approFirst.location ?? '-'} |
-<strong>Avion:</strong> ${task.approFirst.plane ?? '-'}
-` : ''}
-
-${task.isRetour ? `
-<strong>Quantité:</strong> ${task.retourFirst.nb ?? '-'} |
-<strong>SN:</strong> ${task.retourFirst.sn ?? '-'} |
-<strong>Certif:</strong> ${task.retourFirst.certif ?? '-'}
-` : ''}
-</td>
-</tr>
-                `);
+                            <tr class="${rowClass}">
+                                <td class="ps-4 fw-medium">${task.id}</td>
+                                <td>${typeBadge}</td>
+                                <td>${task.title}</td>
+                                <td>${task.description}</td>
+                                <td>${reference}</td>
+                                <td>${task.due_date ?? '-'} ${loadingIcon}</td>
+                            </tr>
+                            <tr class="${rowClass}">
+                                <td colspan="6" class="p-3">
+                                    ${detailsHtml}
+                                </td>
+                            </tr>
+                        `);
                     });
 
                     tbody.innerHTML = html.join('');

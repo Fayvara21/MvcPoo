@@ -65,7 +65,7 @@ if (!is_array($activeStates))
     $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
-// Type filters (appro / retour)
+// Type filters (appro / retour / verif_stock)
 $activeTypes = $_GET['types'] ?? [];
 if (!is_array($activeTypes)) {
     $activeTypes = [$activeTypes];
@@ -80,10 +80,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
+    $hasVerifStock = !empty($task['verif_stock']);
 
     $typeMatch = empty($activeTypes)
         || (in_array('appro', $activeTypes) && $hasAppro)
-        || (in_array('retour', $activeTypes) && $hasRetour);
+        || (in_array('retour', $activeTypes) && $hasRetour)
+        || (in_array('verif_stock', $activeTypes) && $hasVerifStock);
 
     return $stateMatch && $typeMatch;
 });
@@ -132,12 +134,14 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                     <?php
                     $typeLabels = [
                         'appro' => 'APPRO',
-                        'retour' => 'RETOUR'
+                        'retour' => 'RETOUR',
+                        'verif_stock' => 'VERIF STOCK'
                     ];
 
                     $typeColors = [
                         'appro' => 'primary',
-                        'retour' => 'warning'
+                        'retour' => 'warning',
+                        'verif_stock' => 'success'
                     ];
 
                     foreach ($typeLabels as $type => $label):
@@ -217,7 +221,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <th>Complétion</th>
                         <th>Demandeur</th>
                         <th class="actions-header" style="">Actions</th>
-                    </tr>
+                     </tr>
                 </thead>
 
                 <tbody>
@@ -225,6 +229,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <?php
                         $approList = $task['appro'] ?? [];
                         $retourList = $task['retour'] ?? [];
+                        $verifStockList = $task['verif_stock'] ?? [];
 
                         $s = (int) ($task['is_completed'] ?? 0);
 
@@ -256,17 +261,19 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
                             data-task="<?= $taskId ?>">
 
-                            <td class="p-2 fw-semibold"><?= $taskId ?></td>
+                            <td class="p-2 fw-semibold"><?= $taskId ?> </td>
 
                             <td class="p-2 badgeType">
                                 <?php if (!empty($approList)): ?>
                                     <span class="badge bg-blue">APPRO</span>
                                 <?php elseif (!empty($retourList)): ?>
                                     <span class="badge bg-yellow">RETOUR</span>
+                                <?php elseif (!empty($verifStockList)): ?>
+                                    <span class="badge bg-success">VERIF STOCK</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
-                            </td>
+                             </td>
 
                             <td class="p-2 task-description">
                                 <div class="fw-semibold task-title">
@@ -276,36 +283,34 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                 <div class="small description" style="display:block; font-size:1rem;">
                                     <?= e($task['description']) ?>
                                 </div>
-                            </td>
+                             </td>
 
                             <td class="p-2 badgeState">
                                 <span class="badge bg-<?= $stateClass[$s] ?>">
                                     <?= e($labels[$s]) ?>
                                 </span>
-                            </td>
+                             </td>
 
                             <td class="small text-muted">
                                 <?= e(formatDateFr($task['created_at'])) ?>
-                            </td>
+                             </td>
 
                             <td class="small text-muted">
                                 <?= (!isset($task['due_date']) || $task['due_date'] === '' || $task['due_date'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['due_date'])) ?>
-                            </td>
+                             </td>
 
                             <td class="small text-muted">
                                 <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['completed_at'])) ?>
-                            </td>
+                             </td>
 
 
                             <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
-                            </td>
-
-
+                             </td>
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-nowrap">
@@ -328,9 +333,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         </form>
                                     <?php endif; ?>
 
-
-
-                                    <!-- STATE TRANSITIONS (FIXED: no more +1 logic) -->
+                                    <!-- STATE TRANSITIONS -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
                                         <div class="btn-group">
                                             <?php foreach ($nextStates as $nextState): ?>
@@ -350,10 +353,10 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                            </td>
-                        </tr>
+                             </td>
+                         </tr>
 
-                        <!-- SUB-TASK ROWS -->
+                        <!-- SUB-TASK ROWS FOR APPRO -->
                         <?php foreach ($approList as $a): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
@@ -373,10 +376,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
                                         <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
                                     </div>
-                                </td>
-                            </tr>
+                                 </td>
+                             </tr>
                         <?php endforeach; ?>
 
+                        <!-- SUB-TASK ROWS FOR RETOUR -->
                         <?php foreach ($retourList as $r): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
@@ -384,21 +388,37 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-yellow">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
+                                        <div><strong>PN:</strong> <?= e($r['pn'] ?? '') ?></div>
                                         <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
                                     </div>
                                     <div class="small d-flex gap-3">
                                         <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
                                         <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
                                     </div>
-                                </td>
-                            </tr>
+                                 </td>
+                             </tr>
+                        <?php endforeach; ?>
+
+                        <!-- SUB-TASK ROWS FOR VERIF STOCK -->
+                        <?php foreach ($verifStockList as $v): ?>
+                            <?php $subIndex++; ?>
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="">
+                                <td><?= $subIndex ?></td>
+                                <td class="task-description" colspan="8">
+                                    <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
+                                    <div class="d-flex gap-4 mb-1">
+                                        <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
+                                        <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
+                                        <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
+                                    </div>
+                                 </td>
+                             </tr>
                         <?php endforeach; ?>
 
                     <?php endforeach; ?>
                 </tbody>
 
-            </table>
+             </table>
         </div>
     </div>
 </div>
