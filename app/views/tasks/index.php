@@ -30,27 +30,61 @@ $currentUserGroup = $_SESSION['group'] ?? '';
 // Store original tasks before filtering
 $originalTasks = $tasks;
 
-// Calculate counts for APPRO/RETOUR tasks only
-$approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
-// Calculate counts for VERIF STOCK tasks only
-$verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
+// Calculate counts for each type separately
+$approCount = 0;
+$retourCount = 0;
+$verifStockCount = 0;
 
 foreach ($originalTasks as $t) {
-    $state = (int) ($t['is_completed'] ?? 0);
-    $hasAppro = !empty($t['appro']);
-    $hasRetour = !empty($t['retour']);
-    $hasVerifStock = !empty($t['verif_stock']);
-
-    if ($hasVerifStock) {
-        if (isset($verifStockCounts[$state])) {
-            $verifStockCounts[$state]++;
-        }
-    } elseif ($hasAppro || $hasRetour) {
-        if (isset($approRetourCounts[$state])) {
-            $approRetourCounts[$state]++;
-        }
+    if (!empty($t['verif_stock'])) {
+        $verifStockCount++;
+    } elseif (!empty($t['appro'])) {
+        $approCount++;
+    } elseif (!empty($t['retour'])) {
+        $retourCount++;
     }
 }
+
+$typeLabels = [
+    'appro' => 'APPRO',
+    'retour' => 'RETOUR',
+    'verif_stock' => 'VERIF STOCK'
+];
+
+$typeColors = [
+    'appro' => 'primary',
+    'retour' => 'warning',
+    'verif_stock' => 'success'
+];
+
+$typeCounts = [
+    'appro' => $approCount,
+    'retour' => $retourCount,
+    'verif_stock' => $verifStockCount
+];
+
+foreach ($typeLabels as $type => $label):
+    $isActive = in_array($type, $activeTypes);
+    $newTypes = $activeTypes;
+
+    if ($isActive) {
+        $newTypes = array_diff($activeTypes, [$type]);
+    } else {
+        $newTypes[] = $type;
+    }
+
+    $query = http_build_query([
+        'ar_states' => $activeApproRetourStates,
+        'verif_states' => $activeVerifStates,
+        'types' => $newTypes
+    ]);
+    ?>
+    <a href="?<?= e($query) ?>"
+        class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
+        <?= e($label) ?>
+        <span class="badge bg-light text-dark"><?= $typeCounts[$type] ?></span>
+    </a>
+<?php endforeach;
 
 $totalApproRetour = array_sum($approRetourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
@@ -123,34 +157,43 @@ if (!is_array($activeTypes)) {
 }
 $activeTypes = array_map('strval', $activeTypes);
 
-// Filter tasks - COMPLETELY SEPARATE logic
+// Filter tasks - COMPLETELY SEPARATE logic for each type
 $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourStates, $activeVerifStates, $activeTypes) {
     $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
     $hasVerifStock = !empty($task['verif_stock']);
 
-    // Type match
-    $typeMatch = empty($activeTypes)
-        || (in_array('appro', $activeTypes) && $hasAppro)
-        || (in_array('retour', $activeTypes) && $hasRetour)
-        || (in_array('verif_stock', $activeTypes) && $hasVerifStock);
-
-    // If no type filters, show all
-    if (empty($activeTypes)) {
-        $typeMatch = true;
+    // Determine specific task type
+    $specificType = null;
+    if ($hasVerifStock) {
+        $specificType = 'verif_stock';
+    } elseif ($hasAppro) {
+        $specificType = 'appro';
+    } elseif ($hasRetour) {
+        $specificType = 'retour';
     }
 
-    // State match - COMPLETELY SEPARATE
+    // Type match logic
+    $typeMatch = true;
+    if (!empty($activeTypes)) {
+        $typeMatch = in_array($specificType, $activeTypes);
+    }
+
+    if (!$typeMatch) {
+        return false;
+    }
+
+    // State match - completely separate by type
     $stateMatch = true;
 
     if ($hasVerifStock) {
-        // VERIF STOCK task - only use verif_states filter
+        // VERIF STOCK task
         if (!empty($activeVerifStates)) {
             $stateMatch = in_array($state, $activeVerifStates);
         }
-    } else {
-        // APPRO/RETOUR task - only use ar_states filter
+    } elseif ($hasAppro || $hasRetour) {
+        // APPRO or RETOUR task
         if (!empty($activeApproRetourStates)) {
             $stateMatch = in_array($state, $activeApproRetourStates);
         }
@@ -158,7 +201,6 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
 
     return $typeMatch && $stateMatch;
 });
-
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
