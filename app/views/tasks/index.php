@@ -180,8 +180,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         }
 
                         $query = http_build_query([
-                            'states' => $newStates,  
-                            'types' => $activeTypes   
+                            'states' => $newStates,
+                            'types' => $activeTypes
                         ]);
                         ?>
                         <a href="?<?= e($query) ?>"
@@ -221,7 +221,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <th>Complétion</th>
                         <th>Demandeur</th>
                         <th class="actions-header" style="">Actions</th>
-                     </tr>
+                    </tr>
                 </thead>
 
                 <tbody>
@@ -254,8 +254,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         $taskId = (int) $task['id'];
 
                         $nextStates = $transitions[$s] ?? [];
-                        $nextColor = $stateClass[$nextStates[0]] ?? 'secondary';
-                        ?>
+                        $nextColor = !empty($nextStates) ? ($stateClass[$nextStates[0]] ?? 'secondary') : 'secondary'; ?>
 
                         <!-- MAIN TASK ROW -->
                         <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
@@ -273,7 +272,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
-                             </td>
+                            </td>
 
                             <td class="p-2 task-description">
                                 <div class="fw-semibold task-title">
@@ -283,34 +282,34 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                 <div class="small description" style="display:block; font-size:1rem;">
                                     <?= e($task['description']) ?>
                                 </div>
-                             </td>
+                            </td>
 
                             <td class="p-2 badgeState">
                                 <span class="badge bg-<?= $stateClass[$s] ?>">
                                     <?= e($labels[$s]) ?>
                                 </span>
-                             </td>
+                            </td>
 
                             <td class="small text-muted">
                                 <?= e(formatDateFr($task['created_at'])) ?>
-                             </td>
+                            </td>
 
                             <td class="small text-muted">
                                 <?= (!isset($task['due_date']) || $task['due_date'] === '' || $task['due_date'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['due_date'])) ?>
-                             </td>
+                            </td>
 
                             <td class="small text-muted">
                                 <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['completed_at'])) ?>
-                             </td>
+                            </td>
 
 
                             <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
-                             </td>
+                            </td>
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-nowrap">
@@ -353,8 +352,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                             </td>
-                         </tr>
+                            </td>
+                        </tr>
 
                         <!-- SUB-TASK ROWS FOR APPRO -->
                         <?php foreach ($approList as $a): ?>
@@ -376,8 +375,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
                                         <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
                                     </div>
-                                 </td>
-                             </tr>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
 
                         <!-- SUB-TASK ROWS FOR RETOUR -->
@@ -395,8 +394,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
                                         <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
                                     </div>
-                                 </td>
-                             </tr>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
 
                         <!-- SUB-TASK ROWS FOR VERIF STOCK -->
@@ -411,14 +410,14 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
                                         <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
                                     </div>
-                                 </td>
-                             </tr>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
 
                     <?php endforeach; ?>
                 </tbody>
 
-             </table>
+            </table>
         </div>
     </div>
 </div>

@@ -3,9 +3,10 @@
 <?php
 $approList = Appro::findByTaskId($task['id']) ?? [];
 $retourList = Retour::findByTaskId($task['id']) ?? [];
+$verifStockList = Verif_stock::findByTaskId($task['id']) ?? [];
 
 // Determine task type
-$selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : '');
+$selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : (!empty($verifStockList) ? 'verif_stock' : ''));
 
 // Safe escaping
 function e($str)

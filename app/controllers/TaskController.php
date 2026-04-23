@@ -130,6 +130,9 @@ class TaskController extends BaseController
             return;
         }
 
+        // FETCH VERIF_STOCK DATA FOR THIS TASK
+        $verifStockList = Verif_stock::findByTaskId($task['id']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Update basic task info
@@ -193,7 +196,7 @@ class TaskController extends BaseController
             exit;
         }
 
-        
+        // PASS VERIF_STOCK DATA TO THE VIEW
         include __DIR__ . '/../views/tasks/edit.php';
     }
 
