@@ -25,7 +25,7 @@ class Task
             'project_id' => $projectId,
             'description' => $desc,
             'due_date' => $dueDate ?: null,
-            'user_id' => $_SESSION["user_id"]
+            'user_id' => $_SESSION["user_id"],
         ]);
 
         return $db->lastInsertId();
@@ -48,7 +48,7 @@ class Task
 
         $stmt->execute([
             'id' => $id,
-            'state' => $state
+            'state' => $state,
         ]);
     }
 
@@ -79,8 +79,9 @@ class Task
             ? array_map('trim', explode(',', $_SESSION['group']))
             : [];
 
-        if (empty($userGroups))
+        if (empty($userGroups)) {
             return [];
+        }
 
         $conditions = array_map(fn($g) => "FIND_IN_SET('$g', p.`groups`)", $userGroups);
         $where = '(' . implode(' OR ', $conditions) . ')';
@@ -118,8 +119,9 @@ class Task
             ? array_map('trim', explode(',', $_SESSION['group']))
             : [];
 
-        if (empty($userGroups))
+        if (empty($userGroups)) {
             return [];
+        }
 
         $conditions = array_map(fn($g) => "FIND_IN_SET('$g', `groups`)", $userGroups);
         $where = '(' . implode(' OR ', $conditions) . ')';
@@ -166,7 +168,7 @@ class Task
             'title' => $title,
             'description' => $desc,
             'due_date' => $dueDate ?: null,
-            'id' => $taskId
+            'id' => $taskId,
         ]);
     }
 
@@ -214,63 +216,49 @@ class Task
     /**
      * Attach APPRO, RETOUR, and VERIF_STOCK data to tasks
      */
-    private static function attachApproRetour(array $tasks): array
+    private static function attachApproRetourVerifStock(array $tasks): array
     {
-        if (empty($tasks))
+        if (empty($tasks)) {
             return [];
+        }
 
         $db = Database::getInstance()->getPdo();
         $taskIds = array_column($tasks, 'id');
         $placeholders = implode(',', array_fill(0, count($taskIds), '?'));
 
         // APPRO
-        $stmt = $db->prepare("
-            SELECT TaskID, pn, nb, designation, location, plane, `of`, oe, id
-            FROM appro
-            WHERE TaskID IN ($placeholders)
-        ");
+        $stmt = $db->prepare("SELECT TaskID, pn, nb, designation, location, plane, `of`, oe, id FROM appro WHERE TaskID IN ($placeholders)");
         $stmt->execute($taskIds);
         $approRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $approByTask = [];
         foreach ($approRows as $row) {
             $approByTask[$row['TaskID']][] = $row;
         }
 
         // RETOUR
-        $stmt = $db->prepare("
-            SELECT TaskID, PN as pn, nb, sn, certif, id
-            FROM retour
-            WHERE TaskID IN ($placeholders)
-        ");
+        $stmt = $db->prepare("SELECT TaskID, PN as pn, nb, sn, certif, id FROM retour WHERE TaskID IN ($placeholders)");
         $stmt->execute($taskIds);
         $retourRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $retourByTask = [];
         foreach ($retourRows as $row) {
             $retourByTask[$row['TaskID']][] = $row;
         }
 
-        // VERIF_STOCK
-        $stmt = $db->prepare("
-            SELECT TaskID, pn, nb, name, id
-            FROM verif_stock
-            WHERE TaskID IN ($placeholders)
-        ");
+        // VERIF STOCK - ADD THIS
+        $stmt = $db->prepare("SELECT TaskID, pn, nb, name, id FROM verif_stock WHERE TaskID IN ($placeholders)");
         $stmt->execute($taskIds);
         $verifStockRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $verifStockByTask = [];
         foreach ($verifStockRows as $row) {
             $verifStockByTask[$row['TaskID']][] = $row;
         }
 
-        // Attach all data
+        // Attach all
         foreach ($tasks as &$task) {
             $id = $task['id'];
             $task['appro'] = $approByTask[$id] ?? [];
             $task['retour'] = $retourByTask[$id] ?? [];
-            $task['verif_stock'] = $verifStockByTask[$id] ?? [];
+            $task['verif_stock'] = $verifStockByTask[$id] ?? []; // ADD THIS
         }
 
         return $tasks;

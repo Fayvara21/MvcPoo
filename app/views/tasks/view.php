@@ -18,44 +18,45 @@
     <?php
 
     $allProjects = Task::getAllProjects();
-    $tasks = Task::getAllTasksForAllProjects();
+$tasks = Task::getAllTasksForAllProjects();
 
-    $projects = [];
+$projects = [];
 
-    foreach ($allProjects as $p) {
-        $projects[$p['id']] = [
-            'title' => $p['title'],
-            'tasks' => []
-        ];
+foreach ($allProjects as $p) {
+    $projects[$p['id']] = [
+        'title' => $p['title'],
+        'tasks' => [],
+    ];
+}
+
+foreach ($tasks as $task) {
+    if (isset($projects[$task['project_id']])) {
+        $projects[$task['project_id']]['tasks'][] = $task;
     }
+}
 
-    foreach ($tasks as $task) {
-        if (isset($projects[$task['project_id']])) {
-            $projects[$task['project_id']]['tasks'][] = $task;
-        }
-    }
-
-    function getDeadlineClass($dueDate)
-    {
-        if (!$dueDate)
-            return '';
-
-        $due = strtotime($dueDate);
-        $todayStart = strtotime('today');
-        $tomorrowStart = strtotime('tomorrow');
-
-        if ($due < $todayStart) {
-            return 'table-danger'; // expired (past)
-        }
-
-        if ($due >= $todayStart && $due < $tomorrowStart) {
-            return 'table-warning'; // today
-        }
-
+function getDeadlineClass($dueDate)
+{
+    if (!$dueDate) {
         return '';
     }
 
-    ?>
+    $due = strtotime($dueDate);
+    $todayStart = strtotime('today');
+    $tomorrowStart = strtotime('tomorrow');
+
+    if ($due < $todayStart) {
+        return 'table-danger'; // expired (past)
+    }
+
+    if ($due >= $todayStart && $due < $tomorrowStart) {
+        return 'table-warning'; // today
+    }
+
+    return '';
+}
+
+?>
 
     <div id="taskContainer">
 
@@ -191,7 +192,7 @@
     }
 
     function loadTasks() {
-        fetch(window.location.pathname + '/json')
+        fetch("/tasks/json")
             .then(r => r.json())
             .then(tasks => {
 
