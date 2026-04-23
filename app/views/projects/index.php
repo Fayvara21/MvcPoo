@@ -31,7 +31,7 @@
 
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-#md-6 col-lg-4">
                     <div class="card h-100 border-0 shadow-sm">
 
                         <div class="card-body">
@@ -110,40 +110,56 @@
                             <?php endif; ?>
 
                             <!-- Stats -->
-                            <?php
-                            // Calculate urgent count for this project from tasks
-                            $projectUrgentCount = 0;
+<?php
+// Calculate urgent count for this project from tasks
+$projectUrgentCount = 0;
                 $projectTasksCount = 0;
                 if (!empty($project['tasks'])) {
                     $projectTasksCount = count($project['tasks']);
                     foreach ($project['tasks'] as $task) {
-                        $state = (int) ($task['is_completed'] ?? 0);
-                        if ($state === 0 || $state === 1) {
+                        // Check if task is still active (state 0 = Envoyé, 1 = Traitement)
+                        // Use 'is_completed' field if available, otherwise check if task is not completed
+                        $isUrgent = false;
+
+                        if (isset($task['is_completed'])) {
+                            // If we have the state field
+                            $state = (int) $task['is_completed'];
+                            $isUrgent = ($state === 0 || $state === 1);
+                        } elseif (isset($task['status'])) {
+                            // Alternative field name
+                            $state = (int) $task['status'];
+                            $isUrgent = ($state === 0 || $state === 1);
+                        } else {
+                            // If no state field, consider all tasks as urgent
+                            $isUrgent = true;
+                        }
+
+                        if ($isUrgent) {
                             $projectUrgentCount++;
                         }
                     }
                 }
                 ?>
-                            <?php if ($projectTasksCount > 0): ?>
-                                <div class="d-flex gap-3 mt-3 pt-3 border-top">
-                                    <div>
-                                        <span class="text-muted small">Demandes</span>
-                                        <div class="fw-bold"><?= $projectTasksCount ?></div>
-                                    </div>
-                                    
-                                    <div>
-    <span class="text-muted small">Urgentes</span>
-    <div class="fw-bold">
-        <?php if ($projectUrgentCount > 0): ?>
-            <span class="badge bg-danger"><?= $projectUrgentCount ?></span>
-        <?php else: ?>
-            <span class="text-muted">0</span>
-        <?php endif; ?>
-    </div>
-</div>                                </div>
-                            <?php endif; ?>
-                        </div>
 
+<?php if ($projectTasksCount > 0): ?>
+    <div class="d-flex gap-3 mt-3 pt-3 border-top">
+        <div>
+            <span class="text-muted small">Demandes</span>
+            <div class="fw-bold"><?= $projectTasksCount ?></div>
+        </div>
+        
+        <div>
+            <span class="text-muted small">Urgentes</span>
+            <div class="fw-bold">
+                <?php if ($projectUrgentCount > 0): ?>
+                    <span class="badge bg-danger"><?= $projectUrgentCount ?></span>
+                <?php else: ?>
+                    <span class="text-muted">0</span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
                         <!-- Footer -->
                         <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
                             <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
