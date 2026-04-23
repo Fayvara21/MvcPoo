@@ -27,6 +27,8 @@ function formatDateFr($date)
 
 $currentUserGroup = $_SESSION['group'] ?? '';
 
+// Store original tasks before filtering
+$originalTasks = $tasks; // Make a copy of the original tasks array
 
 // Calculate counts for APPRO/RETOUR tasks only
 $approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
@@ -55,51 +57,6 @@ foreach ($originalTasks as $t) {
 $totalApproRetour = array_sum($approRetourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
 $totalTasks = $totalApproRetour + $totalVerifStock;
-
-// Filters - Separate for regular states and verif stock states
-$activeStates = $_GET['states'] ?? [];
-if (!is_array($activeStates))
-    $activeStates = [$activeStates];
-$activeStates = array_map('intval', $activeStates);
-
-$activeVerifStates = $_GET['verif_states'] ?? [];
-if (!is_array($activeVerifStates)) {
-    $activeVerifStates = [$activeVerifStates];
-}
-$activeVerifStates = array_map('intval', $activeVerifStates);
-
-// Type filters
-$activeTypes = $_GET['types'] ?? [];
-if (!is_array($activeTypes)) {
-    $activeTypes = [$activeTypes];
-}
-$activeTypes = array_map('strval', $activeTypes);
-
-// Filter tasks - Combine both regular and verif stock state filters
-$tasks = array_filter($originalTasks, function ($task) use ($activeStates, $activeVerifStates, $activeTypes) {
-    $state = (int) $task['is_completed'];
-    $hasAppro = !empty($task['appro']);
-    $hasRetour = !empty($task['retour']);
-    $hasVerifStock = !empty($task['verif_stock']);
-
-    // Type match
-    $typeMatch = empty($activeTypes)
-        || (in_array('appro', $activeTypes) && $hasAppro)
-        || (in_array('retour', $activeTypes) && $hasRetour)
-        || (in_array('verif_stock', $activeTypes) && $hasVerifStock);
-
-    // State match - regular tasks use regular states, verif stock tasks use verif states
-    $stateMatch = false;
-    if ($hasVerifStock) {
-        // Verif stock task - use verif_states filter
-        $stateMatch = empty($activeVerifStates) || in_array($state, $activeVerifStates);
-    } else {
-        // Regular task (APPRO/RETOUR) - use regular states filter
-        $stateMatch = empty($activeStates) || in_array($state, $activeStates);
-    }
-
-    return $typeMatch && $stateMatch;
-});
 
 // Colors for APPRO/RETOUR
 $labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
@@ -169,7 +126,7 @@ if (!is_array($activeTypes)) {
 $activeTypes = array_map('strval', $activeTypes);
 
 // Filter tasks - Combine both regular and verif stock state filters
-$tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifStates, $activeTypes) {
+$tasks = array_filter($originalTasks, function ($task) use ($activeStates, $activeVerifStates, $activeTypes) {
     $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
@@ -184,8 +141,10 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
     // State match - regular tasks use regular states, verif stock tasks use verif states
     $stateMatch = false;
     if ($hasVerifStock) {
+        // Verif stock task - use verif_states filter
         $stateMatch = empty($activeVerifStates) || in_array($state, $activeVerifStates);
     } else {
+        // Regular task (APPRO/RETOUR) - use regular states filter
         $stateMatch = empty($activeStates) || in_array($state, $activeStates);
     }
 
@@ -194,22 +153,22 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
-
-<div class="container-fluid px-3 py-4">
-
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-
-            <!-- Header -->
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+            
+<div class="container-fluid px-3             py-4">
+  
+                   <div class="card shadow-sm b       order-0 mb-4">
+               <div class="card-bod     y">
+          
+                          <!-- Hea        der -->
+                   <div          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
                 <div>
-                    <h2 class="fw-semibold mb-1">
-                        Demandes - <?= e($project['title']) ?>
-                    </h2>
-                    <?php if (!empty($project['description'])): ?>
-                        <div class="text-muted small">
-                            <?= e($project['description']) ?>
-                        </div>
+                                    <h2 class="fw-semibold mb-1">
+                                        Demandes - <?= e($project['title']) ?>
+                                    </h2>
+                                    <?php if (!empty($project['description'])): ?>
+                                            <div class="text-muted small">
+                                <?= e($project['description']) ?>
+                            </div>
                     <?php endif; ?>
                 </div>
 
@@ -227,14 +186,14 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
             <hr class="my-3">
 
             <!-- Filters -->
-            <div class="d-flex flex-column gap-3">
+                        <div class="d-flex flex-column gap-3">
 
-                <!-- First row: Type filters + Total -->
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span class="text-muted small me-2">Filtres :</span>
-
-                    <!-- TYPE FILTERS -->
-                    <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
+                               <!-- First row:          Type filters + Total -->
+                     <div class="d-fl       ex align-items-center gap-2 flex-wrap">
+                           <span cl     ass="text-muted small me-2">Filtres :</span>
+         
+                                           <!-- TYPE FILTERS -->
+                                    <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
                         $typeLabels = [
                             'appro' => 'APPRO',
@@ -271,11 +230,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                 'types' => $newTypes
                             ]);
                             ?>
-                            <a href="?<?= e($query) ?>"
-                                class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
-                                <?= e($label) ?>
-                                <span class="badge bg-light text-dark"><?= $typeTotal ?></span>
-                            </a>
+                                <a href="?<?= e($query) ?>"
+                                    class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
+                                    <?= e($label) ?>
+                                    <span class="badge bg-light text-dark"><?= $typeTotal ?></span>
+                                </a>
                         <?php endforeach; ?>
                     </div>
 
@@ -311,259 +270,261 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                 'types' => $activeTypes
                             ]);
                             ?>
-                            <a href="?<?= e($query) ?>"
-                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                                <span><?= e($label) ?></span>
-                                <span class="badge bg-light text-dark"><?= $count ?></span>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Third row: VERIF STOCK State Filters (only show counts for VERIF STOCK tasks) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span class="text-muted small me-2">États VERIF STOCK :</span>
+                                <a href="?<?= e($query) ?>"
+                                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                                <span><?= e($label) ?></span>
+                                       <spa     n class="badge bg-light text-dark"><?= $count ?></span>
+                                          </a>  
+                             <?php endforeach; ?>
+                        </div>
+                               </div>
+       
+                       <!-- Third row: VERI       F STOCK State Filters (only show counts for VERIF STOCK tasks) -->
+                        <div class="d-fl    ex align-items-center gap-2 flex-wrap">
+                              <span cl  ass="text-muted small me-2">États VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
-                        <?php
-                        $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
-                        foreach ($verifStockStateKeys as $state):
-                            $label = $verifStockLabels[$state];
-                            $count = $verifStockCounts[$state] ?? 0;
-                            $isActive = in_array($state, $activeVerifStates);
-                            $newVerifStates = $activeVerifStates;
+                              <?php
+                              $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
+                              foreach ($verifStockStateKeys as $state):
+                                  $label = $verifStockLabels[$state];
+                                  $count = $verifStockCounts[$state] ?? 0;
+                                  $isActive = in_array($state, $activeVerifStates);
+                                  $newVerifStates = $activeVerifStates;
 
-                            if ($isActive) {
-                                $newVerifStates = array_diff($activeVerifStates, [$state]);
-                            } else {
-                                $newVerifStates[] = $state;
-                            }
+                                  if ($isActive) {
+                                      $newVerifStates = array_diff($activeVerifStates, [$state]);
+                                  } else {
+                                      $newVerifStates[] = $state;
+                                  }
 
-                            $query = http_build_query([
-                                'states' => $activeStates,
-                                'verif_states' => $newVerifStates,
-                                'types' => $activeTypes
-                            ]);
-                            ?>
-                            <a href="?<?= e($query) ?>"
-                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                                <span><?= e($label) ?></span>
-                                <span class="badge bg-light text-dark"><?= $count ?></span>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="card shadow-sm border-0">
-        <div class="table-responsive">
-            <table class="table table-sm align-middle table-bordered">
-                <thead class="table-light">
-                    <tr class="text-uppercase small text-muted">
-                        <th>#</th>
-                        <th>Type</th>
+                                  $query = http_build_query([
+                                      'states' => $activeStates,
+                                      'verif_states' => $newVerifStates,
+                                      'types' => $activeTypes
+                                  ]);
+                                  ?>
+                                                <a href="?<?= e($query) ?>"
+                                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                    <span><?= e($label) ?></span>
+                                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                                    </a>        
+                              <?php endforeach; ?>
+                      </div>
+                       </div>
+              
+       
+                   </div>
+       
+               </div>
+         </div>
+        
+            <div class="card shadow-sm border-0">
+        
+                                                                <div class="table-responsive">
+                    <table class="table table-sm align-m   iddle table-bordered">
+                    <thead class="table-light">
+                           <tr class="text-uppercas     e small text-muted">
+                          <th>#</th>
+                                       <th>Type</th   >
                         <th>Titre</th>
-                        <th>État</th>
-                        <th>Créé</th>
-                        <th>Deadline</th>
-                        <th>Complétion</th>
-                        <th>Demandeur</th>
-                        <th class="actions-header">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($tasks as $taskIndex => $task): ?>
-                        <?php
-                        $approList = $task['appro'] ?? [];
-                        $retourList = $task['retour'] ?? [];
-                        $verifStockList = $task['verif_stock'] ?? [];
-
-                        $s = (int) ($task['is_completed'] ?? 0);
-                        $isVerifStock = !empty($verifStockList);
-
-                        // Use appropriate transitions and labels based on task type
-                        $currentTransitions = $isVerifStock ? $verifStockTransitions : $transitions;
-                        $currentLabels = $isVerifStock ? $verifStockLabels : $labels;
-                        $currentStateLabel = $currentLabels[$s] ?? $labels[$s] ?? 'Unknown';
-
-                        $canEdit = false;
-                        $canSetState = false;
-
-                        if ($currentUserGroup === 'admin') {
-                            $canEdit = true;
-                            $canSetState = true;
-                        } elseif ($currentUserGroup === 'magasin' && !$isVerifStock && in_array($s, [0, 1, 2, 4, 5])) {
-                            $canSetState = true;
-                        } elseif ($isVerifStock && $currentUserGroup === 'magasin') {
-                            $canSetState = true;
-                        } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
-                            $canEdit = true;
-                        } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3])) {
-                            $canSetState = true;
-                        }
-
-                        // For verif_stock, check if user can use button 7 (Soldé)
-                        $canUseState7 = false;
-                        if ($isVerifStock) {
-                            if ($currentUserGroup === 'admin') {
-                                $canUseState7 = true;
-                            } elseif (in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
-                                $canUseState7 = true;
-                            }
-                        }
-
-                        $subIndex = 0;
-                        $taskId = (int) $task['id'];
-
-                        $nextStates = $currentTransitions[$s] ?? [];
-                        $nextColor = !empty($nextStates) ? ($stateClass[$nextStates[0]] ?? 'secondary') : 'secondary';
-                        ?>
-
-                        <!-- MAIN TASK ROW -->
-                        <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
-                            data-task="<?= $taskId ?>">
-
-                            <td class="p-2 fw-semibold"><?= $taskId ?> </td>
-
-                            <td class="p-2 badgeType">
-                                <?php if (!empty($approList)): ?>
-                                    <span class="badge bg-primary">APPRO</span>
-                                <?php elseif (!empty($retourList)): ?>
-                                    <span class="badge bg-warning text-dark">RETOUR</span>
-                                <?php elseif (!empty($verifStockList)): ?>
-                                    <span class="badge bg-success">VERIF STOCK</span>
-                                <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <td class="p-2 task-description">
-                                <div class="fw-semibold task-title">
-                                    <?= e($task['title']) ?>
-                                </div>
-                                <div class="small description" style="display:block; font-size:1rem;">
-                                    <?= e($task['description']) ?>
-                                </div>
-                            </td>
-
-                            <td class="p-2 badgeState">
-                                <span class="badge bg-<?= $stateClass[$s] ?>">
-                                    <?= e($currentStateLabel) ?>
-                                </span>
-                            </td>
-
-                            <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
-                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?>
-                            </td>
-                            <td class="small text-muted">
-                                <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
-                            </td>
-                            <td class="small text-muted"><?= e($task["user_name"]) ?></td>
-
-                            <td class="actions">
-                                <div class="d-inline-flex flex-nowrap">
-                                    <?php if ($canEdit): ?>
-                                        <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                                        <form method="POST"
-                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
-                                            onsubmit="return confirm('Confirmer la suppression ?');" class="m-0">
-                                            <button type="submit"
-                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center square-btn m-1">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </button>
-                                        </form>
-                                    <?php endif; ?>
-
-                                    <?php if (!empty($nextStates) && $canSetState): ?>
-                                        <div class="btn-group">
-                                            <?php foreach ($nextStates as $nextState): ?>
-                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7)
-                                                    continue; ?>
-                                                <form method="POST"
-                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
-                                                    class="d-inline m-1">
-                                                    <input type="hidden" name="state" value="<?= (int) $nextState ?>">
-                                                    <button type="submit"
-                                                        class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
-                                                        <i class="bi bi-arrow-return-right"></i>
-                                                        <?= e($currentLabels[$nextState]) ?>
-                                                    </button>
-                                                </form>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
+                                   <th>État</th >
+                               <th>Créé</th>
+                               <th>Deadline</th>
+                            <th>Complétion</th>
+                          <th>Demandeur</th>
+                         <th class="actions-heade   r">Actions</th>
                         </tr>
+                </thead>
+                    <tbody>
+    
+                                                                               <?php foreach ($tasks as $taskIndex => $task): ?>
+                            <?php
+                            $approList = $task['appro'] ?? [];
+                            $retourList = $task['retour'] ?? [];
+                            $verifStockList = $task['verif_stock'] ?? [];
 
-                        <!-- SUB-TASK ROWS FOR APPRO -->
-                        <?php foreach ($approList as $a): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
-                                <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-primary">APPRO</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($a['nb'] ?? 0) ?></div>
-                                        <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
-                                        <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
+                            $s = (int) ($task['is_completed'] ?? 0);
+                            $isVerifStock = !empty($verifStockList);
+
+                            // Use appropriate transitions and labels based on task type
+                            $currentTransitions = $isVerifStock ? $verifStockTransitions : $transitions;
+                            $currentLabels = $isVerifStock ? $verifStockLabels : $labels;
+                            $currentStateLabel = $currentLabels[$s] ?? $labels[$s] ?? 'Unknown';
+
+                            $canEdit = false;
+                            $canSetState = false;
+
+                            if ($currentUserGroup === 'admin') {
+                                $canEdit = true;
+                                $canSetState = true;
+                            } elseif ($currentUserGroup === 'magasin' && !$isVerifStock && in_array($s, [0, 1, 2, 4, 5])) {
+                                $canSetState = true;
+                            } elseif ($isVerifStock && $currentUserGroup === 'magasin') {
+                                $canSetState = true;
+                            } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
+                                $canEdit = true;
+                            } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3])) {
+                                $canSetState = true;
+                            }
+
+                            // For verif_stock, check if user can use button 7 (Soldé)
+                            $canUseState7 = false;
+                            if ($isVerifStock) {
+                                if ($currentUserGroup === 'admin') {
+                                    $canUseState7 = true;
+                                } elseif (in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
+                                    $canUseState7 = true;
+                                }
+                            }
+
+                            $subIndex = 0;
+                            $taskId = (int) $task['id'];
+
+                            $nextStates = $currentTransitions[$s] ?? [];
+                            $nextColor = !empty($nextStates) ? ($stateClass[$nextStates[0]] ?? 'secondary') : 'secondary';
+                            ?>
+        
+                                    <!-- MAIN TASK ROW -->
+                                    <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
+                                        data-task="<?= $taskId ?>">
+    
+                                        <td clas    s="p-2 fw-semibold"><?= $taskId ?> </td>
+   
+                                             <td class="p-2 badgeType">
+                                                <?php if (!empty($approList)): ?>
+                                            <span class="badge bg-primary">APPRO</span>
+                                                <?php elseif (!empty($retourList)): ?>
+                                                        <span class="badge bg-warning text-dark">RETOUR</span>
+                                            <?php elseif (!empty($verifStockList)): ?>
+                                                    <span class="badge bg-success">VERIF STOCK</span>
+                                            <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                          <?php endif; ?>
+                                     </td>
+       
+                                        <td class="p    -2 task-description">
+                                       <div cla     ss="fw-semibold task-title">
+                                                <?= e($task['title']) ?>
+                                            </div>
+                                            <div class="small description" style="display:block; font-size:1rem;">
+                                                    <?= e($task['description']) ?>
                                     </div>
-                                    <div class="small mb-1">
-                                        <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
-                                    </div>
-                                    <div class="small d-flex flex-wrap gap-3">
-                                        <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
-                                        <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
+                                                </td>
+               
+                                                 <td class="p-2 badgeState">
+                                                    <span class="badge bg-<?= $stateClass[$s] ?>">
+                                                        <?= e($currentStateLabel) ?>
+                                                    </span>
+                                </td>
+                
+                                                <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
+                                                <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?>
+                                                </td>
+                                                <td class="small text-muted">
+                                                    <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
+                                                </td>
+                                                <td class="small text-muted"><?= e($task["user_name"]) ?></td>
+         
+                                                       <td class="actions">
+                                                    <div class="d-inline-flex flex-nowrap">
+                                                        <?php if ($canEdit): ?>
+                                                <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
+                                                                    class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
+                                                                    <i class="bi bi-pencil-fill"></i>
+                                                                </a>
+                                                        <?php endif; ?>
+           
+                                                             <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
+                                                                <form method="POST"
+                                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                                                    onsubmit="return confirm('Confirmer la suppression ?');" class="m-0">
+                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-danger d-flex align-items-center justify-content-center square-btn m-1">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                                    </button>
+                                                                </form>
+                                                        <?php endif; ?>
+
+                                                        <?php if (!empty($nextStates) && $canSetState): ?>
+                                                                <div class="btn-group">
+                                                                    <?php foreach ($nextStates as $nextState): ?>
+                                                                            <?php if ($isVerifStock && $nextState == 7 && !$canUseState7)
+                                                                                continue; ?>
+                                                                            <form method="POST"
+                                                                                action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
+                                                                                class="d-inline m-1">
+                                                                                <input type="hidden" name="state" value="<?= (int) $nextState ?>">
+                                                                                <button type="submit"
+                                                                                    class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
+                                                                                    <i class="bi bi-arrow-return-right"></i>
+                                                                                    <?= e($currentLabels[$nextState]) ?>
+                                                                                </button>
+                                                                            </form>
+                                                                    <?php endforeach; ?>
+                                                </div>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
 
-                        <!-- SUB-TASK ROWS FOR RETOUR -->
-                        <?php foreach ($retourList as $r): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
-                                <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
-                                    </div>
-                                    <div class="small d-flex gap-3">
-                                        <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
-                                        <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                            <!-- SUB-TASK ROWS FOR APPRO -->
+                            <?php foreach ($approList as $a): ?>
+                                    <?php $subIndex++; ?>
+                                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
+                                        <td class="p-2 fw-semibold"><?= $subIndex ?></td>
+                                        <td class="task-description" colspan="8">
+                                            <div class="small fw-semibold mb-1 text-primary">APPRO</div>
+                                            <div class="d-flex gap-4 mb-1">
+                                                <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
+                                                <div><strong>Qté:</strong> <?= (int) ($a['nb'] ?? 0) ?></div>
+                                                <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
+                                                <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
+                                            </div>
+                                            <div class="small mb-1">
+                                                <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
+                                            </div>
+                                            <div class="small d-flex flex-wrap gap-3">
+                                                <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
+                                                <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            <?php endforeach; ?>
 
-                        <!-- SUB-TASK ROWS FOR VERIF STOCK -->
-                        <?php foreach ($verifStockList as $v): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
-                                <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
-                                        <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                            <!-- SUB-TASK ROWS FOR RETOUR -->
+                            <?php foreach ($retourList as $r): ?>
+                                    <?php $subIndex++; ?>
+                                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
+                                        <td class="p-2 fw-semibold"><?= $subIndex ?></td>
+                                        <td class="task-description" colspan="8">
+                                            <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
+                                            <div class="d-flex gap-4 mb-1">
+                                                <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
+                                                <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
+                                            </div>
+                                            <div class="small d-flex gap-3">
+                                                <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
+                                                <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            <?php endforeach; ?>
+
+                            <!-- SUB-TASK ROWS FOR VERIF STOCK -->
+                            <?php foreach ($verifStockList as $v): ?>
+                                    <?php $subIndex++; ?>
+                                    <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
+                                        <td class="p-2 fw-semibold"><?= $subIndex ?></td>
+                                        <td class="task-description" colspan="8">
+                                            <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
+                                            <div class="d-flex gap-4 mb-1">
+                                                <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
+                                                <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
+                                                <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            <?php endforeach; ?>
 
                     <?php endforeach; ?>
                 </tbody>
