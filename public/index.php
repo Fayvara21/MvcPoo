@@ -74,11 +74,7 @@ $router->add('/contact', [new ContactController(), 'contact']);
 $router->add('/api/projects/{id}/tasks', [new TaskController(), 'json']);
 $router->add('/api/tasks/all', [new TaskController(), 'jsonall']);
 
-// ==================== ERROR HANDLING ====================
-$router->setNotFoundHandler(function () {
-    http_response_code(404);
-    echo "404 Not Found";
-});
+
 
 // Dispatch the router
 $router->dispatch();
