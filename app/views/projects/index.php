@@ -139,6 +139,9 @@ $projectUrgentCount = 0;
                         }
                     }
                 }
+
+                var_dump($project);
+                var_dump($task);
                 ?>
 
 <?php if ($projectTasksCount > 0): ?>
@@ -160,8 +163,6 @@ $projectUrgentCount = 0;
         </div>
     </div>
                     <?php endif; ?>
-                    <?php var_dump($projectTasksCount);
-                var_dump($projectUrgentCount);?>
 
                         </div>
 
