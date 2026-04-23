@@ -28,14 +28,78 @@ function formatDateFr($date)
 $currentUserGroup = $_SESSION['group'] ?? '';
 
 
-// State counts 
-$stateCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
-foreach ($tasks as $t) {
+// Calculate counts for APPRO/RETOUR tasks only
+$approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+// Calculate counts for VERIF STOCK tasks only
+$verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
+
+foreach ($originalTasks as $t) {
     $state = (int) ($t['is_completed'] ?? 0);
-    if (isset($stateCounts[$state]))
-        $stateCounts[$state]++;
+    $hasAppro = !empty($t['appro']);
+    $hasRetour = !empty($t['retour']);
+    $hasVerifStock = !empty($t['verif_stock']);
+
+    if ($hasVerifStock) {
+        // This is a VERIF STOCK task
+        if (isset($verifStockCounts[$state])) {
+            $verifStockCounts[$state]++;
+        }
+    } elseif ($hasAppro || $hasRetour) {
+        // This is an APPRO or RETOUR task
+        if (isset($approRetourCounts[$state])) {
+            $approRetourCounts[$state]++;
+        }
+    }
 }
-$totalTasks = array_sum($stateCounts);
+
+$totalApproRetour = array_sum($approRetourCounts);
+$totalVerifStock = array_sum($verifStockCounts);
+$totalTasks = $totalApproRetour + $totalVerifStock;
+
+// Filters - Separate for regular states and verif stock states
+$activeStates = $_GET['states'] ?? [];
+if (!is_array($activeStates))
+    $activeStates = [$activeStates];
+$activeStates = array_map('intval', $activeStates);
+
+$activeVerifStates = $_GET['verif_states'] ?? [];
+if (!is_array($activeVerifStates)) {
+    $activeVerifStates = [$activeVerifStates];
+}
+$activeVerifStates = array_map('intval', $activeVerifStates);
+
+// Type filters
+$activeTypes = $_GET['types'] ?? [];
+if (!is_array($activeTypes)) {
+    $activeTypes = [$activeTypes];
+}
+$activeTypes = array_map('strval', $activeTypes);
+
+// Filter tasks - Combine both regular and verif stock state filters
+$tasks = array_filter($originalTasks, function ($task) use ($activeStates, $activeVerifStates, $activeTypes) {
+    $state = (int) $task['is_completed'];
+    $hasAppro = !empty($task['appro']);
+    $hasRetour = !empty($task['retour']);
+    $hasVerifStock = !empty($task['verif_stock']);
+
+    // Type match
+    $typeMatch = empty($activeTypes)
+        || (in_array('appro', $activeTypes) && $hasAppro)
+        || (in_array('retour', $activeTypes) && $hasRetour)
+        || (in_array('verif_stock', $activeTypes) && $hasVerifStock);
+
+    // State match - regular tasks use regular states, verif stock tasks use verif states
+    $stateMatch = false;
+    if ($hasVerifStock) {
+        // Verif stock task - use verif_states filter
+        $stateMatch = empty($activeVerifStates) || in_array($state, $activeVerifStates);
+    } else {
+        // Regular task (APPRO/RETOUR) - use regular states filter
+        $stateMatch = empty($activeStates) || in_array($state, $activeStates);
+    }
+
+    return $typeMatch && $stateMatch;
+});
 
 // Colors for APPRO/RETOUR
 $labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
@@ -194,6 +258,13 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                 $newTypes[] = $type;
                             }
 
+                            // Show appropriate total count for each type
+                            if ($type === 'verif_stock') {
+                                $typeTotal = $totalVerifStock;
+                            } else {
+                                $typeTotal = $totalApproRetour;
+                            }
+
                             $query = http_build_query([
                                 'states' => $activeStates,
                                 'verif_states' => $activeVerifStates,
@@ -201,8 +272,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                             ]);
                             ?>
                             <a href="?<?= e($query) ?>"
-                                class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?>">
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
                                 <?= e($label) ?>
+                                <span class="badge bg-light text-dark"><?= $typeTotal ?></span>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -215,15 +287,15 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                     </div>
                 </div>
 
-                <!-- Second row: APPRO/RETOUR State Filters -->
+                <!-- Second row: APPRO/RETOUR State Filters (only show counts for APPRO/RETOUR tasks) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">États APPRO/RETOUR :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
-                        $approRetourStates = [0, 1, 2, 3, 4, 5];
-                        foreach ($approRetourStates as $state):
+                        $approRetourStateKeys = [0, 1, 2, 3, 4, 5];
+                        foreach ($approRetourStateKeys as $state):
                             $label = $labels[$state] ?? 'Unknown';
-                            $count = $stateCounts[$state] ?? 0;
+                            $count = $approRetourCounts[$state] ?? 0;
                             $isActive = in_array($state, $activeStates);
                             $newStates = $activeStates;
 
@@ -248,7 +320,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                     </div>
                 </div>
 
-                <!-- Third row: VERIF STOCK State Filters -->
+                <!-- Third row: VERIF STOCK State Filters (only show counts for VERIF STOCK tasks) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">États VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
@@ -256,7 +328,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
                         foreach ($verifStockStateKeys as $state):
                             $label = $verifStockLabels[$state];
-                            $count = $stateCounts[$state] ?? 0;
+                            $count = $verifStockCounts[$state] ?? 0;
                             $isActive = in_array($state, $activeVerifStates);
                             $newVerifStates = $activeVerifStates;
 
@@ -280,6 +352,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                         <?php endforeach; ?>
                     </div>
                 </div>
+
 
             </div>
 
@@ -384,8 +457,11 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                             </td>
 
                             <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
-                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?></td>
-                            <td class="small text-muted"><?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?></td>
+                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?>
+                            </td>
+                            <td class="small text-muted">
+                                <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
+                            </td>
                             <td class="small text-muted"><?= e($task["user_name"]) ?></td>
 
                             <td class="actions">
@@ -411,7 +487,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                                     <?php if (!empty($nextStates) && $canSetState): ?>
                                         <div class="btn-group">
                                             <?php foreach ($nextStates as $nextState): ?>
-                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7) continue; ?>
+                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7)
+                                                    continue; ?>
                                                 <form method="POST"
                                                     action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
                                                     class="d-inline m-1">
@@ -517,13 +594,13 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeVerifS
                     const taskId = taskRow.dataset.task;
                     const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
                     const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
-                    
+
                     let match = title.includes(query) || description.includes(query);
-                    
+
                     document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                         if (subRow.textContent.toLowerCase().includes(query)) match = true;
                     });
-                    
+
                     if (match || query === '') {
                         taskRow.style.display = '';
                         document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
