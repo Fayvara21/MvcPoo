@@ -248,7 +248,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeStates, $acti
 
                 <!-- Second row: APPRO/RETOUR State Filters (only show counts for APPRO/RETOUR tasks) -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span class="text-muted small me-2">États APPRO/RETOUR :</span>
+                    <span class="text-muted small me-2"></span>APPRO/RETOUR :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
                         $approRetourStateKeys = [0, 1, 2, 3, 4, 5];
@@ -279,9 +279,9 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeStates, $acti
                     </div>
                 </div>
 
-                <!-- Third row: VERI       F STOCK State Filters (only show counts for VERIF STOCK tasks) -->
-                <div class="d-fl    ex align-items-center gap-2 flex-wrap">
-                    <span cl ass="text-muted small me-2">États VERIF STOCK :</span>
+                <!-- Third row: VERIF STOCK State Filters (only show counts for VERIF STOCK tasks) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span cl ass="text-muted small me-2">VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
                         $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -323,7 +323,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeStates, $acti
         <div class="table-responsive">
             <table class="table table-sm align-m   iddle table-bordered">
                 <thead class="table-light">
-                    <tr class="text-uppercas     e small text-muted">
+                    <tr class="text-uppercase small text-muted">
                         <th>#</th>
                         <th>Type</th>
                         <th>Titre</th>
@@ -332,7 +332,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeStates, $acti
                         <th>Deadline</th>
                         <th>Complétion</th>
                         <th>Demandeur</th>
-                        <th class="actions-heade   r">Actions</th>
+                        <th class="actions-header">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
