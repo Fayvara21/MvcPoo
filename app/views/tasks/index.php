@@ -29,7 +29,7 @@ $currentUserGroup = $_SESSION['group'] ?? '';
 
 
 // State counts 
-$stateCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+$stateCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 foreach ($tasks as $t) {
     $state = (int) ($t['is_completed'] ?? 0);
     if (isset($stateCounts[$state]))
@@ -37,8 +37,20 @@ foreach ($tasks as $t) {
 }
 $totalTasks = array_sum($stateCounts);
 
-//colors
+// Colors for APPRO/RETOUR
 $labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
+
+// Verif stock labels
+$verifStockLabels = [
+    0 => 'Envoyé',
+    1 => 'Traitement',
+    2 => 'OK',
+    3 => 'NOK',
+    4 => 'Sans CC',
+    5 => 'Avec CC',
+    6 => 'Form1',
+    7 => 'Soldé'
+];
 
 $stateClass = [
     0 => 'blue',
@@ -46,10 +58,12 @@ $stateClass = [
     2 => 'orange',
     3 => 'yellow',
     4 => 'indigo',
-    5 => 'pink'
+    5 => 'pink',
+    6 => 'primary',
+    7 => 'secondary'
 ];
 
-// WORKFLOW (branching model)
+// WORKFLOW for APPRO/RETOUR (branching model)
 $transitions = [
     0 => [1],
     1 => [2, 4, 5],
@@ -57,6 +71,18 @@ $transitions = [
     3 => [],
     4 => [1],
     5 => [1]
+];
+
+// WORKFLOW for VERIF STOCK
+$verifStockTransitions = [
+    0 => [1],
+    1 => [2, 3],
+    2 => [4, 5, 6],
+    3 => [7],
+    4 => [7],
+    5 => [7],
+    6 => [7],
+    7 => []
 ];
 
 // Filters
@@ -166,7 +192,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                     <?php endforeach; ?>
                 </div>
 
-                <!-- STATE FILTERS -->
+                <!-- STATE FILTERS (APPRO/RETOUR) -->
                 <div class="d-flex gap-2 flex-wrap">
                     <?php foreach ($labels as $state => $label):
                         $count = $stateCounts[$state] ?? 0;
@@ -201,6 +227,42 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
             </div>
 
+            <!-- Divider for second filter row -->
+            <hr class="my-3">
+
+            <!-- VERIF STOCK STATE FILTERS (second row) -->
+            <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                <span class="text-muted small me-2">Filtres VERIF STOCK :</span>
+                
+                <div class="d-flex gap-2 flex-wrap">
+                    <?php 
+                    $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
+                    foreach ($verifStockStateKeys as $state):
+                        $label = $verifStockLabels[$state];
+                        $count = $stateCounts[$state] ?? 0;
+                        $isActive = in_array($state, $activeStates);
+                        $newStates = $activeStates;
+                        
+                        if ($isActive) {
+                            $newStates = array_diff($activeStates, [$state]);
+                        } else {
+                            $newStates[] = $state;
+                        }
+                        
+                        $query = http_build_query([
+                            'states' => $newStates,
+                            'types' => $activeTypes
+                        ]);
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                            <span><?= e($label) ?></span>
+                            <span class="badge bg-light text-dark"><?= $count ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -232,6 +294,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         $verifStockList = $task['verif_stock'] ?? [];
 
                         $s = (int) ($task['is_completed'] ?? 0);
+                        $isVerifStock = !empty($verifStockList);
+
+                        // Use appropriate transitions and labels based on task type
+                        $currentTransitions = $isVerifStock ? $verifStockTransitions : $transitions;
+                        $currentLabels = $isVerifStock ? $verifStockLabels : $labels;
+                        $currentStateLabel = $currentLabels[$s] ?? $labels[$s] ?? 'Unknown';
 
                         $canEdit = false;
                         $canSetState = false;
@@ -239,21 +307,32 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         if ($currentUserGroup === 'admin') {
                             $canEdit = true;
                             $canSetState = true;
-
-                        } elseif ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
+                        } elseif ($currentUserGroup === 'magasin' && !$isVerifStock && in_array($s, [0, 1, 2, 4, 5])) {
                             $canSetState = true;
-
+                        } elseif ($isVerifStock && $currentUserGroup === 'magasin') {
+                            // Magasin can use all buttons EXCEPT state 7 (Soldé) for verif_stock
+                            $canSetState = true;
                         } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
                             $canEdit = true;
-
                         } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3])) {
                             $canSetState = true;
+                        }
+
+                        // For verif_stock, check if user can use button 7 (Soldé)
+                        $canUseState7 = false;
+                        if ($isVerifStock) {
+                            if ($currentUserGroup === 'admin') {
+                                $canUseState7 = true;
+                            } elseif (in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
+                                // User belongs to the project's group
+                                $canUseState7 = true;
+                            }
                         }
 
                         $subIndex = 0;
                         $taskId = (int) $task['id'];
 
-                        $nextStates = $transitions[$s] ?? [];
+                        $nextStates = $currentTransitions[$s] ?? [];
                         $nextColor = !empty($nextStates) ? ($stateClass[$nextStates[0]] ?? 'secondary') : 'secondary'; ?>
 
                         <!-- MAIN TASK ROW -->
@@ -286,7 +365,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
                             <td class="p-2 badgeState">
                                 <span class="badge bg-<?= $stateClass[$s] ?>">
-                                    <?= e($labels[$s]) ?>
+                                    <?= e($currentStateLabel) ?>
                                 </span>
                             </td>
 
@@ -304,12 +383,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                 <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
                                     ? '-'
                                     : e(formatDateFr($task['completed_at'])) ?>
-                            </td>
+                            </td
 
 
                             <td class="small text-muted">
                                 <?= e($task["user_name"]) ?>
-                            </td>
+                            </td
 
                             <td class="actions">
                                 <div class="d-inline-flex flex-nowrap">
@@ -336,6 +415,12 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                     <?php if (!empty($nextStates) && $canSetState): ?>
                                         <div class="btn-group">
                                             <?php foreach ($nextStates as $nextState): ?>
+                                                <?php 
+                                                // Skip state 7 (Soldé) for magasin on verif_stock tasks
+                                                if ($isVerifStock && $nextState == 7 && !$canUseState7) {
+                                                    continue;
+                                                }
+                                                ?>
                                                 <form method="POST"
                                                     action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
                                                     class="d-inline m-1">
@@ -345,21 +430,21 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                                     <button type="submit"
                                                         class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
                                                         <i class="bi bi-arrow-return-right"></i>
-                                                        <?= e($labels[$nextState]) ?>
+                                                        <?= e($currentLabels[$nextState]) ?>
                                                     </button>
                                                 </form>
                                             <?php endforeach; ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                            </td>
+                            </td
                         </tr>
 
                         <!-- SUB-TASK ROWS FOR APPRO -->
                         <?php foreach ($approList as $a): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td>
+                                <td><?= $subIndex ?></td
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-blue">APPRO</div>
                                     <div class="d-flex gap-4 mb-1">
@@ -375,7 +460,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
                                         <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
                                     </div>
-                                </td>
+                                </td
                             </tr>
                         <?php endforeach; ?>
 
@@ -383,7 +468,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <?php foreach ($retourList as $r): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td>
+                                <td><?= $subIndex ?></td
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-yellow">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
@@ -394,7 +479,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
                                         <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
                                     </div>
-                                </td>
+                                </td
                             </tr>
                         <?php endforeach; ?>
 
@@ -402,7 +487,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <?php foreach ($verifStockList as $v): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td>
+                                <td><?= $subIndex ?></td
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
                                     <div class="d-flex gap-4 mb-1">
@@ -410,7 +495,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
                                         <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
                                     </div>
-                                </td>
+                                </td
                             </tr>
                         <?php endforeach; ?>
 

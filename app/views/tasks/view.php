@@ -293,7 +293,7 @@
                                 <td>${task.due_date ?? '-'} ${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
-                                <td colspan="5" class="p-3" style="max-width: 800px; word-wrap: break-word; white-space: normal;">
+                                <td colspan="5" class="p-3" style="max-width: 600px; word-wrap: break-word; white-space: normal;">
                                     <strong>Description:</strong> ${task.description || '-'}
                                 </td>
                             </tr>
