@@ -1,65 +1,131 @@
 <?php
 session_start();
 
-// Helper functions
-function e($value) {
+// Helper
+function e($value)
+{
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-function formatDateFr($date) {
-    if (empty($date)) return '—';
+function formatDateFr($date)
+{
+    if (empty($date)) {
+        return '—';
+    }
+
     $dt = new DateTime($date);
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::MEDIUM, IntlDateFormatter::SHORT);
+
+    $formatter = new IntlDateFormatter(
+        'fr_FR',
+        IntlDateFormatter::MEDIUM,
+        IntlDateFormatter::SHORT
+    );
+
     return $formatter->format($dt);
 }
 
 $currentUserGroup = $_SESSION['group'] ?? '';
 
-// Make a copy of original tasks (passed from controller)
+// Store original tasks before filtering
 $originalTasks = $tasks;
 
-// ========== 1. Count tasks by type and state ==========
-$approRetourCounts = array_fill(0, 6, 0);      // states 0..5
-$verifStockCounts  = array_fill(0, 8, 0);      // states 0..7
+// ============================================================
+// 1. INITIALIZE FILTERS FROM URL (must be done first)
+// ============================================================
+$activeApproRetourStates = $_GET['ar_states'] ?? [];
+if (!is_array($activeApproRetourStates)) {
+    $activeApproRetourStates = [$activeApproRetourStates];
+}
+$activeApproRetourStates = array_map('intval', $activeApproRetourStates);
+
+$activeVerifStates = $_GET['verif_states'] ?? [];
+if (!is_array($activeVerifStates)) {
+    $activeVerifStates = [$activeVerifStates];
+}
+$activeVerifStates = array_map('intval', $activeVerifStates);
+
+// Ensure $activeTypes is always an array, even when not present in URL
+$activeTypes = $_GET['types'] ?? [];
+if (!is_array($activeTypes)) {
+    $activeTypes = [$activeTypes];
+}
+// Remove empty values
+$activeTypes = array_filter($activeTypes, function ($value) {
+    return $value !== '';
+});
+$activeTypes = array_map('strval', $activeTypes);
+
+// ============================================================
+// 2. CALCULATE COUNTS FOR EACH STATE (for badge display)
+// ============================================================
+$approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+$verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 
 foreach ($originalTasks as $t) {
-    $state = (int)($t['is_completed'] ?? 0);
-    $hasAppro   = !empty($t['appro']);
-    $hasRetour  = !empty($t['retour']);
-    $hasVerif   = !empty($t['verif_stock']);
+    $state = (int) ($t['is_completed'] ?? 0);
+    $hasAppro = !empty($t['appro']);
+    $hasRetour = !empty($t['retour']);
+    $hasVerifStock = !empty($t['verif_stock']);
 
-    if ($hasVerif) {
-        if (isset($verifStockCounts[$state])) $verifStockCounts[$state]++;
+    if ($hasVerifStock) {
+        if (isset($verifStockCounts[$state])) {
+            $verifStockCounts[$state]++;
+        }
     } elseif ($hasAppro || $hasRetour) {
-        if (isset($approRetourCounts[$state])) $approRetourCounts[$state]++;
+        if (isset($approRetourCounts[$state])) {
+            $approRetourCounts[$state]++;
+        }
     }
 }
 
 $totalApproRetour = array_sum($approRetourCounts);
-$totalVerifStock  = array_sum($verifStockCounts);
-$totalTasks       = $totalApproRetour + $totalVerifStock;
+$totalVerifStock = array_sum($verifStockCounts);
+$totalTasks = $totalApproRetour + $totalVerifStock;
 
-// ========== 2. Labels and transitions ==========
-// APPRO/RETOUR
-$labels = [0 => 'Envoyé', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé', 4 => 'En achat', 5 => 'En sous-traitance'];
+// ============================================================
+// 3. LABELS & WORKFLOWS
+// ============================================================
+// Colors for APPRO/RETOUR
+$labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
+
+// Verif stock labels
+$verifStockLabels = [
+    0 => 'Envoyé',
+    1 => 'Traitement',
+    2 => 'OK',
+    3 => 'NOK',
+    4 => 'OK Sans CC',
+    5 => 'OK Avec CC',
+    6 => 'OK Form1',
+    7 => 'Soldé'
+];
+
+$stateClass = [
+    0 => 'blue',
+    1 => 'red',
+    2 => 'orange',
+    3 => 'yellow',
+    4 => 'indigo',
+    5 => 'pink',
+    6 => 'primary',
+    7 => 'secondary'
+];
+
+// WORKFLOW for APPRO/RETOUR
 $transitions = [
     0 => [1],
-    1 => [2,4,5],
+    1 => [2, 4, 5],
     2 => [3],
     3 => [],
     4 => [1],
     5 => [1]
 ];
 
-// VERIF STOCK
-$verifStockLabels = [
-    0 => 'Envoyé', 1 => 'Traitement', 2 => 'OK', 3 => 'NOK',
-    4 => 'OK Sans CC', 5 => 'OK Avec CC', 6 => 'OK Form1', 7 => 'Soldé'
-];
+// WORKFLOW for VERIF STOCK
 $verifStockTransitions = [
     0 => [1],
-    1 => [2,3],
-    2 => [4,5,6],
+    1 => [2, 3],
+    2 => [4, 5, 6],
     3 => [7],
     4 => [7],
     5 => [7],
@@ -67,56 +133,51 @@ $verifStockTransitions = [
     7 => []
 ];
 
-$stateClass = [
-    0 => 'blue', 1 => 'red', 2 => 'orange', 3 => 'yellow',
-    4 => 'indigo', 5 => 'pink', 6 => 'primary', 7 => 'secondary'
-];
+// ============================================================
+// 4. FILTER TASKS BASED ON ACTIVE FILTERS
+// ============================================================
+$tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourStates, $activeVerifStates, $activeTypes) {
+    $state = (int) $task['is_completed'];
+    $hasAppro = !empty($task['appro']);
+    $hasRetour = !empty($task['retour']);
+    $hasVerifStock = !empty($task['verif_stock']);
 
-// ========== 3. Read filters from URL ==========
-$activeTypes = $_GET['types'] ?? [];
-if (!is_array($activeTypes)) $activeTypes = [$activeTypes];
-$activeTypes = array_map('strval', $activeTypes);
+    // Determine specific task type
+    $specificType = null;
+    if ($hasVerifStock) {
+        $specificType = 'verif_stock';
+    } elseif ($hasAppro) {
+        $specificType = 'appro';
+    } elseif ($hasRetour) {
+        $specificType = 'retour';
+    }
 
-// Separate parameters for each task type
-$activeARStates = $_GET['ar_states'] ?? [];
-if (!is_array($activeARStates)) $activeARStates = [$activeARStates];
-$activeARStates = array_map('intval', $activeARStates);
-
-$activeVerifStates = $_GET['verif_states'] ?? [];
-if (!is_array($activeVerifStates)) $activeVerifStates = [$activeVerifStates];
-$activeVerifStates = array_map('intval', $activeVerifStates);
-
-// ========== 4. Apply filters to tasks ==========
-$tasks = array_filter($originalTasks, function($task) use ($activeTypes, $activeARStates, $activeVerifStates) {
-    $state = (int)($task['is_completed'] ?? 0);
-    $hasAppro   = !empty($task['appro']);
-    $hasRetour  = !empty($task['retour']);
-    $hasVerif   = !empty($task['verif_stock']);
-    
-    // ---- Type filter ----
-    $typeOk = true;
+    // Type match logic - if no active types, show all
+    $typeMatch = true;
     if (!empty($activeTypes)) {
-        $typeOk = false;
-        if (in_array('appro', $activeTypes) && $hasAppro) $typeOk = true;
-        if (in_array('retour', $activeTypes) && $hasRetour) $typeOk = true;
-        if (in_array('verif_stock', $activeTypes) && $hasVerif) $typeOk = true;
+        $typeMatch = in_array($specificType, $activeTypes);
     }
-    if (!$typeOk) return false;
-    
-    // ---- State filter ----
-    if ($hasVerif) {
-        // VERIF STOCK: only verif_states matter
+
+    if (!$typeMatch) {
+        return false;
+    }
+
+    // State match - completely separate by type
+    $stateMatch = true;
+
+    if ($hasVerifStock) {
+        // VERIF STOCK task
         if (!empty($activeVerifStates)) {
-            return in_array($state, $activeVerifStates);
+            $stateMatch = in_array($state, $activeVerifStates);
         }
-    } else {
-        // APPRO/RETOUR: only ar_states matter
-        if (!empty($activeARStates)) {
-            return in_array($state, $activeARStates);
+    } elseif ($hasAppro || $hasRetour) {
+        // APPRO or RETOUR task
+        if (!empty($activeApproRetourStates)) {
+            $stateMatch = in_array($state, $activeApproRetourStates);
         }
     }
-    
-    return true;
+
+    return $typeMatch && $stateMatch;
 });
 ?>
 
@@ -160,82 +221,58 @@ $tasks = array_filter($originalTasks, function($task) use ($activeTypes, $active
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">Filtres :</span>
 
-                    <!-- TYPE FILTERS -->
                     <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
-                        $typeLabels = [
-                            'appro' => 'APPRO',
-                            'retour' => 'RETOUR',
-                            'verif_stock' => 'VERIF STOCK'
-                        ];
-
-                        $typeColors = [
-                            'appro' => 'primary',
-                            'retour' => 'warning',
-                            'verif_stock' => 'success'
-                        ];
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success'];
 
                         foreach ($typeLabels as $type => $label):
                             $isActive = in_array($type, $activeTypes);
                             $newTypes = $activeTypes;
-
                             if ($isActive) {
                                 $newTypes = array_diff($activeTypes, [$type]);
                             } else {
                                 $newTypes[] = $type;
                             }
-                            
-                            // Remove empty values and reindex
-                            $newTypes = array_values(array_filter($newTypes));
-
-                            if ($type === 'verif_stock') {
-                                $typeTotal = $totalVerifStock;
-                            } else {
-                                $typeTotal = $totalApproRetour;
-                            }
-
+                            // Build query preserving both state filters
                             $query = http_build_query([
                                 'ar_states' => $activeApproRetourStates,
                                 'verif_states' => $activeVerifStates,
                                 'types' => $newTypes
                             ]);
+                            $count = ($type === 'verif_stock') ? $totalVerifStock : $totalApproRetour;
                             ?>
                             <a href="?<?= e($query) ?>"
                                 class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
                                 <?= e($label) ?>
-                                <span class="badge bg-light text-dark"><?= $typeTotal ?></span>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
                             </a>
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- TOTAL / RESET -->
                     <div class="ms-2">
-                        <a href="?" class="btn btn-sm btn-outline-dark">
-                            <?= $totalTasks ?> total
-                        </a>
+                        <a href="?" class="btn btn-sm btn-outline-dark"><?= $totalTasks ?> total</a>
                     </div>
                 </div>
 
-                <!-- Second row: APPRO/RETOUR State Filters (ONLY affects APPRO/RETOUR tasks) -->
+                <!-- Second row: APPRO/RETOUR State Filters -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">États APPRO/RETOUR :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
-                        $approRetourStateKeys = [0, 1, 2, 3, 4, 5];
-                        foreach ($approRetourStateKeys as $state):
-                            $label = $labels[$state] ?? 'Unknown';
+                        $arStatesList = [0, 1, 2, 3, 4, 5];
+                        foreach ($arStatesList as $state):
+                            $label = $labels[$state] ?? '?';
                             $count = $approRetourCounts[$state] ?? 0;
                             $isActive = in_array($state, $activeApproRetourStates);
-                            $newStates = $activeApproRetourStates;
-
+                            $newARStates = $activeApproRetourStates;
                             if ($isActive) {
-                                $newStates = array_diff($activeApproRetourStates, [$state]);
+                                $newARStates = array_diff($activeApproRetourStates, [$state]);
                             } else {
-                                $newStates[] = $state;
+                                $newARStates[] = $state;
                             }
-
                             $query = http_build_query([
-                                'ar_states' => $newStates,
+                                'ar_states' => $newARStates,
                                 'verif_states' => $activeVerifStates,
                                 'types' => $activeTypes
                             ]);
@@ -249,24 +286,22 @@ $tasks = array_filter($originalTasks, function($task) use ($activeTypes, $active
                     </div>
                 </div>
 
-                <!-- Third row: VERIF STOCK State Filters (ONLY affects VERIF STOCK tasks) -->
+                <!-- Third row: VERIF STOCK State Filters -->
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted small me-2">États VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
-                        $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
-                        foreach ($verifStockStateKeys as $state):
-                            $label = $verifStockLabels[$state];
+                        $verifStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
+                        foreach ($verifStatesList as $state):
+                            $label = $verifStockLabels[$state] ?? '?';
                             $count = $verifStockCounts[$state] ?? 0;
                             $isActive = in_array($state, $activeVerifStates);
                             $newVerifStates = $activeVerifStates;
-
                             if ($isActive) {
                                 $newVerifStates = array_diff($activeVerifStates, [$state]);
                             } else {
                                 $newVerifStates[] = $state;
                             }
-
                             $query = http_build_query([
                                 'ar_states' => $activeApproRetourStates,
                                 'verif_states' => $newVerifStates,
@@ -281,7 +316,6 @@ $tasks = array_filter($originalTasks, function($task) use ($activeTypes, $active
                         <?php endforeach; ?>
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -387,7 +421,8 @@ $tasks = array_filter($originalTasks, function($task) use ($activeTypes, $active
                             </td>
 
                             <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
-                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?></td>
+                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?>
+                            </td>
                             <td class="small text-muted">
                                 <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
                             </td>
