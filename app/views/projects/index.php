@@ -31,7 +31,7 @@
 
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
-                <div class="col-12 col-#md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <div class="card h-100 border-0 shadow-sm">
 
                         <div class="card-body">
@@ -160,6 +160,9 @@ $projectUrgentCount = 0;
         </div>
     </div>
 <?php endif; ?>
+
+                        </div>
+
                         <!-- Footer -->
                         <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
                             <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
@@ -261,7 +264,7 @@ $projectUrgentCount = 0;
                         SN, Avion, etc.)</li>
                     <li class="list-group-item">Correction de l'horodatage des demandes sur le fuseau horaire
                         Europe/Paris</li>
-                </ul>   
+                </ul>
             </div>
 
         </div>
