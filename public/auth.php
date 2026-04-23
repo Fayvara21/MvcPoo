@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 $action = $_GET['action'] ?? 'login';
@@ -18,4 +19,3 @@ switch ($action) {
     default:
         $controller->login();
 }
-

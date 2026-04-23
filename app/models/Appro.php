@@ -17,7 +17,7 @@ class Appro
         ");
 
         $stmt->execute([
-            $taskId, $pn, $nb, $designation, $of, $location, $plane, $oe
+            $taskId, $pn, $nb, $designation, $of, $location, $plane, $oe,
         ]);
     }
 
@@ -31,9 +31,8 @@ class Appro
         $of = null,
         $location = null,
         $plane = null,
-        $oe = null
-    )
-    {
+        $oe = null,
+    ) {
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
@@ -56,11 +55,11 @@ class Appro
                 $of,
                 $location,
                 $plane,
-                $oe
+                $oe,
             ]);
         }
     }
-    
+
 
     /**
      * Fetch all APPRO rows for a task
@@ -87,9 +86,8 @@ class Appro
         $of = null,
         $location = null,
         $plane = null,
-        $oe = null
-    )
-    {
+        $oe = null,
+    ) {
         self::deleteByTaskId($taskId);
 
         self::createMultiple(
@@ -99,7 +97,7 @@ class Appro
             $of,
             $location,
             $plane,
-            $oe
+            $oe,
         );
     }
 

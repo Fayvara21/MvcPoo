@@ -4,7 +4,6 @@ require_once '../app/models/Contact.php';
 
 class ContactController
 {
-
     private $contactModel;
 
     public function __construct()

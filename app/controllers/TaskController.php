@@ -1,4 +1,5 @@
 <?php
+
 require_once '../app/controllers/BaseController.php';
 require_once '../app/models/Appro.php';
 require_once '../app/models/Retour.php';
@@ -61,7 +62,7 @@ class TaskController extends BaseController
                         $data['of'] ?? null,
                         $data['location'] ?? null,
                         $data['plane'] ?? null,
-                        $data['oe'] ?? null
+                        $data['oe'] ?? null,
                     );
                 }
             }
@@ -77,14 +78,14 @@ class TaskController extends BaseController
                 foreach ($retourRows as $row) {
                     $data = array_merge($row, [
                         'sn' => $sharedSn,
-                        'certif' => $sharedCertif
+                        'certif' => $sharedCertif,
                     ]);
                     Retour::create(
                         $taskId,
                         $data['pn'] ?? null,
                         $data['nb'] ?? 1,
                         $data['sn'] ?? null,
-                        $data['certif'] ?? null
+                        $data['certif'] ?? null,
                     );
                 }
             }
@@ -98,7 +99,7 @@ class TaskController extends BaseController
                         $taskId,
                         $row['pn'] ?? null,
                         $row['nb'] ?? 1,
-                        $row['name'] ?? null
+                        $row['name'] ?? null,
                     );
                 }
             }
@@ -140,7 +141,7 @@ class TaskController extends BaseController
                 $_POST['title'] ?? '',
                 $_POST['desc'] ?? '',
                 $task['id'],
-                $_POST['dueDate'] ?: null
+                $_POST['dueDate'] ?: null,
             );
 
             $type = $_POST['type'] ?? '';
@@ -161,7 +162,7 @@ class TaskController extends BaseController
                         $row['of'] ?? null,
                         $row['location'] ?? null,
                         $row['plane'] ?? null,
-                        $row['oe'] ?? null
+                        $row['oe'] ?? null,
                     );
                 }
             }
@@ -174,7 +175,7 @@ class TaskController extends BaseController
                         $row['PN'] ?? null,
                         $row['nb'] ?? 1,
                         $row['sn'] ?? null,
-                        $row['certif'] ?? null
+                        $row['certif'] ?? null,
                     );
                 }
             }
@@ -186,7 +187,7 @@ class TaskController extends BaseController
                         $task['id'],
                         $row['pn'] ?? null,
                         $row['nb'] ?? 1,
-                        $row['name'] ?? null
+                        $row['name'] ?? null,
                     );
                 }
             }

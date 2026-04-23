@@ -83,10 +83,6 @@ $totalApproRetour = array_sum($approRetourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
 $totalTasks = $totalApproRetour + $totalVerifStock;
 
-// Calculate urgent tasks count (state 0 or 1 for both types)
-$urgentApproRetour = ($approRetourCounts[0] ?? 0) + ($approRetourCounts[1] ?? 0);
-$urgentVerifStock = ($verifStockCounts[0] ?? 0) + ($verifStockCounts[1] ?? 0);
-$totalUrgent = $urgentApproRetour + $urgentVerifStock;
 
 // ============================================================
 // 3. LABELS & WORKFLOWS
@@ -219,14 +215,8 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
 
                     <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
                         + Nouvelle demande
-                </a>
+                    </a>
 
-    <!-- Urgent tasks badge -->
-    <a href="?ar_states[]=0&ar_states[]=1&verif_states[]=0&verif_states[]=1" 
-       class="btn btn-danger d-flex align-items-center gap-1">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        Urgent: <?= $totalUrgent ?>
-    </a>
                 </div>
             </div>
 

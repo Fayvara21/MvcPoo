@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . "/../core/Database.php";
 require_once __DIR__ . "/../core/Router.php";
 require_once __DIR__ . "/../app/models/Task.php";
@@ -26,7 +27,7 @@ $router->add("/", function () {
 $router->add('/projects/{project_id}/tasks/{task_id}/mark-completed', function ($project_id, $task_id) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $state = $_POST['state'] ?? 0;
-        (new TaskController())->markAsCompleted($task_id, (int)$state);
+        (new TaskController())->markAsCompleted($task_id, (int) $state);
     }
 });
 

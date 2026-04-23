@@ -17,10 +17,11 @@ class Contact
         ");
 
         $stmt->execute([
-            $email, $type, $description, $user
+            $email, $type, $description, $user,
         ]);
     }
-    public static function view(){
+    public static function view()
+    {
         $db = Database::getInstance()->getPdo();
         $stmt = $db->prepare("SELECt * FROM contact");
         $stmt->execute();

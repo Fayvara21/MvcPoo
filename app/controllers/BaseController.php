@@ -1,5 +1,7 @@
 <?php
-class BaseController {
+
+class BaseController
+{
     protected function requireAuth()
     {
         if (!isset($_SESSION['user_id'])) {

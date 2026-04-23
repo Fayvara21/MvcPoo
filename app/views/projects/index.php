@@ -110,22 +110,35 @@
                             <?php endif; ?>
 
                             <!-- Stats -->
-                            <?php if (!empty($project['tasks_count'])): ?>
+                            <?php
+                            // Calculate urgent count for this project from tasks
+                            $projectUrgentCount = 0;
+                $projectTasksCount = 0;
+                if (!empty($project['tasks'])) {
+                    $projectTasksCount = count($project['tasks']);
+                    foreach ($project['tasks'] as $task) {
+                        $state = (int) ($task['is_completed'] ?? 0);
+                        if ($state === 0 || $state === 1) {
+                            $projectUrgentCount++;
+                        }
+                    }
+                }
+                ?>
+                            <?php if ($projectTasksCount > 0): ?>
                                 <div class="d-flex gap-3 mt-3 pt-3 border-top">
                                     <div>
                                         <span class="text-muted small">Demandes</span>
-                                        <div class="fw-bold"><?= $project['tasks_count'] ?></div>
+                                        <div class="fw-bold"><?= $projectTasksCount ?></div>
                                     </div>
-
-                                    <?php if (!empty($project['urgent_count'])): ?>
-                                        <div>
-                                            <span class="text-muted small">Urgentes</span>
-                                            <div class="fw-bold text-warning"><?= $project['urgent_count'] ?></div>
+                                    
+                                    <div>
+                                        <span class="text-muted small">Urgentes</span>
+                                        <div class="fw-bold <?= $projectUrgentCount > 0 ? 'text-danger' : 'text-muted' ?>">
+                                            <?= $projectUrgentCount ?>
                                         </div>
-                                    <?php endif; ?>
+                                    </div>
                                 </div>
                             <?php endif; ?>
-
                         </div>
 
                         <!-- Footer -->
@@ -229,7 +242,7 @@
                         SN, Avion, etc.)</li>
                     <li class="list-group-item">Correction de l'horodatage des demandes sur le fuseau horaire
                         Europe/Paris</li>
-                </ul>
+                </ul>   
             </div>
 
         </div>
