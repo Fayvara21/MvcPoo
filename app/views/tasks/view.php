@@ -81,7 +81,6 @@
                                     <th class="ps-4" style="width:60px">#</th>
                                     <th style="width:100px">Type</th>
                                     <th>Titre</th>
-                                    <th>Desc</th>
                                     <th style="width:120px">Ref</th>
                                     <th style="width:160px">Date limite</th>
                                 </tr>
@@ -110,7 +109,6 @@
                                         ?>
 
                                         <tr class="<?= $deadlineClass ?>">
-
                                             <td class="ps-4 fw-medium"><?= $task['id'] ?></td>
                                             <td>
                                                 <?php if ($isAppro): ?>
@@ -126,11 +124,6 @@
                                             <td><?= htmlspecialchars($task['title']) ?></td>
                                             <td>
                                                 <?= $isAppro
-                                                    ? ($approFirst['designation'] ?? '-')
-                                                    : ($isRetour ? ($retourFirst['sn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['name'] ?? '-') : '-')) ?>
-                                            </td>
-                                            <td>
-                                                <?= $isAppro
                                                     ? ($approFirst['pn'] ?? '-')
                                                     : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : '-')) ?>
                                             </td>
@@ -140,11 +133,11 @@
                                                     <span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
                                                 <?php endif; ?>
                                             </td>
-
                                         </tr>
-
-                                        <tr class="table <?= $deadlineClass ?>">
-                                            <td colspan="6" class="p-3">
+                                        <tr class="<?= $deadlineClass ?>">
+                                            <td colspan="5" class="p-3"
+                                                style="max-width: 800px; word-wrap: break-word; white-space: normal;">
+                                                <strong>Description:</strong>
                                                 <?= htmlspecialchars($task['description']) ?: '<span class="text-muted small">-</span>' ?>
                                             </td>
                                         </tr>
@@ -296,13 +289,12 @@
                                 <td class="ps-4 fw-medium">${task.id}</td>
                                 <td>${typeBadge}</td>
                                 <td>${task.title}</td>
-                                <td>${task.description}</td>
                                 <td>${reference}</td>
                                 <td>${task.due_date ?? '-'} ${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
-                                <td colspan="6" class="p-3">
-                                    ${task.description || '-'}
+                                <td colspan="5" class="p-3" style="max-width: 800px; word-wrap: break-word; white-space: normal;">
+                                    <strong>Description:</strong> ${task.description || '-'}
                                 </td>
                             </tr>
                         `);
