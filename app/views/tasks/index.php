@@ -121,120 +121,150 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
 
 <div class="container-fluid px-3 py-4">
 
-    <!-- Filters -->
-    <div class="d-flex align-items-center gap-2 flex-wrap">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
 
-        <span class="text-muted small me-2">Filtres :</span>
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                <div>
+                    <h2 class="fw-semibold mb-1">
+                        Demandes - <?= e($project['title']) ?>
+                    </h2>
+                    <?php if (!empty($project['description'])): ?>
+                        <div class="text-muted small">
+                            <?= e($project['description']) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-        <!-- TYPE FILTERS -->
-        <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
-            <?php
-            $typeLabels = [
-                'appro' => 'APPRO',
-                'retour' => 'RETOUR',
-                'verif_stock' => 'VERIF STOCK'
-            ];
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <input type="text" id="task-search" class="form-control" placeholder="Rechercher..."
+                        style="width: 220px;">
 
-            $typeColors = [
-                'appro' => 'primary',
-                'retour' => 'warning',
-                'verif_stock' => 'success'
-            ];
+                    <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
+                        + Nouvelle demande
+                    </a>
+                </div>
+            </div>
 
-            foreach ($typeLabels as $type => $label):
-                $isActive = in_array($type, $activeTypes);
-                $newTypes = $activeTypes;
+            <!-- Divider -->
+            <hr class="my-3">
 
-                if ($isActive) {
-                    $newTypes = array_diff($activeTypes, [$type]);
-                } else {
-                    $newTypes[] = $type;
-                }
+            <!-- Filters -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                $query = http_build_query([
-                    'states' => $activeStates,
-                    'types' => $newTypes
-                ]);
-                ?>
-                <a href="?<?= e($query) ?>"
-                    class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?>">
-                    <?= e($label) ?>
-                </a>
-            <?php endforeach; ?>
+                <span class="text-muted small me-2">Filtres :</span>
+
+                <!-- TYPE FILTERS -->
+                <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
+                    <?php
+                    $typeLabels = [
+                        'appro' => 'APPRO',
+                        'retour' => 'RETOUR',
+                        'verif_stock' => 'VERIF STOCK'
+                    ];
+
+                    $typeColors = [
+                        'appro' => 'primary',
+                        'retour' => 'warning',
+                        'verif_stock' => 'success'
+                    ];
+
+                    foreach ($typeLabels as $type => $label):
+                        $isActive = in_array($type, $activeTypes);
+                        $newTypes = $activeTypes;
+
+                        if ($isActive) {
+                            $newTypes = array_diff($activeTypes, [$type]);
+                        } else {
+                            $newTypes[] = $type;
+                        }
+
+                        $query = http_build_query([
+                            'states' => $activeStates,
+                            'types' => $newTypes
+                        ]);
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?>">
+                            <?= e($label) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- STATE FILTERS (APPRO/RETOUR) -->
+                <div class="d-flex gap-2 flex-wrap">
+                    <?php foreach ($labels as $state => $label):
+                        $count = $stateCounts[$state] ?? 0;
+                        $isActive = in_array($state, $activeStates);
+                        $newStates = $activeStates;
+
+                        if ($isActive) {
+                            $newStates = array_diff($activeStates, [$state]);
+                        } else {
+                            $newStates[] = $state;
+                        }
+
+                        $query = http_build_query([
+                            'states' => $newStates,
+                            'types' => $activeTypes
+                        ]);
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                            <span><?= e($label) ?></span>
+                            <span class="badge bg-light text-dark"><?= $count ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- TOTAL / RESET -->
+                <div class="ms-2">
+                    <a href="?" class="btn btn-sm btn-outline-dark">
+                        <?= $totalTasks ?> total
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Divider for second filter row -->
+            <hr class="my-3">
+
+            <!-- VERIF STOCK STATE FILTERS (second row) -->
+            <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                <span class="text-muted small me-2">Filtres VERIF STOCK :</span>
+
+                <div class="d-flex gap-2 flex-wrap">
+                    <?php
+                    $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
+                    foreach ($verifStockStateKeys as $state):
+                        $label = $verifStockLabels[$state];
+                        $count = $stateCounts[$state] ?? 0;
+                        $isActive = in_array($state, $activeStates);
+                        $newStates = $activeStates;
+
+                        if ($isActive) {
+                            $newStates = array_diff($activeStates, [$state]);
+                        } else {
+                            $newStates[] = $state;
+                        }
+
+                        $query = http_build_query([
+                            'states' => $newStates,
+                            'types' => $activeTypes
+                        ]);
+                        ?>
+                        <a href="?<?= e($query) ?>"
+                            class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                            <span><?= e($label) ?></span>
+                            <span class="badge bg-light text-dark"><?= $count ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
         </div>
-
-        <!-- STATE FILTERS -->
-        <div class="d-flex gap-2 flex-wrap">
-            <?php foreach ($labels as $state => $label):
-                $count = $stateCounts[$state] ?? 0;
-                $isActive = in_array($state, $activeStates);
-                $newStates = $activeStates;
-
-                if ($isActive) {
-                    $newStates = array_diff($activeStates, [$state]);
-                } else {
-                    $newStates[] = $state;
-                }
-
-                $query = http_build_query([
-                    'states' => $newStates,
-                    'types' => $activeTypes
-                ]);
-                ?>
-                <a href="?<?= e($query) ?>"
-                    class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                    <span><?= e($label) ?></span>
-                    <span class="badge bg-light text-dark"><?= $count ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- TOTAL / RESET -->
-        <div class="ms-2">
-            <a href="?" class="btn btn-sm btn-outline-dark">
-                <?= $totalTasks ?> total
-            </a>
-        </div>
-
     </div>
-
-    <!-- Divider for second filter row -->
-    <hr class="my-3">
-
-    <!-- VERIF STOCK STATE FILTERS (second row) -->
-    <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-        <span class="text-muted small me-2">Filtres VERIF STOCK :</span>
-
-        <div class="d-flex gap-2 flex-wrap">
-            <?php
-            $verifStockStateKeys = [0, 1, 2, 3, 4, 5, 6, 7];
-            foreach ($verifStockStateKeys as $state):
-                $label = $verifStockLabels[$state];
-                $count = $stateCounts[$state] ?? 0;
-                $isActive = in_array($state, $activeStates);
-                $newStates = $activeStates;
-
-                if ($isActive) {
-                    $newStates = array_diff($activeStates, [$state]);
-                } else {
-                    $newStates[] = $state;
-                }
-
-                $query = http_build_query([
-                    'states' => $newStates,
-                    'types' => $activeTypes
-                ]);
-                ?>
-                <a href="?<?= e($query) ?>"
-                    class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                    <span><?= e($label) ?></span>
-                    <span class="badge bg-light text-dark"><?= $count ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-
-
 
     <div class="card shadow-sm border-0">
 
@@ -411,7 +441,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <!-- SUB-TASK ROWS FOR APPRO -->
                         <?php foreach ($approList as $a): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: none;">
+                            <tr class="bg-light sub-task-<?= $taskId ?>">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-primary">APPRO</div>
@@ -435,7 +465,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <!-- SUB-TASK ROWS FOR RETOUR -->
                         <?php foreach ($retourList as $r): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: none;">
+                            <tr class="bg-light sub-task-<?= $taskId ?>">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
@@ -454,7 +484,7 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <!-- SUB-TASK ROWS FOR VERIF STOCK -->
                         <?php foreach ($verifStockList as $v): ?>
                             <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: none;">
+                            <tr class="bg-light sub-task-<?= $taskId ?>>
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
