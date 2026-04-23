@@ -64,6 +64,7 @@
                                     <option value="">-- Choisir --</option>
                                     <option value="appro">APPRO</option>
                                     <option value="retour">RETOUR</option>
+                                    <option value="verif_stock">VERIF STOCK</option>
                                 </select>
                             </div>
                         </div>
@@ -84,6 +85,7 @@
             <div class="col-12 col-lg-5">
                 <?php include __DIR__ . '/partials/appro.php'; ?>
                 <?php include __DIR__ . '/partials/retour.php'; ?>
+                <?php include __DIR__ . '/partials/verif_stock.php'; ?>
             </div>
 
         </div>
@@ -92,8 +94,9 @@
 
 </div>
 
-<script defer src="/js/tasks/create/appro.js"></script>
+script defer src="/js/tasks/create/appro.js"></script>
 <script defer src="/js/tasks/create/retour.js"></script>
+<script defer src="/js/tasks/create/verif_stock.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 

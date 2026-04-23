@@ -56,11 +56,14 @@ class Task
     {
         $db = Database::getInstance()->getPdo();
 
-        // Delete related APPRO and RETOUR entries first
+        // Delete related APPRO, RETOUR, and VERIF_STOCK entries first
         $stmt = $db->prepare("DELETE FROM appro WHERE TaskID = :id");
         $stmt->execute(['id' => $id]);
 
         $stmt = $db->prepare("DELETE FROM retour WHERE TaskID = :id");
+        $stmt->execute(['id' => $id]);
+
+        $stmt = $db->prepare("DELETE FROM verif_stock WHERE TaskID = :id");
         $stmt->execute(['id' => $id]);
 
         // Then delete task
@@ -208,6 +211,9 @@ class Task
     }
 
     // Helper: attach multiple APPRO and RETOUR to tasks
+    /**
+     * Attach APPRO, RETOUR, and VERIF_STOCK data to tasks
+     */
     private static function attachApproRetour(array $tasks): array
     {
         if (empty($tasks))
@@ -219,7 +225,7 @@ class Task
 
         // APPRO
         $stmt = $db->prepare("
-            SELECT TaskID, pn, nb, designation, location, plane, `of`, oe
+            SELECT TaskID, pn, nb, designation, location, plane, `of`, oe, id
             FROM appro
             WHERE TaskID IN ($placeholders)
         ");
@@ -233,7 +239,7 @@ class Task
 
         // RETOUR
         $stmt = $db->prepare("
-            SELECT TaskID, PN, nb, sn, certif
+            SELECT TaskID, PN as pn, nb, sn, certif, id
             FROM retour
             WHERE TaskID IN ($placeholders)
         ");
@@ -245,15 +251,31 @@ class Task
             $retourByTask[$row['TaskID']][] = $row;
         }
 
-        // Attach
+        // VERIF_STOCK
+        $stmt = $db->prepare("
+            SELECT TaskID, pn, nb, name, id
+            FROM verif_stock
+            WHERE TaskID IN ($placeholders)
+        ");
+        $stmt->execute($taskIds);
+        $verifStockRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $verifStockByTask = [];
+        foreach ($verifStockRows as $row) {
+            $verifStockByTask[$row['TaskID']][] = $row;
+        }
+
+        // Attach all data
         foreach ($tasks as &$task) {
             $id = $task['id'];
             $task['appro'] = $approByTask[$id] ?? [];
             $task['retour'] = $retourByTask[$id] ?? [];
+            $task['verif_stock'] = $verifStockByTask[$id] ?? [];
         }
 
         return $tasks;
     }
+
     private static function getUserFromID($id)
     {
         $db = Database::getInstance()->getPdo();

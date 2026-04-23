@@ -1,7 +1,8 @@
 <?php
 require_once '../app/controllers/BaseController.php';
-// require_once '../app/models/Appro.php';
-// require_once '../app/models/Retour.php';
+require_once '../app/models/Appro.php';
+require_once '../app/models/Retour.php';
+require_once '../app/models/Verif_stock.php';
 
 class TaskController extends BaseController
 {
@@ -46,13 +47,12 @@ class TaskController extends BaseController
                 $sharedFields = [
                     'designation' => $_POST['appro_designation'] ?? null,
                     'of' => $_POST['appro_of'] ?? null,
-                    //'location' => $_POST['appro_location'] ?? null,
                     'plane' => $_POST['appro_plane'] ?? null,
                     'oe' => $_POST['appro_oe'] ?? null,
                 ];
 
                 foreach ($approRows as $row) {
-                    $data = array_merge($row, $sharedFields); // merge shared fields
+                    $data = array_merge($row, $sharedFields);
                     Appro::create(
                         $taskId,
                         $data['pn'] ?? null,
@@ -67,8 +67,8 @@ class TaskController extends BaseController
             }
 
             // === RETOUR ===
-            if ($type === 'retour') {
-                $retourRows = $_POST['retour'] ?? [];
+            if ($type === 'retour' && !empty($_POST['retour'])) {
+                $retourRows = $_POST['retour'];
 
                 // Shared fields
                 $sharedSn = $_POST['retour_sn'] ?? null;
@@ -89,12 +89,27 @@ class TaskController extends BaseController
                 }
             }
 
+            // === VERIF STOCK ===
+            if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
+                $verifStockRows = $_POST['verif_stock'];
+
+                foreach ($verifStockRows as $row) {
+                    Verif_stock::create(
+                        $taskId,
+                        $row['pn'] ?? null,
+                        $row['nb'] ?? 1,
+                        $row['name'] ?? null
+                    );
+                }
+            }
+
             header("Location: /projects/$id/tasks");
             exit;
         }
 
         include __DIR__ . '/../views/tasks/create.php';
     }
+
     public function edit($taskId)
     {
         $this->requireAuth();
@@ -130,6 +145,7 @@ class TaskController extends BaseController
             // Clear existing entries first
             Appro::deleteByTaskId($task['id']);
             Retour::deleteByTaskId($task['id']);
+            Verif_stock::deleteByTaskId($task['id']);
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {
@@ -152,10 +168,22 @@ class TaskController extends BaseController
                 foreach ($_POST['retour'] as $row) {
                     Retour::create(
                         $task['id'],
-                        $row['PN'] ?? null,
+                        $row['pn'] ?? null,
                         $row['nb'] ?? 1,
                         $row['sn'] ?? null,
                         $row['certif'] ?? null
+                    );
+                }
+            }
+
+            // === VERIF STOCK ===
+            if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
+                foreach ($_POST['verif_stock'] as $row) {
+                    Verif_stock::create(
+                        $task['id'],
+                        $row['pn'] ?? null,
+                        $row['nb'] ?? 1,
+                        $row['name'] ?? null
                     );
                 }
             }
@@ -165,6 +193,7 @@ class TaskController extends BaseController
             exit;
         }
 
+        
         include __DIR__ . '/../views/tasks/edit.php';
     }
 

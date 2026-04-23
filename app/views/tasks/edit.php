@@ -8,7 +8,8 @@ $retourList = Retour::findByTaskId($task['id']) ?? [];
 $selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : '');
 
 // Safe escaping
-function e($str) {
+function e($str)
+{
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
 }
 ?>
@@ -52,12 +53,14 @@ function e($str) {
                             <label class="form-label fw-medium">
                                 BP (titre, référence): <span class="text-danger">*</span>
                             </label>
-                            <input class="form-control form-control-lg" type="text" name="title" value="<?= e($task['title']) ?>" required>
+                            <input class="form-control form-control-lg" type="text" name="title"
+                                value="<?= e($task['title']) ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-medium">Description :</label>
-                            <textarea class="form-control" name="desc" rows="3"><?= e($task['description']) ?></textarea>
+                            <textarea class="form-control" name="desc"
+                                rows="3"><?= e($task['description']) ?></textarea>
                         </div>
 
                         <div class="row g-3">
@@ -73,7 +76,9 @@ function e($str) {
                                 <select class="form-select" name="type" id="taskType" required>
                                     <option value="">-- Choisir --</option>
                                     <option value="appro" <?= $selectedType === 'appro' ? 'selected' : '' ?>>APPRO</option>
-                                    <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>RETOUR</option>
+                                    <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>RETOUR
+                                    </option>
+                                        <option value="verif_stock" <?= $selectedType === 'verif_stock' ? 'selected' : '' ?>>VERIF STOCK</option>
                                 </select>
                             </div>
                         </div>
@@ -94,6 +99,7 @@ function e($str) {
             <div class="col-12 col-lg-5">
                 <?php include __DIR__ . '/edit/appro.php'; ?>
                 <?php include __DIR__ . '/edit/retour.php'; ?>
+                <?php include __DIR__ . '/edit/verif_stock.php'; ?>
             </div>
 
         </div>
@@ -103,6 +109,7 @@ function e($str) {
 
 <script defer src="/js/tasks/edit/appro.js"></script>
 <script defer src="/js/tasks/edit/retour.js"></script>
+<script defer src="/js/tasks/edit/verif_stock.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 
