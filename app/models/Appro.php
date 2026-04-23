@@ -60,6 +60,7 @@ class Appro
             ]);
         }
     }
+    
 
     /**
      * Fetch all APPRO rows for a task

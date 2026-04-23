@@ -28,6 +28,7 @@ class Verif_stock
     {
         $db = Database::getInstance()->getPdo();
 
+        
         $stmt = $db->prepare("
             INSERT INTO verif_stock (TaskID, pn, nb, name)
             VALUES (?, ?, ?, ?)
