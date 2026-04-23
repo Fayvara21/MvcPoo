@@ -192,7 +192,7 @@ function getDeadlineClass($dueDate)
     }
 
     function loadTasks() {
-        fetch("/tasks/json")
+        fetch(window.location.pathname + '/json')
             .then(r => r.json())
             .then(tasks => {
 
