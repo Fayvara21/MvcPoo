@@ -41,6 +41,7 @@ $router->add('/projects/{project_id}/tasks/{task_id}/edit', function ($project_i
 });
 
 // Task views
+$router->add('/projects/tasks/view', [new TaskController(), 'viewall']);
 $router->add('/projects/{id}/tasks', [new TaskController(), 'index']);
 $router->add('/projects/{id}/tasks/create', [new TaskController(), 'create']);
 $router->add('/projects/{id}/tasks/json', [new TaskController(), 'json']);
