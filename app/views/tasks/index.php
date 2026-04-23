@@ -63,7 +63,7 @@ $stateClass = [
     7 => 'secondary'
 ];
 
-// WORKFLOW for APPRO/RETOUR (branching model)
+// WORKFLOW for APPRO/RETOUR
 $transitions = [
     0 => [1],
     1 => [2, 4, 5],
@@ -91,7 +91,7 @@ if (!is_array($activeStates))
     $activeStates = [$activeStates];
 $activeStates = array_map('intval', $activeStates);
 
-// Type filters (appro / retour / verif_stock)
+// Type filters
 $activeTypes = $_GET['types'] ?? [];
 if (!is_array($activeTypes)) {
     $activeTypes = [$activeTypes];
@@ -267,11 +267,8 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
     </div>
 
     <div class="card shadow-sm border-0">
-
-        <!-- TABLE -->
         <div class="table-responsive">
             <table class="table table-sm align-middle table-bordered">
-
                 <thead class="table-light">
                     <tr class="text-uppercase small text-muted">
                         <th>#</th>
@@ -282,10 +279,9 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         <th>Deadline</th>
                         <th>Complétion</th>
                         <th>Demandeur</th>
-                        <th class="actions-header" style="">Actions</th>
+                        <th class="actions-header">Actions</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <?php foreach ($tasks as $taskIndex => $task): ?>
                         <?php
@@ -310,7 +306,6 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                         } elseif ($currentUserGroup === 'magasin' && !$isVerifStock && in_array($s, [0, 1, 2, 4, 5])) {
                             $canSetState = true;
                         } elseif ($isVerifStock && $currentUserGroup === 'magasin') {
-                            // Magasin can use all buttons EXCEPT state 7 (Soldé) for verif_stock
                             $canSetState = true;
                         } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
                             $canEdit = true;
@@ -324,112 +319,65 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                             if ($currentUserGroup === 'admin') {
                                 $canUseState7 = true;
                             } elseif (in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
-                                // User belongs to the project's group
                                 $canUseState7 = true;
                             }
                         }
 
                         $subIndex = 0;
                         $taskId = (int) $task['id'];
-
                         $nextStates = $currentTransitions[$s] ?? [];
-                        $nextColor = !empty($nextStates) ? ($stateClass[$nextStates[0]] ?? 'secondary') : 'secondary'; ?>
+                        ?>
 
                         <!-- MAIN TASK ROW -->
-                        <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
-                            data-task="<?= $taskId ?>">
-
-                            <td class="p-2 fw-semibold"><?= $taskId ?> </td>
-
-                            <td class="p-2 badgeType">
+                        <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row" data-task="<?= $taskId ?>">
+                            <td class="p-2 fw-semibold"><?= $taskId ?></td>
+                            <td class="p-2">
                                 <?php if (!empty($approList)): ?>
-                                    <span class="badge bg-blue">APPRO</span>
+                                    <span class="badge bg-primary">APPRO</span>
                                 <?php elseif (!empty($retourList)): ?>
-                                    <span class="badge bg-yellow">RETOUR</span>
+                                    <span class="badge bg-warning text-dark">RETOUR</span>
                                 <?php elseif (!empty($verifStockList)): ?>
                                     <span class="badge bg-success">VERIF STOCK</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
-
-                            <td class="p-2 task-description">
-                                <div class="fw-semibold task-title">
-                                    <?= e($task['title']) ?>
-                                </div>
-
-                                <div class="small description" style="display:block; font-size:1rem;">
-                                    <?= e($task['description']) ?>
-                                </div>
+                            <td class="p-2">
+                                <div class="fw-semibold"><?= e($task['title']) ?></div>
+                                <div class="small text-muted"><?= e($task['description']) ?></div>
                             </td>
-
-                            <td class="p-2 badgeState">
-                                <span class="badge bg-<?= $stateClass[$s] ?>">
-                                    <?= e($currentStateLabel) ?>
-                                </span>
+                            <td class="p-2">
+                                <span class="badge bg-<?= $stateClass[$s] ?>"><?= e($currentStateLabel) ?></span>
                             </td>
-
-                            <td class="small text-muted">
-                                <?= e(formatDateFr($task['created_at'])) ?>
-                            </td>
-
-                            <td class="small text-muted">
-                                <?= (!isset($task['due_date']) || $task['due_date'] === '' || $task['due_date'] === null)
-                                    ? '-'
-                                    : e(formatDateFr($task['due_date'])) ?>
-                            </td>
-
-                            <td class="small text-muted">
-                                <?= (!isset($task['completed_at']) || $task['completed_at'] === '' || $task['completed_at'] === null)
-                                    ? '-'
-                                    : e(formatDateFr($task['completed_at'])) ?>
-                            </td
-
-
-                            <td class="small text-muted">
-                                <?= e($task["user_name"]) ?>
-                            </td
-
+                            <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
+                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?></td>
+                            <td class="small text-muted"><?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?></td>
+                            <td class="small text-muted"><?= e($task["user_name"] ?? '-') ?></td>
                             <td class="actions">
                                 <div class="d-inline-flex flex-nowrap">
-
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
-                                            class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
+                                            class="btn btn-sm btn-primary square-btn m-1">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                     <?php endif; ?>
 
                                     <?php if ($canEdit && $currentUserGroup === 'admin'): ?>
-                                        <form method="POST"
-                                            action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
+                                        <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/delete"
                                             onsubmit="return confirm('Confirmer la suppression ?');" class="m-0">
-                                            <button type="submit"
-                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center square-btn m-1">
+                                            <button type="submit" class="btn btn-sm btn-danger square-btn m-1">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </form>
                                     <?php endif; ?>
 
-                                    <!-- STATE TRANSITIONS -->
                                     <?php if (!empty($nextStates) && $canSetState): ?>
                                         <div class="btn-group">
                                             <?php foreach ($nextStates as $nextState): ?>
-                                                <?php 
-                                                // Skip state 7 (Soldé) for magasin on verif_stock tasks
-                                                if ($isVerifStock && $nextState == 7 && !$canUseState7) {
-                                                    continue;
-                                                }
-                                                ?>
-                                                <form method="POST"
-                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
-                                                    class="d-inline m-1">
-
+                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7) continue; ?>
+                                                <form method="POST" action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed" class="d-inline m-1">
                                                     <input type="hidden" name="state" value="<?= (int) $nextState ?>">
-
-                                                    <button type="submit"
-                                                        class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
-                                                        <i class="bi bi-arrow-return-right"></i>
+                                                    <button type="submit" class="btn btn-sm btn-<?= $stateClass[$nextState] ?? 'secondary' ?>">
                                                         <?= e($currentLabels[$nextState]) ?>
                                                     </button>
                                                 </form>
@@ -437,140 +385,105 @@ $tasks = array_filter($tasks, function ($task) use ($activeStates, $activeTypes)
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                            </td
+                            </td>
                         </tr>
 
-                        <!-- SUB-TASK ROWS FOR APPRO -->
+                        <!-- SUB-TASK ROWS -->
                         <?php foreach ($approList as $a): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td
-                                <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-blue">APPRO</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($a['nb'] ?? 0) ?></div>
-                                        <div><strong>OF:</strong> <?= e($a['of'] ?? '') ?></div>
-                                        <div><strong>Avion:</strong> <?= e($a['plane'] ?? '') ?></div>
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                                <td colspan="9" class="p-3">
+                                    <div class="small fw-semibold mb-1 text-primary">APPRO</div>
+                                    <div class="d-flex gap-4 flex-wrap">
+                                        <span><strong>PN:</strong> <?= e($a['pn'] ?? '-') ?></span>
+                                        <span><strong>Qté:</strong> <?= (int)($a['nb'] ?? 0) ?></span>
+                                        <span><strong>OF:</strong> <?= e($a['of'] ?? '-') ?></span>
+                                        <span><strong>Avion:</strong> <?= e($a['plane'] ?? '-') ?></span>
+                                        <span><strong>Désignation:</strong> <?= e($a['designation'] ?? '-') ?></span>
+                                        <span><strong>Emplacement:</strong> <?= e($a['location'] ?? '-') ?></span>
+                                        <span><strong>OE:</strong> <?= e($a['oe'] ?? '-') ?></span>
                                     </div>
-                                    <div class="small mb-1">
-                                        <div><strong>Désignation:</strong> <?= e($a['designation'] ?? '') ?></div>
-                                    </div>
-                                    <div class="small d-flex flex-wrap gap-3">
-                                        <div><strong>Emplacement:</strong> <?= e($a['location'] ?? '') ?></div>
-                                        <div><strong>OE:</strong> <?= e($a['oe'] ?? '') ?></div>
-                                    </div>
-                                </td
+                                </td>
                             </tr>
                         <?php endforeach; ?>
 
-                        <!-- SUB-TASK ROWS FOR RETOUR -->
                         <?php foreach ($retourList as $r): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td
-                                <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-yellow">RETOUR</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($r['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                                <td colspan="9" class="p-3">
+                                    <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
+                                    <div class="d-flex gap-4 flex-wrap">
+                                        <span><strong>PN:</strong> <?= e($r['pn'] ?? '-') ?></span>
+                                        <span><strong>Qté:</strong> <?= (int)($r['nb'] ?? 0) ?></span>
+                                        <span><strong>SN:</strong> <?= e($r['sn'] ?? '-') ?></span>
+                                        <span><strong>Certif:</strong> <?= e($r['certif'] ?? '-') ?></span>
                                     </div>
-                                    <div class="small d-flex gap-3">
-                                        <div><strong>SN:</strong> <?= e($r['sn'] ?? '') ?></div>
-                                        <div><strong>Certif:</strong> <?= e($r['certif'] ?? '') ?></div>
-                                    </div>
-                                </td
+                                </td>
                             </tr>
                         <?php endforeach; ?>
 
-                        <!-- SUB-TASK ROWS FOR VERIF STOCK -->
                         <?php foreach ($verifStockList as $v): ?>
-                            <?php $subIndex++; ?>
-                            <tr class="bg-light sub-task-<?= $taskId ?>" style="">
-                                <td><?= $subIndex ?></td
-                                <td class="task-description" colspan="8">
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display:none;">
+                                <td colspan="9" class="p-3">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
-                                    <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
-                                        <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
-                                        <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
+                                    <div class="d-flex gap-4 flex-wrap">
+                                        <span><strong>PN:</strong> <?= e($v['pn'] ?? '-') ?></span>
+                                        <span><strong>Qté:</strong> <?= (int)($v['nb'] ?? 0) ?></span>
+                                        <span><strong>Nom:</strong> <?= e($v['name'] ?? '-') ?></span>
                                     </div>
-                                </td
+                                </td>
                             </tr>
                         <?php endforeach; ?>
 
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const firstActionsHeader = document.querySelector('.actions-header');
-
         // Toggle task rows on click
         document.querySelectorAll('.task-row').forEach(function (row) {
-            row.addEventListener('click', function () {
+            row.addEventListener('click', function (e) {
+                // Don't toggle if clicking on a button or form element
+                if (e.target.closest('.btn') || e.target.closest('form')) return;
+                
                 const taskId = row.dataset.task;
-                const actions = row.querySelector('.actions');
-
-                // Toggle sub-rows
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                     subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
                 });
-
-                // Toggle actions column
-
             });
         });
 
         // Search function
         const searchInput = document.getElementById('task-search');
-
-        searchInput.addEventListener('input', function () {
-            const query = searchInput.value.toLowerCase().trim();
-
-            document.querySelectorAll('.task-row').forEach(function (taskRow) {
-                const taskId = taskRow.dataset.task;
-
-                // Get all relevant main row text
-                const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
-                const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
-                const requester = taskRow.querySelector('td:nth-child(8)')?.textContent.toLowerCase() || '';
-
-                // Combine main fields
-                let match = (
-                    title.includes(query) ||
-                    description.includes(query) ||
-                    requester.includes(query)
-                );
-
-                // Search inside subtasks
-                document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                    const subText = subRow.textContent.toLowerCase();
-                    if (subText.includes(query)) {
-                        match = true;
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const query = searchInput.value.toLowerCase().trim();
+                document.querySelectorAll('.task-row').forEach(function (taskRow) {
+                    const taskId = taskRow.dataset.task;
+                    const title = taskRow.querySelector('td:nth-child(3) .fw-semibold')?.textContent.toLowerCase() || '';
+                    const description = taskRow.querySelector('td:nth-child(3) .text-muted')?.textContent.toLowerCase() || '';
+                    
+                    let match = title.includes(query) || description.includes(query);
+                    
+                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                        if (subRow.textContent.toLowerCase().includes(query)) match = true;
+                    });
+                    
+                    if (match || query === '') {
+                        taskRow.style.display = '';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'none';
+                        });
+                    } else {
+                        taskRow.style.display = 'none';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'none';
+                        });
                     }
                 });
-
-                // Show / hide
-                if (match || query === '') {
-                    taskRow.style.display = '';
-
-                    // Show subtasks only if searching
-                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        subRow.style.display = query ? 'table-row' : 'none';
-                    });
-
-                } else {
-                    taskRow.style.display = 'none';
-                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        subRow.style.display = 'none';
-                    });
-                }
             });
-        });
+        }
     });
 </script>
