@@ -179,6 +179,10 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
     
     return $typeMatch && $stateMatch;
 });
+
+// Determine visibility of state filter rows
+$showApproRetourFilters = !empty($activeTypes) && (in_array('appro', $activeTypes) || in_array('retour', $activeTypes));
+$showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
@@ -215,108 +219,108 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
             <hr class="my-3">
 
             <!-- Filters -->
-<div class="d-flex flex-column gap-3">
+            <div class="d-flex flex-column gap-3">
 
-    <!-- First row: Type filters + Total -->
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-        <span class="text-muted small me-2">Filtres :</span>
+                <!-- First row: Type filters + Total -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="text-muted small me-2">Filtres :</span>
 
-        <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
-            <?php
-            $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK'];
-            $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success'];
+                    <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
+                        <?php
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success'];
 
-            foreach ($typeLabels as $type => $label):
-                $isActive = in_array($type, $activeTypes);
-                $newTypes = $activeTypes;
-                if ($isActive) {
-                    $newTypes = array_diff($activeTypes, [$type]);
-                } else {
-                    $newTypes[] = $type;
-                }
-                // Build query preserving both state filters
-                $query = http_build_query([
-                    'ar_states'    => $activeApproRetourStates,
-                    'verif_states' => $activeVerifStates,
-                    'types'        => $newTypes
-                ]);
-                $count = ($type === 'verif_stock') ? $totalVerifStock : $totalApproRetour;
-                ?>
-                <a href="?<?= e($query) ?>"
-                   class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
-                    <?= e($label) ?>
-                    <span class="badge bg-light text-dark"><?= $count ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
+                        foreach ($typeLabels as $type => $label):
+                            $isActive = in_array($type, $activeTypes);
+                            $newTypes = $activeTypes;
+                            if ($isActive) {
+                                $newTypes = array_diff($activeTypes, [$type]);
+                            } else {
+                                $newTypes[] = $type;
+                            }
+                            // Build query preserving both state filters
+                            $query = http_build_query([
+                                'ar_states'    => $activeApproRetourStates,
+                                'verif_states' => $activeVerifStates,
+                                'types'        => $newTypes
+                            ]);
+                            $count = ($type === 'verif_stock') ? $totalVerifStock : $totalApproRetour;
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                               class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
+                                <?= e($label) ?>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
 
-        <div class="ms-2">
-            <a href="?" class="btn btn-sm btn-outline-dark"><?= $totalTasks ?> total</a>
-        </div>
-    </div>
+                    <div class="ms-2">
+                        <a href="?" class="btn btn-sm btn-outline-dark"><?= $totalTasks ?> total</a>
+                    </div>
+                </div>
 
-    <!-- Second row: APPRO/RETOUR State Filters -->
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-        <span class="text-muted small me-2">États APPRO/RETOUR :</span>
-        <div class="d-flex gap-2 flex-wrap">
-            <?php
-            $arStatesList = [0,1,2,3,4,5];
-            foreach ($arStatesList as $state):
-                $label = $labels[$state] ?? '?';
-                $count = $approRetourCounts[$state] ?? 0;
-                $isActive = in_array($state, $activeApproRetourStates);
-                $newARStates = $activeApproRetourStates;
-                if ($isActive) {
-                    $newARStates = array_diff($activeApproRetourStates, [$state]);
-                } else {
-                    $newARStates[] = $state;
-                }
-                $query = http_build_query([
-                    'ar_states'    => $newARStates,
-                    'verif_states' => $activeVerifStates,
-                    'types'        => $activeTypes
-                ]);
-                ?>
-                <a href="?<?= e($query) ?>"
-                   class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                    <span><?= e($label) ?></span>
-                    <span class="badge bg-light text-dark"><?= $count ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
+                <!-- Second row: APPRO/RETOUR State Filters (visible only if at least one of 'appro' or 'retour' is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showApproRetourFilters ? '' : 'style="display: none;"' ?>>
+                    <span class="text-muted small me-2">États APPRO/RETOUR :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $arStatesList = [0,1,2,3,4,5];
+                        foreach ($arStatesList as $state):
+                            $label = $labels[$state] ?? '?';
+                            $count = $approRetourCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeApproRetourStates);
+                            $newARStates = $activeApproRetourStates;
+                            if ($isActive) {
+                                $newARStates = array_diff($activeApproRetourStates, [$state]);
+                            } else {
+                                $newARStates[] = $state;
+                            }
+                            $query = http_build_query([
+                                'ar_states'    => $newARStates,
+                                'verif_states' => $activeVerifStates,
+                                'types'        => $activeTypes
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                               class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span><?= e($label) ?></span>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-    <!-- Third row: VERIF STOCK State Filters -->
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-        <span class="text-muted small me-2">États VERIF STOCK :</span>
-        <div class="d-flex gap-2 flex-wrap">
-            <?php
-            $verifStatesList = [0,1,2,3,4,5,6,7];
-            foreach ($verifStatesList as $state):
-                $label = $verifStockLabels[$state] ?? '?';
-                $count = $verifStockCounts[$state] ?? 0;
-                $isActive = in_array($state, $activeVerifStates);
-                $newVerifStates = $activeVerifStates;
-                if ($isActive) {
-                    $newVerifStates = array_diff($activeVerifStates, [$state]);
-                } else {
-                    $newVerifStates[] = $state;
-                }
-                $query = http_build_query([
-                    'ar_states'    => $activeApproRetourStates,
-                    'verif_states' => $newVerifStates,
-                    'types'        => $activeTypes
-                ]);
-                ?>
-                <a href="?<?= e($query) ?>"
-                   class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
-                    <span><?= e($label) ?></span>
-                    <span class="badge bg-light text-dark"><?= $count ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</div>
+                <!-- Third row: VERIF STOCK State Filters (visible only if 'verif_stock' is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showVerifStockFilters ? '' : 'style="display: none;"' ?>>
+                    <span class="text-muted small me-2">États VERIF STOCK :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $verifStatesList = [0,1,2,3,4,5,6,7];
+                        foreach ($verifStatesList as $state):
+                            $label = $verifStockLabels[$state] ?? '?';
+                            $count = $verifStockCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeVerifStates);
+                            $newVerifStates = $activeVerifStates;
+                            if ($isActive) {
+                                $newVerifStates = array_diff($activeVerifStates, [$state]);
+                            } else {
+                                $newVerifStates[] = $state;
+                            }
+                            $query = http_build_query([
+                                'ar_states'    => $activeApproRetourStates,
+                                'verif_states' => $newVerifStates,
+                                'types'        => $activeTypes
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                               class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span><?= e($label) ?></span>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
