@@ -75,11 +75,9 @@ $router->add('/api/projects/{id}/tasks', [new TaskController(), 'json']);
 $router->add('/api/tasks/all', [new TaskController(), 'jsonall']);
 
 // ==================== ERROR HANDLING ====================
-
-// 404 Not Found handler
-$router->set404(function() {
+$router->setNotFoundHandler(function () {
     http_response_code(404);
-    echo "404 - Page not found";
+    echo "404 Not Found";
 });
 
 // Dispatch the router
