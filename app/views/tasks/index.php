@@ -293,7 +293,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                 </div>
 
                 <!-- Third row: VERIF STOCK State Filters (hidden by default, appears only when VERIF STOCK type is selected) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showVerifStockFilters ? '' : 'style="display: none;"' ?>>
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showVerifStockFilters ? '' : 'style="display: none !important;"' ?>>
                     <span class="text-muted small me-2">États VERIF STOCK :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
