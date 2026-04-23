@@ -262,7 +262,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                 </div>
 
                 <!-- Second row: APPRO/RETOUR State Filters (hidden by default, appears only when APPRO or RETOUR type is selected) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showApproRetourFilters ? '' : 'style="display: none;"' ?>>
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showApproRetourFilters ? '' : 'style="display: none !important;"' ?>>
                     <span class="text-muted small me-2">États APPRO/RETOUR :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
