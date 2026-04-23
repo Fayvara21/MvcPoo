@@ -7,46 +7,103 @@ document.addEventListener("DOMContentLoaded", function () {
     const approList = document.getElementById('approList');
     const retourList = document.getElementById('retourList');
 
+    // Define the add functions globally so they can be called by buttons
+    window.addApproItem = function() {
+        const timestamp = Date.now();
+        const div = document.createElement('div');
+        div.className = 'border rounded p-2 mb-2';
+        div.innerHTML = `
+            <div class="row g-2">
+                <div class="col">
+                    <input class="form-control" name="appro[${timestamp}][pn]" required>
+                </div>
+                <div class="col">
+                    <input class="form-control" name="appro[${timestamp}][location]">
+                </div>
+                <div class="col">
+                    <input class="form-control" type="number" name="appro[${timestamp}][nb]" value="1">
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger remove" onclick="this.closest('.border').remove()">✕</button>
+                </div>
+            </div>
+        `;
+        approList.appendChild(div);
+    };
+
+    window.addRetourItem = function() {
+        const timestamp = Date.now();
+        const div = document.createElement('div');
+        div.className = 'border rounded p-2 mb-2';
+        div.innerHTML = `
+            <div class="row g-2">
+                <div class="col">
+                    <input class="form-control" name="retour[${timestamp}][pn]" required>
+                </div>
+                <div class="col">
+                    <input class="form-control" name="retour[${timestamp}][location]">
+                </div>
+                <div class="col">
+                    <input class="form-control" type="number" name="retour[${timestamp}][nb]" value="1">
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger remove" onclick="this.closest('.border').remove()">✕</button>
+                </div>
+            </div>
+        `;
+        retourList.appendChild(div);
+    };
+
     function setDisabled(container, disabled) {
+        if (!container) return;
         container.querySelectorAll('input, select, textarea')
             .forEach(el => el.disabled = disabled);
     }
 
     function clearContainer(container) {
-        container.innerHTML = "";
+        if (container) container.innerHTML = "";
     }
 
     function toggleFields() {
-        approFields.style.display = "none";
-        retourFields.style.display = "none";
+        if (approFields) approFields.style.display = "none";
+        if (retourFields) retourFields.style.display = "none";
 
         setDisabled(approFields, true);
         setDisabled(retourFields, true);
 
-        if (typeSelect.value === "appro") {
+        if (typeSelect && typeSelect.value === "appro") {
             clearContainer(retourList);
 
-            approFields.style.display = "block";
-            setDisabled(approFields, false);
+            if (approFields) {
+                approFields.style.display = "block";
+                setDisabled(approFields, false);
+            }
 
-            if (approList.children.length === 0) {
-                addApproItem();
+            // Add default item if list is empty
+            if (approList && approList.children.length === 0) {
+                window.addApproItem();
             }
         }
 
-        if (typeSelect.value === "retour") {
+        if (typeSelect && typeSelect.value === "retour") {
             clearContainer(approList);
 
-            retourFields.style.display = "block";
-            setDisabled(retourFields, false);
+            if (retourFields) {
+                retourFields.style.display = "block";
+                setDisabled(retourFields, false);
+            }
 
-            if (retourList.children.length === 0) {
-                addRetourItem();
+            // Add default item if list is empty
+            if (retourList && retourList.children.length === 0) {
+                window.addRetourItem();
             }
         }
     }
 
-    typeSelect.addEventListener("change", toggleFields);
+    if (typeSelect) {
+        typeSelect.addEventListener("change", toggleFields);
+    }
+    
     toggleFields();
 
 });
