@@ -30,6 +30,7 @@ $currentUserGroup = $_SESSION['group'] ?? '';
 // Store original tasks before filtering
 $originalTasks = $tasks;
 
+
 // Calculate counts for each type separately
 $approCount = 0;
 $retourCount = 0;
@@ -66,13 +67,16 @@ $typeCounts = [
 foreach ($typeLabels as $type => $label):
     $isActive = in_array($type, $activeTypes);
     $newTypes = $activeTypes;
-
+    
     if ($isActive) {
         $newTypes = array_diff($activeTypes, [$type]);
     } else {
         $newTypes[] = $type;
     }
-
+    
+    // Remove empty values and reindex
+    $newTypes = array_values(array_filter($newTypes));
+    
     $query = http_build_query([
         'ar_states' => $activeApproRetourStates,
         'verif_states' => $activeVerifStates,
@@ -150,20 +154,25 @@ if (!is_array($activeVerifStates)) {
 }
 $activeVerifStates = array_map('intval', $activeVerifStates);
 
-// Type filters
+// FIX: Ensure $activeTypes is always an array, even when not present in URL
 $activeTypes = $_GET['types'] ?? [];
 if (!is_array($activeTypes)) {
     $activeTypes = [$activeTypes];
 }
+// Remove any empty values that might come from the URL
+$activeTypes = array_filter($activeTypes, function($value) {
+    return $value !== '';
+});
 $activeTypes = array_map('strval', $activeTypes);
 
 // Filter tasks - COMPLETELY SEPARATE logic for each type
+// Filter tasks - COMPLETELY SEPARATE logic
 $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourStates, $activeVerifStates, $activeTypes) {
     $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
     $hasVerifStock = !empty($task['verif_stock']);
-
+    
     // Determine specific task type
     $specificType = null;
     if ($hasVerifStock) {
@@ -173,20 +182,20 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
     } elseif ($hasRetour) {
         $specificType = 'retour';
     }
-
-    // Type match logic
+    
+    // Type match logic - if no active types, show all
     $typeMatch = true;
     if (!empty($activeTypes)) {
         $typeMatch = in_array($specificType, $activeTypes);
     }
-
+    
     if (!$typeMatch) {
         return false;
     }
-
+    
     // State match - completely separate by type
     $stateMatch = true;
-
+    
     if ($hasVerifStock) {
         // VERIF STOCK task
         if (!empty($activeVerifStates)) {
@@ -198,7 +207,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
             $stateMatch = in_array($state, $activeApproRetourStates);
         }
     }
-
+    
     return $typeMatch && $stateMatch;
 });
 ?>
