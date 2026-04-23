@@ -24,76 +24,67 @@ function formatDateFr($date)
     return $formatter->format($dt);
 }
 
-
 $currentUserGroup = $_SESSION['group'] ?? '';
 
 // Store original tasks before filtering
 $originalTasks = $tasks;
 
+// ============================================================
+// 1. INITIALIZE FILTERS FROM URL (must be done first)
+// ============================================================
+$activeApproRetourStates = $_GET['ar_states'] ?? [];
+if (!is_array($activeApproRetourStates)) {
+    $activeApproRetourStates = [$activeApproRetourStates];
+}
+$activeApproRetourStates = array_map('intval', $activeApproRetourStates);
 
-// Calculate counts for each type separately
-$approCount = 0;
-$retourCount = 0;
-$verifStockCount = 0;
+$activeVerifStates = $_GET['verif_states'] ?? [];
+if (!is_array($activeVerifStates)) {
+    $activeVerifStates = [$activeVerifStates];
+}
+$activeVerifStates = array_map('intval', $activeVerifStates);
+
+// Ensure $activeTypes is always an array, even when not present in URL
+$activeTypes = $_GET['types'] ?? [];
+if (!is_array($activeTypes)) {
+    $activeTypes = [$activeTypes];
+}
+// Remove empty values
+$activeTypes = array_filter($activeTypes, function($value) {
+    return $value !== '';
+});
+$activeTypes = array_map('strval', $activeTypes);
+
+// ============================================================
+// 2. CALCULATE COUNTS FOR EACH STATE (for badge display)
+// ============================================================
+$approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+$verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 
 foreach ($originalTasks as $t) {
-    if (!empty($t['verif_stock'])) {
-        $verifStockCount++;
-    } elseif (!empty($t['appro'])) {
-        $approCount++;
-    } elseif (!empty($t['retour'])) {
-        $retourCount++;
+    $state = (int) ($t['is_completed'] ?? 0);
+    $hasAppro = !empty($t['appro']);
+    $hasRetour = !empty($t['retour']);
+    $hasVerifStock = !empty($t['verif_stock']);
+
+    if ($hasVerifStock) {
+        if (isset($verifStockCounts[$state])) {
+            $verifStockCounts[$state]++;
+        }
+    } elseif ($hasAppro || $hasRetour) {
+        if (isset($approRetourCounts[$state])) {
+            $approRetourCounts[$state]++;
+        }
     }
 }
-
-$typeLabels = [
-    'appro' => 'APPRO',
-    'retour' => 'RETOUR',
-    'verif_stock' => 'VERIF STOCK'
-];
-
-$typeColors = [
-    'appro' => 'primary',
-    'retour' => 'warning',
-    'verif_stock' => 'success'
-];
-
-$typeCounts = [
-    'appro' => $approCount,
-    'retour' => $retourCount,
-    'verif_stock' => $verifStockCount
-];
-
-foreach ($typeLabels as $type => $label):
-    $isActive = in_array($type, $activeTypes);
-    $newTypes = $activeTypes;
-    
-    if ($isActive) {
-        $newTypes = array_diff($activeTypes, [$type]);
-    } else {
-        $newTypes[] = $type;
-    }
-    
-    // Remove empty values and reindex
-    $newTypes = array_values(array_filter($newTypes));
-    
-    $query = http_build_query([
-        'ar_states' => $activeApproRetourStates,
-        'verif_states' => $activeVerifStates,
-        'types' => $newTypes
-    ]);
-    ?>
-    <a href="?<?= e($query) ?>"
-        class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
-        <?= e($label) ?>
-        <span class="badge bg-light text-dark"><?= $typeCounts[$type] ?></span>
-    </a>
-<?php endforeach;
 
 $totalApproRetour = array_sum($approRetourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
 $totalTasks = $totalApproRetour + $totalVerifStock;
 
+// ============================================================
+// 3. LABELS & WORKFLOWS
+// ============================================================
 // Colors for APPRO/RETOUR
 $labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
 
@@ -142,31 +133,9 @@ $verifStockTransitions = [
     7 => []
 ];
 
-// SEPARATE FILTERS - Different URL parameters
-$activeApproRetourStates = $_GET['ar_states'] ?? [];
-if (!is_array($activeApproRetourStates))
-    $activeApproRetourStates = [$activeApproRetourStates];
-$activeApproRetourStates = array_map('intval', $activeApproRetourStates);
-
-$activeVerifStates = $_GET['verif_states'] ?? [];
-if (!is_array($activeVerifStates)) {
-    $activeVerifStates = [$activeVerifStates];
-}
-$activeVerifStates = array_map('intval', $activeVerifStates);
-
-// FIX: Ensure $activeTypes is always an array, even when not present in URL
-$activeTypes = $_GET['types'] ?? [];
-if (!is_array($activeTypes)) {
-    $activeTypes = [$activeTypes];
-}
-// Remove any empty values that might come from the URL
-$activeTypes = array_filter($activeTypes, function($value) {
-    return $value !== '';
-});
-$activeTypes = array_map('strval', $activeTypes);
-
-// Filter tasks - COMPLETELY SEPARATE logic for each type
-// Filter tasks - COMPLETELY SEPARATE logic
+// ============================================================
+// 4. FILTER TASKS BASED ON ACTIVE FILTERS
+// ============================================================
 $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourStates, $activeVerifStates, $activeTypes) {
     $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
@@ -276,6 +245,9 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
                             } else {
                                 $newTypes[] = $type;
                             }
+                            
+                            // Remove empty values and reindex
+                            $newTypes = array_values(array_filter($newTypes));
 
                             if ($type === 'verif_stock') {
                                 $typeTotal = $totalVerifStock;
@@ -379,7 +351,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
     <div class="card shadow-sm border-0">
 
         <div class="table-responsive">
-            <table class="table table-sm align-m   iddle table-bordered">
+            <table class="table table-sm align-middle table-bordered">
                 <thead class="table-light">
                     <tr class="text-uppercase small text-muted">
                         <th>#</th>
@@ -446,7 +418,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
                         <tr style="border-top:2px solid #dee2e6; cursor:pointer;" class="task-row"
                             data-task="<?= $taskId ?>">
 
-                            <td clas s="p-2 fw-semibold"><?= $taskId ?> </td>
+                            <td class="p-2 fw-semibold"><?= $taskId ?></td>
 
                             <td class="p-2 badgeType">
                                 <?php if (!empty($approList)): ?>
@@ -460,8 +432,8 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
                                 <?php endif; ?>
                             </td>
 
-                            <td class="p    -2 task-description">
-                                <div cla ss="fw-semibold task-title">
+                            <td class="p-2 task-description">
+                                <div class="fw-semibold task-title">
                                     <?= e($task['title']) ?>
                                 </div>
                                 <div class="small description" style="display:block; font-size:1rem;">
@@ -476,8 +448,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
                             </td>
 
                             <td class="small text-muted"><?= e(formatDateFr($task['created_at'])) ?></td>
-                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?>
-                            </td>
+                            <td class="small text-muted"><?= $task['due_date'] ? e(formatDateFr($task['due_date'])) : '-' ?></td>
                             <td class="small text-muted">
                                 <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
                             </td>
