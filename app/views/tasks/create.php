@@ -99,7 +99,7 @@
 
 <script defer src="/js/tasks/create/appro.js"></script>
 <script defer src="/js/tasks/create/retour.js"></script>
-<script defer src="/js/tasks/create/verif_Stock.js"></script>
+<script defer src="/js/tasks/create/verif_stock.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 

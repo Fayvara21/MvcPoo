@@ -258,7 +258,7 @@ class TaskController extends BaseController
         switch ($_SESSION["group"] ?? '') {
             case 'adv':
                 return [
-                    "verif_stock"
+                    "verif_stock" => "VERIF STOCK"
                 ];
             default:
                 return [

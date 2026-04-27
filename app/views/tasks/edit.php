@@ -110,7 +110,7 @@ function e($str)
 
 <script defer src="/js/tasks/edit/appro.js"></script>
 <script defer src="/js/tasks/edit/retour.js"></script>
-<script defer src="/js/tasks/edit/verif_Stock.js"></script>
+<script defer src="/js/tasks/edit/verif_stock.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 
