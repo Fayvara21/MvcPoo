@@ -20,7 +20,7 @@
                             <input class="form-control" type="number" name="verif_stock[<?= $i ?>][nb]" value="<?= (int) ($v['nb'] ?? 1) ?>">
                         </div>
                         <div>
-                            <label class="form-label fw-medium">Nom</label>
+                            <label class="form-label fw-medium">Libellé</label>
                             <input class="form-control" name="verif_stock[<?= $i ?>][name]" value="<?= e($v['name'] ?? '') ?>">
                         </div>
                         <?php if (!empty($v['id'])): ?>
