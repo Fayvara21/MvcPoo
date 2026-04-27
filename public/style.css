@@ -448,10 +448,8 @@ th {
 }
 
 .contactDescription {
-    text-align: left;
-    white-space: normal; 
-    max-width: 400px; 
-    word-wrap: break-word;
+    text-align: left; 
+    text-wrap: wrap;
 }
 
 .table-sm td {
