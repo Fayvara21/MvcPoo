@@ -32,11 +32,17 @@ $originalTasks = $tasks;
 // ============================================================
 // 1. INITIALIZE FILTERS FROM URL (must be done first)
 // ============================================================
-$activeApproRetourStates = $_GET['ar_states'] ?? [];
-if (!is_array($activeApproRetourStates)) {
-    $activeApproRetourStates = [$activeApproRetourStates];
+$activeApproStates = $_GET['appro_states'] ?? [];
+if (!is_array($activeApproStates)) {
+    $activeApproStates = [$activeApproStates];
 }
-$activeApproRetourStates = array_map('intval', $activeApproRetourStates);
+$activeApproStates = array_map('intval', $activeApproStates);
+
+$activeRetourStates = $_GET['retour_states'] ?? [];
+if (!is_array($activeRetourStates)) {
+    $activeRetourStates = [$activeRetourStates];
+}
+$activeRetourStates = array_map('intval', $activeRetourStates);
 
 $activeVerifStates = $_GET['verif_states'] ?? [];
 if (!is_array($activeVerifStates)) {
@@ -143,7 +149,7 @@ $verifStockTransitions = [
 // ============================================================
 // 4. FILTER TASKS BASED ON ACTIVE FILTERS
 // ============================================================
-$tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourStates, $activeVerifStates, $activeTypes) {
+$tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, $activeRetourStates, $activeVerifStates, $activeTypes) {
     $state = (int) $task['is_completed'];
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
@@ -179,8 +185,10 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproRetourSt
         }
     } elseif ($hasAppro || $hasRetour) {
         // APPRO or RETOUR task
-        if (!empty($activeApproRetourStates)) {
-            $stateMatch = in_array($state, $activeApproRetourStates);
+        if (!empty($activeApproStates)) {
+            $stateMatch = in_array($state, $activeApproStates);
+        } elseif (!empty($activeRetourStates)) {
+            $stateMatch = in_array($state, $activeRetourStates);
         }
     }
 
@@ -250,7 +258,8 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                             }
                             // Build query preserving both state filters
                             $query = http_build_query([
-                                'ar_states' => $activeApproRetourStates,
+                                'appro_states' => $activeApproStates,
+                                'retour_states' => $activeRetourStates,
                                 'verif_states' => $activeVerifStates,
                                 'types' => $newTypes
                             ]);
