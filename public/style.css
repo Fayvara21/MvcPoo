@@ -447,6 +447,13 @@ th {
   text-align: center
 }
 
+.contactDescription {
+    text-align: left;
+    white-space: normal; 
+    max-width: 400px; 
+    word-wrap: break-word;
+}
+
 .table-sm td {
     padding: .3rem !important;
 }
