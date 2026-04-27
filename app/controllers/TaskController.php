@@ -264,7 +264,7 @@ class TaskController extends BaseController
                 return [
                     'appro' => 'APPRO',
                     'retour'=> 'RETOUR',
-                    'verif_stock' => 'VERIF_STOCK'
+                    'verif_stock' => 'VERIF STOCK'
                 ];
         }
     }
