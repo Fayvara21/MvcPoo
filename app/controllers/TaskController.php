@@ -25,6 +25,8 @@ class TaskController extends BaseController
         $this->requireAuth();
 
         $project = Project::find($id);
+        $taskTypes = $this->getAllowedTypes();
+
         if (!str_contains($project["groups"], $_SESSION["group"])) {
             http_response_code(403);
             echo json_encode(["error" => "Unauthorized"]);
@@ -260,9 +262,9 @@ class TaskController extends BaseController
                 ];
             default:
                 return [
-                    'appro',
-                    'retour',
-                    'verif_stock'
+                    'appro' => 'APPRO',
+                    'retour'=> 'RETOUR',
+                    'verif_stock' => 'VERIF_STOCK'
                 ];
         }
     }

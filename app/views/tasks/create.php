@@ -1,8 +1,5 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<?php
-$taskTypes = TaskController::getAllowedTypes();
-?>
 
 <div class="container py-4">
 
