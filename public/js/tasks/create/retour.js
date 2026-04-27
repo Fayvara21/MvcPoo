@@ -6,7 +6,7 @@ function addRetourItem() {
     div.innerHTML = `
         <div class="row g-2">
             <div class="col">
-                <input class="form-control" name="retour[${index}][pn]" placeholder="PN" required>
+                <input class="form-control" name="retour[${index}][PN]" placeholder="PN" required>
             </div>
             <div class="col">
                 <input class="form-control" type="number" name="retour[${index}][nb]" value="1" placeholder="Quantité">
