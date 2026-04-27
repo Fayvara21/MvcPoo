@@ -244,8 +244,8 @@ class Task
             $retourByTask[$row['TaskID']][] = $row;
         }
 
-        // VERIF STOCK - ADD THIS
-        $stmt = $db->prepare("SELECT TaskID, pn, nb, name, id FROM verif_stock WHERE TaskID IN ($placeholders)");
+        // VERIF STOCK
+        $stmt = $db->prepare("SELECT TaskID, pn, nb, name, id, location, remarks FROM verif_stock WHERE TaskID IN ($placeholders)");
         $stmt->execute($taskIds);
         $verifStockRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $verifStockByTask = [];
