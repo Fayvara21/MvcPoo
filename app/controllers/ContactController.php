@@ -42,9 +42,9 @@ class ContactController
         if (isset($_SESSION['group']) && $_SESSION['group'] === 'admin') {
             $contacts = Contact::view();
             require "../app/views/contacts/index.php";
-        } else {
-            require '../app/views/contacts/create.php';
         }
+        require '../app/views/contacts/create.php';
+
     }
 
 }

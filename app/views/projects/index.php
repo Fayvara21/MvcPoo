@@ -160,6 +160,17 @@
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4">
 
+                    <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>
+
+                <ul class="list-group list-group-flush">
+
+                <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
+
+                
+                </ul>
+            </div>
+
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260427:</h4>
 
