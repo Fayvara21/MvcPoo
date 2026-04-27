@@ -12,7 +12,7 @@ function addVerifStockItem() {
                 <input class="form-control" type="number" name="verif_stock[${index}][nb]" value="1" placeholder="Quantité">
             </div>
             <div class="col">
-                <input class="form-control" name="verif_stock[${index}][name]" placeholder="Nom">
+                <input class="form-control" name="verif_stock[${index}][name]" placeholder="Libellé">
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger remove">✕</button>

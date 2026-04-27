@@ -14,7 +14,7 @@
         <hr>
 
         <div class="mb-2">
-            <label class="form-label fw-medium">Emplacement</label>
+            <label class="form-label fw-medium">Emplacement :</label>
             <input class="form-control" name="verif_stock_location">
         </div>
         <!--

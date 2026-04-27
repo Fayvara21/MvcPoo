@@ -6,16 +6,16 @@ function addVerifStockItem() {
     div.innerHTML = `
         <div class="d-flex flex-column gap-2">
             <div>
-                <label class="form-label fw-medium">PN</label>
+                <label class="form-label fw-medium">PN :</label>
                 <input class="form-control" name="verif_stock[${index}][pn]" placeholder="PN" required>
             </div>
             <div>
-                <label class="form-label fw-medium">Quantité</label>
+                <label class="form-label fw-medium">Quantité :</label>
                 <input class="form-control" type="number" name="verif_stock[${index}][nb]" value="1">
             </div>
             <div>
-                <label class="form-label fw-medium">Nom</label>
-                <input class="form-control" name="verif_stock[${index}][name]" placeholder="Nom">
+                <label class="form-label fw-medium">Libellé :</label>
+                <input class="form-control" name="verif_stock[${index}][name]" placeholder="Libellé">
             </div>
             <button type="button" class="btn btn-danger btn-sm remove-verif-stock mt-1">✕</button>
         </div>
