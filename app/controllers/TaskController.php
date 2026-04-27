@@ -95,6 +95,12 @@ class TaskController extends BaseController
             // === VERIF STOCK ===
             if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
                 $verifStockRows = $_POST['verif_stock'];
+                $sharedLocation = $_POST['verif_stock_location'] ?? null;
+                $sharedRemarks = $_POST['verif_stock_remarks'] ?? null;
+                $data = array_merge($row, [
+                    'location' => $sharedLocation,
+                    'remarks' => $sharedRemarks,
+                ]);
 
                 foreach ($verifStockRows as $row) {
                     Verif_stock::create(
@@ -258,7 +264,8 @@ class TaskController extends BaseController
         header('Content-Type: application/json');
         echo json_encode($tasks);
     }
-    public static function getAllowedTypes(){
+    public static function getAllowedTypes()
+    {
         switch ($_SESSION["group"] ?? '') {
             case 'adv':
                 return [
@@ -267,7 +274,7 @@ class TaskController extends BaseController
             default:
                 return [
                     'appro' => 'APPRO',
-                    'retour'=> 'RETOUR',
+                    'retour' => 'RETOUR',
                     'verif_stock' => 'VERIF STOCK'
                 ];
         }
