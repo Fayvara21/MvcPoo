@@ -24,7 +24,7 @@
                                     <td><?= htmlspecialchars($contact['id'], ENT_QUOTES, 'UTF-8') ?></td>
                                     <td><?= htmlspecialchars($contact['email'], ENT_QUOTES, 'UTF-8') ?></td>
                                     <td><?= htmlspecialchars($contact['type'], ENT_QUOTES, 'UTF-8') ?></td>
-                                    <td style="text-align: left; text-wrap: wrap;"><?= nl2br(htmlspecialchars($contact['description'], ENT_QUOTES, 'UTF-8')) ?></td>
+                                    <td class="contactDescription"><?= nl2br(htmlspecialchars($contact['description'], ENT_QUOTES, 'UTF-8')) ?></td>
                                     <td><?= htmlspecialchars($contact['user'], ENT_QUOTES, 'UTF-8') ?></td>
                                     <td><?= htmlspecialchars($contact['created_at'], ENT_QUOTES, 'UTF-8') ?></td>
                                 </tr>

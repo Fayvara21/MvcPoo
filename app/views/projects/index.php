@@ -160,48 +160,52 @@
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4">
 
-                    <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <!-- 
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>
 
                 <ul class="list-group list-group-flush">
 
-                <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
+                    <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
 
-                
+
                 </ul>
             </div>
+
+                                            -->
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260427:</h4>
 
                 <ul class="list-group list-group-flush">
 
-                <li class="list-group-item">Séparation de la logique de filtres d'appro, retour et verif stock</li>
-                <li class="list-group-item">Système de droit de création selon type de sous-taches</li>
-                <li class="list-group-item">Remplacement de "magasinier" par "emplacement" et "remarques"</li>
-                <li class="list-group-item">Renommage de "nom" en "libellé"</li>
-                <li class="list-group-item">Les Verifications de stocks ne seront plus soldables, et garderons simplement leur dernier statut</li>
+                    <li class="list-group-item">Séparation de la logique de filtres d'appro, retour et verif stock</li>
+                    <li class="list-group-item">Système de droit de création selon type de sous-taches</li>
+                    <li class="list-group-item">Remplacement de "magasinier" par "emplacement" et "remarques"</li>
+                    <li class="list-group-item">Renommage de "nom" en "libellé"</li>
+                    <li class="list-group-item">Les Verifications de stocks ne seront plus soldables, et garderons
+                        simplement leur dernier statut</li>
 
                 </ul>
             </div>
 
             <div class=" mb-3 p-4 border rounded shadow-sm bg-light">
-                    <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
+                <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
 
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Ajout des demandes de vérification de stock dans la liste des
-                            demandes
-                        </li>
-                        <li class="list-group-item">Refactorisation de la base de code pour faciliter l'intégration de
-                            nouvelles fonctionnalitées</li>
-                        <li class="list-group-item">Modification du système de filtres par boutons pour intégrer les
-                            vérifications de stock</li>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout des demandes de vérification de stock dans la liste des
+                        demandes
+                    </li>
+                    <li class="list-group-item">Refactorisation de la base de code pour faciliter l'intégration de
+                        nouvelles fonctionnalitées</li>
+                    <li class="list-group-item">Modification du système de filtres par boutons pour intégrer les
+                        vérifications de stock</li>
 
-                        <li class="list-group-item">Correction de plusieurs bugs d'affichage mineurs</li>
+                    <li class="list-group-item">Correction de plusieurs bugs d'affichage mineurs</li>
 
 
 
-                    </ul>
+                </ul>
             </div>
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">

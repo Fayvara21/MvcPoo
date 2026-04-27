@@ -447,7 +447,10 @@ th {
   text-align: center
 }
 
-
+.contactDescription {
+    text-align: left; 
+    text-wrap: wrap ;
+}
 
 .table-sm td {
     padding: .3rem !important;

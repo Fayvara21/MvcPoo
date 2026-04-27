@@ -43,7 +43,10 @@ class ContactController
             $contacts = Contact::view();
             require "../app/views/contacts/index.php";
         }
-        require '../app/views/contacts/create.php';
+        else{
+            require '../app/views/contacts/create.php';
+        }
+        
 
     }
 
