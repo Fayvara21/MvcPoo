@@ -2,7 +2,7 @@
 
 require_once '../core/Database.php';
 
-class Verif_stock
+class Verif_Stock
 {
     /**
      * Create a single VERIF_STOCK entry

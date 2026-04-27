@@ -155,6 +155,19 @@
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4">
 
+        <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout des demandes de vérification de stock dans la liste des demandes </li>
+                    <li class="list-group-item">Refactorisation de la base de code pour faciliter l'intégration de nouvelles fonctionnalitées</li>
+                    <li class="list-group-item">Modification du système de filtres par boutons pour intégrer les vérifications de stock</li>
+                    <li class="list-group-item">Correction de plusieurs bugs d'affichage mineurs</li>
+                    
+                    
+                </ul>
+            </div>
+
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260420:</h4>
 

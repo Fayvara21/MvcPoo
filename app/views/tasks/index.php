@@ -58,7 +58,8 @@ $activeTypes = array_map('strval', $activeTypes);
 // ============================================================
 // 2. CALCULATE COUNTS FOR EACH STATE (for badge display)
 // ============================================================
-$approRetourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+$approCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+$retourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 
 foreach ($originalTasks as $t) {
@@ -71,16 +72,22 @@ foreach ($originalTasks as $t) {
         if (isset($verifStockCounts[$state])) {
             $verifStockCounts[$state]++;
         }
-    } elseif ($hasAppro || $hasRetour) {
-        if (isset($approRetourCounts[$state])) {
-            $approRetourCounts[$state]++;
+    } elseif ($hasAppro) {
+        if (isset($approCounts[$state])) {
+            $approCounts[$state]++;
+        }
+    }
+    elseif ($hasRetour) {
+        if (isset($retourCounts[$state])) {
+            $retourCounts[$state]++;
         }
     }
 }
 
-$totalApproRetour = array_sum($approRetourCounts);
+$totalAppro = array_sum($approCounts);
+$totalRetour = array_sum($retourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
-$totalTasks = $totalApproRetour + $totalVerifStock;
+$totalTasks = $totalAppro + $totalRetour + $totalVerifStock;
 
 // ============================================================
 // 3. LABELS & WORKFLOWS
@@ -246,7 +253,19 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                 'verif_states' => $activeVerifStates,
                                 'types'        => $newTypes
                             ]);
-                            $count = ($type === 'verif_stock') ? $totalVerifStock : $totalApproRetour;
+                            switch ($type) {
+                                case 'appro':
+                                    $count = $totalAppro;
+                                    break;
+                                case 'retour':
+                                    $count = $totalRetour;
+                                    break;
+                                case 'verif_stock':
+                                    $count = $totalVerifStock;
+                                    break;
+                                default:
+                                    $count = 0;
+                            }
                             ?>
                             <a href="?<?= e($query) ?>"
                                class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">

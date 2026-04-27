@@ -2,7 +2,7 @@
 require_once '../app/controllers/BaseController.php';
 require_once '../app/models/Appro.php';
 require_once '../app/models/Retour.php';
-require_once '../app/models/Verif_stock.php';
+require_once '../app/models/Verif_Stock.php';
 
 class TaskController extends BaseController
 {
@@ -250,5 +250,19 @@ class TaskController extends BaseController
         $tasks = Task::getAllTasksForAllProjects();
         header('Content-Type: application/json');
         echo json_encode($tasks);
+    }
+    public static function getAllowedTypes(){
+        switch ($_SESSION["group"] ?? '') {
+            case 'adv':
+                return [
+                    "verif_stock"
+                ];
+            default:
+                return [
+                    'appro',
+                    'retour',
+                    'verif_stock'
+                ];
+        }
     }
 }

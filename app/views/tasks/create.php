@@ -1,4 +1,9 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
+<?php include __DIR__ . '/../../controllers/TaskController.php'; ?>
+
+<?php
+$taskTypes = TaskController::getAllowedTypes();
+?>
 
 <div class="container py-4">
 
@@ -62,9 +67,11 @@
                                 <label class="form-label fw-medium">Type de tâche</label>
                                 <select class="form-select" name="type" id="taskType">
                                     <option value="">-- Choisir --</option>
-                                    <option value="appro">APPRO</option>
-                                    <option value="retour">RETOUR</option>
-                                    <option value="verif_stock">VERIF STOCK</option>
+                                    <?php
+                                    foreach ($taskTypes as $value => $label) {
+                                        echo "<option value=\"$value\">$label</option>";
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -85,7 +92,7 @@
             <div class="col-12 col-lg-5">
                 <?php include __DIR__ . '/partials/appro.php'; ?>
                 <?php include __DIR__ . '/partials/retour.php'; ?>
-                <?php include __DIR__ . '/partials/verif_stock.php'; ?>
+                <?php include __DIR__ . '/partials/verif_Stock.php'; ?>
             </div>
 
         </div>
@@ -96,7 +103,7 @@
 
 <script defer src="/js/tasks/create/appro.js"></script>
 <script defer src="/js/tasks/create/retour.js"></script>
-<script defer src="/js/tasks/create/verif_stock.js"></script>
+<script defer src="/js/tasks/create/verif_Stock.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 
