@@ -161,7 +161,7 @@
         <div class="container my-4">
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-2 text-primary">Mise à jour v260627:</h4>
+                <h4 class="mb-2 text-primary">Mise à jour v260427:</h4>
 
                 <ul class="list-group list-group-flush">
 
@@ -284,7 +284,6 @@
                         Recherche de stock pour l'ADV avec :
                         <ul class="mt-2">
                             <li>Réponse écrite (stock vrai, faux ou partiel)</li>
-                            <li>Quantité</li>
                             <li>Documents en pièce jointe</li>
                         </ul>
                     </li>

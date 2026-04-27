@@ -41,16 +41,13 @@ class Retour
 
         foreach ($retourRows as $row) {
 
-            // Handle PN case mismatch safely
-            $pn = $row['PN'] ?? $row['pn'] ?? null;
-
             // Priority: row value > shared value
             $sn = $row['sn'] ?? $sharedSn ?? null;
             $certif = $row['certif'] ?? $sharedCertif ?? null;
 
             $stmt->execute([
                 $taskId,
-                $pn,
+                $row['PN'] ?? null,
                 $row['nb'] ?? 1,
                 $sn,
                 $certif,
