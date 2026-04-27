@@ -88,7 +88,7 @@
             <div class="col-12 col-lg-5">
                 <?php include __DIR__ . '/partials/appro.php'; ?>
                 <?php include __DIR__ . '/partials/retour.php'; ?>
-                <?php include __DIR__ . '/partials/verif_Stock.php'; ?>
+                <?php include __DIR__ . '/partials/verif_stock.php'; ?>
             </div>
 
         </div>

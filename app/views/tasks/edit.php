@@ -100,7 +100,7 @@ function e($str)
             <div class="col-12 col-lg-5">
                 <?php include __DIR__ . '/edit/appro.php'; ?>
                 <?php include __DIR__ . '/edit/retour.php'; ?>
-                <?php include __DIR__ . '/edit/verif_Stock.php'; ?>
+                <?php include __DIR__ . '/edit/verif_stock.php'; ?>
             </div>
 
         </div>
