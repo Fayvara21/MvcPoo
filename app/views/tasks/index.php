@@ -419,7 +419,6 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
 
                     <?php foreach ($tasks as $taskIndex => $task): ?>
                         <?php
-                        var_dump($task["retour"]);
                         $approList = $task['appro'] ?? [];
                         $retourList = $task['retour'] ?? [];
                         $verifStockList = $task['verif_stock'] ?? [];
@@ -581,7 +580,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
-                                        <div><strong>PN:</strong> <?= e($r['PN'] ?? '') ?></div>
+                                        <div><strong>PN:</strong> <?= e($r['pn'] ?? '') ?></div>
                                         <div><strong>Qté:</strong> <?= (int) ($r['nb'] ?? 0) ?></div>
                                     </div>
                                     <div class="small d-flex gap-3">
