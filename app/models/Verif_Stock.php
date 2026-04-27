@@ -7,7 +7,7 @@ class Verif_Stock
     /**
      * Create a single VERIF_STOCK entry
      */
-    public static function create($taskId, $pn, $nb, $name, $location, $remarks = null)
+    public static function create($taskId, $pn, $nb, $name, $location, $remarks)
     {
         $db = Database::getInstance()->getPdo();
 

@@ -99,8 +99,6 @@ class TaskController extends BaseController
                 $sharedLocation = $_POST['verif_stock_location'] ?? null;
                 $sharedRemarks = $_POST['verif_stock_remarks'] ?? null;
 
-
-
                 foreach ($verifStockRows as $row) {
                     $data = array_merge($row, [
                         'location' => $sharedLocation,

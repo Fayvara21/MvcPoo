@@ -15,11 +15,11 @@
 
         <div class="mb-2">
             <label class="form-label fw-medium">Emplacement :</label>
-            <input class="form-control" name="verif_stock_location">
+            <input class="form-control" name="verif_stock_location" placeholder="Emplacement">
         </div>
         <div class="mb-2">
             <label class="form-label fw-medium">Remarques :</label>
-            <input class="form-control" name="verif_stock_remarks">
+            <input class="form-control" name="verif_stock_remarks" placeholder="Remarques">
         </div>
     </div>
 </div>
