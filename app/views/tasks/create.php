@@ -1,5 +1,4 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
-<?php include __DIR__ . '/../../controllers/TaskController.php'; ?>
 
 <?php
 $taskTypes = TaskController::getAllowedTypes();
