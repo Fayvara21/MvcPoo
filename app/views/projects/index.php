@@ -110,26 +110,26 @@
                             <?php endif; ?>
 
 
-<!-- Stats -->
-<?php if (($project['tasks_count'] ?? 0) > 0): ?>
-    <div class="d-flex gap-3 mt-3 pt-3 border-top">
-        <div>
-            <span class="text-muted small">Demandes</span>
-            <div class="fw-bold"><?= $project['tasks_count'] ?></div>
-        </div>
-        
-        <div>
-            <span class="text-muted small">Urgentes</span>
-            <div class="fw-bold">
-                <?php if (($project['urgent_count'] ?? 0) > 0): ?>
-                    <span class="badge bg-danger"><?= $project['urgent_count'] ?></span>
-                <?php else: ?>
-                    <span class="text-muted">0</span>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
+                            <!-- Stats -->
+                            <?php if (($project['tasks_count'] ?? 0) > 0): ?>
+                                <div class="d-flex gap-3 mt-3 pt-3 border-top">
+                                    <div>
+                                        <span class="text-muted small">Demandes</span>
+                                        <div class="fw-bold"><?= $project['tasks_count'] ?></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted small">Urgentes</span>
+                                        <div class="fw-bold">
+                                            <?php if (($project['urgent_count'] ?? 0) > 0): ?>
+                                                <span class="badge bg-danger"><?= $project['urgent_count'] ?></span>
+                                            <?php else: ?>
+                                                <span class="text-muted">0</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
 
                         </div>
 
@@ -160,17 +160,37 @@
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4">
 
-        <div class="mb-3 p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260627:</h4>
 
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Ajout des demandes de vérification de stock dans la liste des demandes </li>
-                    <li class="list-group-item">Refactorisation de la base de code pour faciliter l'intégration de nouvelles fonctionnalitées</li>
-                    <li class="list-group-item">Modification du système de filtres par boutons pour intégrer les vérifications de stock</li>
-                    <li class="list-group-item">Correction de plusieurs bugs d'affichage mineurs</li>
-                    
-                    
+
+                <li class="list-group-item">Séparation de la logique de filtres d'appro, retour et verif stock</li>
+                <li class="list-group-item">Système de droit de création selon type de sous-taches</li>
+                <li class="list-group-item">Remplacement de "magasinier" par "emplacement" et "remarques"</li>
+                <li class="list-group-item">Renommage de "nom" en "libellé"</li>
+                <li class="list-group-item">Les Verifications de stocks ne seront plus soldables, et garderons simplement leur dernier statut</li>
+
                 </ul>
+            </div>
+
+            <div class=" mb-3 p-4 border rounded shadow-sm bg-light">
+                    <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Ajout des demandes de vérification de stock dans la liste des
+                            demandes
+                        </li>
+                        <li class="list-group-item">Refactorisation de la base de code pour faciliter l'intégration de
+                            nouvelles fonctionnalitées</li>
+                        <li class="list-group-item">Modification du système de filtres par boutons pour intégrer les
+                            vérifications de stock</li>
+
+                        <li class="list-group-item">Correction de plusieurs bugs d'affichage mineurs</li>
+
+
+
+                    </ul>
             </div>
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
@@ -180,10 +200,11 @@
                     <li class="list-group-item">Ajout du bouton contact dans la barre de navigation</li>
                     <li class="list-group-item">Ajout du formulaire de rapport d'incident pour les utilisateurs</li>
                     <li class="list-group-item">Ajout de la vue de tous les rapports d'incidents pour les admins</li>
-                    <li class="list-group-item">Ajout de la date de complétion lorsqu'une demande est marquée comme livrée</li>
+                    <li class="list-group-item">Ajout de la date de complétion lorsqu'une demande est marquée comme
+                        livrée</li>
                     <li class="list-group-item">Les horodatages des demandes sont formatées pour être plus lisibles</li>
                     <li class="list-group-item">Application de plusieurs ajustements de l'interface</li>
-                    
+
                 </ul>
             </div>
 
