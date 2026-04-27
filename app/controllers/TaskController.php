@@ -94,6 +94,8 @@ class TaskController extends BaseController
 
             // === VERIF STOCK ===
             if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
+
+                var_dump($_POST);
                 $verifStockRows = $_POST['verif_stock'];
 
                 $sharedLocation = $_POST['verif_stock_location'] ?? null;
