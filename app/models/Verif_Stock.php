@@ -17,7 +17,7 @@ class Verif_Stock
         ");
 
         $stmt->execute([
-            $taskId, $pn, $nb, $name
+            $taskId, $pn, $nb, $name,
         ]);
     }
 
@@ -28,7 +28,7 @@ class Verif_Stock
     {
         $db = Database::getInstance()->getPdo();
 
-        
+
         $stmt = $db->prepare("
             INSERT INTO verif_stock (TaskID, pn, nb, name)
             VALUES (?, ?, ?, ?)
@@ -44,7 +44,7 @@ class Verif_Stock
                 $taskId,
                 $row['pn'] ?? null,
                 $row['nb'] ?? 1,
-                $row['name'] ?? null
+                $row['name'] ?? null,
             ]);
         }
     }
@@ -103,7 +103,7 @@ class Verif_Stock
                 $taskId,
                 $row['pn'] ?? null,
                 $row['nb'] ?? 1,
-                $row['name'] ?? null
+                $row['name'] ?? null,
             ]);
         }
     }

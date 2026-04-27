@@ -109,22 +109,27 @@
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Stats -->
-                            <?php if (!empty($project['tasks_count'])): ?>
-                                <div class="d-flex gap-3 mt-3 pt-3 border-top">
-                                    <div>
-                                        <span class="text-muted small">Demandes</span>
-                                        <div class="fw-bold"><?= $project['tasks_count'] ?></div>
-                                    </div>
 
-                                    <?php if (!empty($project['urgent_count'])): ?>
-                                        <div>
-                                            <span class="text-muted small">Urgentes</span>
-                                            <div class="fw-bold text-warning"><?= $project['urgent_count'] ?></div>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
+<!-- Stats -->
+<?php if (($project['tasks_count'] ?? 0) > 0): ?>
+    <div class="d-flex gap-3 mt-3 pt-3 border-top">
+        <div>
+            <span class="text-muted small">Demandes</span>
+            <div class="fw-bold"><?= $project['tasks_count'] ?></div>
+        </div>
+        
+        <div>
+            <span class="text-muted small">Urgentes</span>
+            <div class="fw-bold">
+                <?php if (($project['urgent_count'] ?? 0) > 0): ?>
+                    <span class="badge bg-danger"><?= $project['urgent_count'] ?></span>
+                <?php else: ?>
+                    <span class="text-muted">0</span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
                         </div>
 

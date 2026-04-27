@@ -1,4 +1,5 @@
 <?php
+
 class Database
 {
     private static $instance = null;
@@ -22,4 +23,3 @@ class Database
         return $this->pdo;
     }
 }
-

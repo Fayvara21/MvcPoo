@@ -21,7 +21,7 @@ class Retour
             $pn,
             $nb,
             $sn,
-            $certif
+            $certif,
         ]);
     }
 
@@ -53,7 +53,7 @@ class Retour
                 $pn,
                 $row['nb'] ?? 1,
                 $sn,
-                $certif
+                $certif,
             ]);
         }
     }

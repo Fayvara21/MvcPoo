@@ -17,7 +17,7 @@
                         </div>
                         <div>
                             <label class="form-label fw-medium">Quantité</label>
-                            <input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int)($r['nb'] ?? 1) ?>">
+                            <input class="form-control" type="number" name="retour[<?= $i ?>][nb]" value="<?= (int) ($r['nb'] ?? 1) ?>">
                         </div>
                         <div>
                             <label class="form-label fw-medium">SN</label>

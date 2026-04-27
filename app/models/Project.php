@@ -2,11 +2,11 @@
 
 class Project
 {
-	public static function all()
-	{
-		$db = Database::getInstance()->getPdo();
+    public static function all()
+    {
+        $db = Database::getInstance()->getPdo();
 
-		$stmt = $db->query("
+        $stmt = $db->query("
 			SELECT 
 				p.*,
 				COUNT(t.id) AS tasks_count,
@@ -26,16 +26,17 @@ class Project
 			ORDER BY p.id DESC
 		");
 
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-	}
-	public static function allByGroup($group){
-		$db = Database::getInstance()->getPdo();
-		$stmt = $db->prepare("SELECT * FROM projects WHERE `groups` LIKE :group ORDER BY id DESC");
-		$search = "%{$group}%";
-		$stmt->bindParam(':group', $search, PDO::PARAM_STR);
-		$stmt->execute();
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-	}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function allByGroup($group)
+    {
+        $db = Database::getInstance()->getPdo();
+        $stmt = $db->prepare("SELECT * FROM projects WHERE `groups` LIKE :group ORDER BY id DESC");
+        $search = "%{$group}%";
+        $stmt->bindParam(':group', $search, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public static function create($name)
     {
