@@ -183,11 +183,14 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
         if (!empty($activeVerifStates)) {
             $stateMatch = in_array($state, $activeVerifStates);
         }
-    } elseif ($hasAppro || $hasRetour) {
-        // APPRO or RETOUR task
+    } elseif ($hasAppro) {
+        // APPRO task
         if (!empty($activeApproStates)) {
             $stateMatch = in_array($state, $activeApproStates);
-        } elseif (!empty($activeRetourStates)) {
+        }
+    } elseif ($hasRetour) {
+        // RETOUR task
+        if (!empty($activeRetourStates)) {
             $stateMatch = in_array($state, $activeRetourStates);
         }
     }
@@ -196,9 +199,8 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
 });
 
 // Determine visibility of state filter rows - HIDDEN BY DEFAULT
-// Only show APPRO/RETOUR state filters if at least one of 'appro' or 'retour' is selected
-$showApproRetourFilters = !empty($activeTypes) && (in_array('appro', $activeTypes) || in_array('retour', $activeTypes));
-// Only show VERIF STOCK state filters if 'verif_stock' is selected
+$showApproFilters = !empty($activeTypes) && (in_array('appro', $activeTypes));
+$showRetourFilters = !empty($activeTypes) && (in_array('retour', $activeTypes));
 $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
 ?>
 
