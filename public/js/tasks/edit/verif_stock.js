@@ -17,6 +17,14 @@ function addVerifStockItem() {
                 <label class="form-label fw-medium">Libellé :</label>
                 <input class="form-control" name="verif_stock[${index}][name]" placeholder="Libellé">
             </div>
+            <div>
+                <label class="form-label fw-medium">Emplacement :</label>
+                <input class="form-control" name="verif_stock[${index}][location]" placeholder="Emplacement">
+            </div>
+            <div>
+                <label class="form-label fw-medium">Remarques :</label>
+                <input class="form-control" name="verif_stock[${index}][remarks]" placeholder="Remarques">
+            </div>
             <button type="button" class="btn btn-danger btn-sm remove-verif-stock mt-1">✕</button>
         </div>
     `;

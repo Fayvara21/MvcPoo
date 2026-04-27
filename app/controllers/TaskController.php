@@ -103,6 +103,7 @@ class TaskController extends BaseController
                         $row['nb'] ?? 1,
                         $row['name'] ?? null,
                         $row['location'] ?? null,
+                        $row['remarks'] ?? null,
                     );
                 }
             }
@@ -192,6 +193,7 @@ class TaskController extends BaseController
                         $row['nb'] ?? 1,
                         $row['name'] ?? null,
                         $row['location'] ?? null,
+                        $row['remarks'] ?? null,
                     );
                 }
             }

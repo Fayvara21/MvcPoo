@@ -603,6 +603,10 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                         <div><strong>Qté:</strong> <?= (int) ($v['nb'] ?? 0) ?></div>
                                         <div><strong>Nom:</strong> <?= e($v['name'] ?? '') ?></div>
                                     </div>
+                                    <div class="small d-flex gap-3">
+                                        <div><strong>Emplacement:</strong> <?= e($v['location'] ?? '') ?></div>
+                                        <div><strong>Remarques:</strong> <?= e($v['remarks'] ?? '') ?></div>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

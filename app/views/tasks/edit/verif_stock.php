@@ -23,6 +23,14 @@
                             <label class="form-label fw-medium">Libellé</label>
                             <input class="form-control" name="verif_stock[<?= $i ?>][name]" value="<?= e($v['name'] ?? '') ?>">
                         </div>
+                        <div>
+                            <label class="form-label fw-medium">Emplacement</label>
+                            <input class="form-control" name="verif_stock[<?= $i ?>][location]" value="<?= e($v['location'] ?? '') ?>">
+                        </div>
+                        <div>
+                            <label class="form-label fw-medium">Remarques</label>
+                            <input class="form-control" name="verif_stock[<?= $i ?>][remarks]" value="<?= e($v['remarks'] ?? '') ?>">
+                        </div>
                         <?php if (!empty($v['id'])): ?>
                             <input type="hidden" name="verif_stock[<?= $i ?>][id]" value="<?= $v['id'] ?>">
                         <?php endif; ?>

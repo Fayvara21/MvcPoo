@@ -17,10 +17,9 @@
             <label class="form-label fw-medium">Emplacement :</label>
             <input class="form-control" name="verif_stock_location">
         </div>
-        <!--
         <div class="mb-2">
-            <label class="form-label fw-medium">Date vérification</label>
-            <input class="form-control" type="date" name="verif_stock_date">
-        </div> -->
+            <label class="form-label fw-medium">Remarques :</label>
+            <input class="form-control" name="verif_stock_remarks">
+        </div>
     </div>
 </div>

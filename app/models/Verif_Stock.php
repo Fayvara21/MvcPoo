@@ -7,17 +7,17 @@ class Verif_Stock
     /**
      * Create a single VERIF_STOCK entry
      */
-    public static function create($taskId, $pn, $nb, $name, $location)
+    public static function create($taskId, $pn, $nb, $name, $location, $remarks = null)
     {
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            INSERT INTO verif_stock (TaskID, pn, nb, name, location)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO verif_stock (TaskID, pn, nb, name, location, remarks)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
-            $taskId, $pn, $nb, $name, $location
+            $taskId, $pn, $nb, $name, $location, $remarks
         ]);
     }
 
@@ -30,8 +30,8 @@ class Verif_Stock
 
 
         $stmt = $db->prepare("
-            INSERT INTO verif_stock (TaskID, pn, nb, name, location)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO verif_stock (TaskID, pn, nb, name, location, remarks)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
 
         foreach ($verifStockRows as $row) {
@@ -46,6 +46,7 @@ class Verif_Stock
                 $row['nb'] ?? 1,
                 $row['name'] ?? null,
                 $row['location'] ?? null,
+                $row['remarks'] ?? null,
             ]);
         }
     }
@@ -86,13 +87,14 @@ class Verif_Stock
 
         // Then insert all current rows (including those with IDs)
         $stmt = $db->prepare("
-            INSERT INTO verif_stock (id, TaskID, pn, nb, name, location)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO verif_stock (id, TaskID, pn, nb, name, location, remarks)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 pn = VALUES(pn),
                 nb = VALUES(nb),
                 name = VALUES(name),
-                location = VALUES(location)
+                location = VALUES(location),
+                remarks = VALUES(remarks)
         ");
 
         foreach ($verifStockRows as $row) {
@@ -107,6 +109,7 @@ class Verif_Stock
                 $row['nb'] ?? 1,
                 $row['name'] ?? null,
                 $row['location'] ?? null,
+                $row['remarks'] ?? null,
             ]);
         }
     }
