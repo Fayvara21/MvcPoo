@@ -84,7 +84,7 @@ class TaskController extends BaseController
                     ]);
                     Retour::create(
                         $taskId,
-                        $data['pn'] ?? null,
+                        $data['PN'] ?? null,
                         $data['nb'] ?? 1,
                         $data['sn'] ?? null,
                         $data['certif'] ?? null,
