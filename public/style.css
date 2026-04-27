@@ -448,8 +448,8 @@ th {
 }
 
 .contactDescription {
-    text-align: left; 
-    text-wrap: wrap;
+    text-align: left !important; 
+    text-wrap: wrap !important;
 }
 
 .table-sm td {
