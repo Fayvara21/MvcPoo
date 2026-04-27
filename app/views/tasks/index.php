@@ -377,7 +377,8 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                 $newVerifStates[] = $state;
                             }
                             $query = http_build_query([
-                                'ar_states' => $activeApproRetourStates,
+                                'appro_states' => $activeApproStates,
+                                'retour_states' => $activeRetourStates,
                                 'verif_states' => $newVerifStates,
                                 'types' => $activeTypes,
                             ]);
