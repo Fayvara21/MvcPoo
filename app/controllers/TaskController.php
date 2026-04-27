@@ -95,14 +95,17 @@ class TaskController extends BaseController
             // === VERIF STOCK ===
             if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
                 $verifStockRows = $_POST['verif_stock'];
+
                 $sharedLocation = $_POST['verif_stock_location'] ?? null;
                 $sharedRemarks = $_POST['verif_stock_remarks'] ?? null;
-                $data = array_merge($row, [
-                    'location' => $sharedLocation,
-                    'remarks' => $sharedRemarks,
-                ]);
+
+
 
                 foreach ($verifStockRows as $row) {
+                    $data = array_merge($row, [
+                        'location' => $sharedLocation,
+                        'remarks' => $sharedRemarks,
+                    ]);
                     Verif_stock::create(
                         $taskId,
                         $row['pn'] ?? null,

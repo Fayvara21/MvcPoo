@@ -24,7 +24,7 @@ document.addEventListener('click', function (e) {
         }
     }
     
-    // FOR VERIF STOCK - ADD THIS
+    // FOR VERIF STOCK
     if (e.target.classList && e.target.classList.contains('remove-verif-stock')) {
         const itemToRemove = e.target.closest('.verif-stock-item');
         if (itemToRemove) {
