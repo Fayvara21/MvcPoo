@@ -7,7 +7,7 @@ class Verif_Stock
     /**
      * Create a single VERIF_STOCK entry
      */
-    public static function create($taskId, $pn, $nb, $name, $location, $remarks)
+    public static function create($taskId, $pn = null, $nb = null, $name = null, $location = null, $remarks = null)
     {
         $db = Database::getInstance()->getPdo();
 
@@ -24,7 +24,7 @@ class Verif_Stock
     /**
      * Create multiple VERIF_STOCK entries
      */
-    public static function createMultiple($taskId, array $verifStockRows)
+    public static function createMultiple($taskId, array $verifStockRows, $sharedLocation = null, $sharedRemarks = null)
     {
         $db = Database::getInstance()->getPdo();
 
@@ -45,8 +45,8 @@ class Verif_Stock
                 $row['pn'] ?? null,
                 $row['nb'] ?? 1,
                 $row['name'] ?? null,
-                $row['location'] ?? null,
-                $row['remarks'] ?? null,
+                $sharedLocation,
+                $sharedRemarks,
             ]);
         }
     }
@@ -69,16 +69,16 @@ class Verif_Stock
     /**
      * Edit multiple VERIF_STOCK rows (delete old, insert new)
      */
-    public static function editMultiple($taskId, array $verifStockRows)
+    public static function editMultiple($taskId, array $verifStockRows, $sharedLocation = null, $sharedRemarks = null)
     {
         self::deleteByTaskId($taskId);
-        self::createMultiple($taskId, $verifStockRows);
+        self::createMultiple($taskId, $verifStockRows, $sharedLocation, $sharedRemarks);
     }
 
     /**
      * Update multiple VERIF_STOCK rows (preserve IDs)
      */
-    public static function updateMultiple($taskId, array $verifStockRows)
+    public static function updateMultiple($taskId, array $verifStockRows, $sharedLocation = null, $sharedRemarks = null)
     {
         $db = Database::getInstance()->getPdo();
 
@@ -108,8 +108,8 @@ class Verif_Stock
                 $row['pn'] ?? null,
                 $row['nb'] ?? 1,
                 $row['name'] ?? null,
-                $row['location'] ?? null,
-                $row['remarks'] ?? null,
+                $sharedLocation,
+                $sharedRemarks,
             ]);
         }
     }
