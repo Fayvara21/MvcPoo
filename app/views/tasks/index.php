@@ -422,7 +422,6 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                         $approList = $task['appro'] ?? [];
                         $retourList = $task['retour'] ?? [];
                         $verifStockList = $task['verif_stock'] ?? [];
-                        var_dump($task);
 
                         $s = (int) ($task['is_completed'] ?? 0);
                         $isVerifStock = !empty($verifStockList);
