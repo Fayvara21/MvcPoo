@@ -12,7 +12,7 @@ class ThirdParty
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            INSERT INTO 3rd_party (TaskID, bp, equipement, nb, destination, order_nb)
+            INSERT INTO third_party (TaskID, bp, equipement, nb, destination, order_nb)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
 
@@ -29,7 +29,7 @@ class ThirdParty
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            INSERT INTO 3rd_party (TaskID, bp, equipement, nb, destination, order_nb)
+            INSERT INTO third_party (TaskID, bp, equipement, nb, destination, order_nb)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
 
@@ -58,7 +58,7 @@ class ThirdParty
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
-            SELECT * FROM 3rd_party WHERE TaskID = ? ORDER BY ID ASC
+            SELECT * FROM third_party WHERE TaskID = ? ORDER BY ID ASC
         ");
 
         $stmt->execute([$taskId]);
@@ -86,7 +86,7 @@ class ThirdParty
 
         // Then insert all current rows (including those with IDs)
         $stmt = $db->prepare("
-            INSERT INTO 3rd_party (ID, TaskID, bp, equipement, nb, destination, order_nb)
+            INSERT INTO third_party (ID, TaskID, bp, equipement, nb, destination, order_nb)
             VALUES (?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 bp = VALUES(bp),
@@ -120,7 +120,7 @@ class ThirdParty
     {
         $db = Database::getInstance()->getPdo();
 
-        $stmt = $db->prepare("DELETE FROM 3rd_party WHERE TaskID = ?");
+        $stmt = $db->prepare("DELETE FROM third_party WHERE TaskID = ?");
         $stmt->execute([$taskId]);
     }
 
@@ -131,7 +131,7 @@ class ThirdParty
     {
         $db = Database::getInstance()->getPdo();
 
-        $stmt = $db->prepare("DELETE FROM 3rd_party WHERE ID = ?");
+        $stmt = $db->prepare("DELETE FROM third_party WHERE ID = ?");
         $stmt->execute([$id]);
     }
 }

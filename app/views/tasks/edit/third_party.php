@@ -1,11 +1,11 @@
 <div id="thirdPartyFields" class="card shadow-sm border-0 mb-3" style="display: <?= $selectedType === '3rd_party' ? 'block' : 'none' ?>;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge bg-success">3RD PARTY</span>
+            <span class="badge bg-danger">3RD PARTY</span>
             <h5 class="fw-semibold mb-0">Informations Tiers</h5>
         </div>
 
-        <button type="button" id="addThirdParty" class="btn btn-sm btn-success mb-3">+ Ajouter Équipement</button>
+        <button type="button" id="addThirdParty" class="btn btn-sm btn-danger mb-3">+ Ajouter Équipement</button>
 
         <div id="thirdPartyList">
             <?php foreach ($thirdPartyList as $i => $t): ?>

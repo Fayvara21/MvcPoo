@@ -254,7 +254,7 @@ class Task
         }
 
         // 3RD PARTY
-        $stmt = $db->prepare("SELECT TaskID, bp, equipement, nb, ID, destination, order_nb FROM 3rd_party WHERE TaskID IN ($placeholders)");
+        $stmt = $db->prepare("SELECT TaskID, bp, equipement, nb, ID, destination, order_nb FROM third_party WHERE TaskID IN ($placeholders)");
         $stmt->execute($taskIds);
         $thirdPartyRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $thirdPartyByTask = [];

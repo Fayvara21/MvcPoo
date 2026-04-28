@@ -15,12 +15,6 @@ function addThirdPartyItem() {
             <div class="col">
                 <input class="form-control" type="number" name="third_party[${index}][nb]" value="1" placeholder="Quantité">
             </div>
-            <div class="col">
-                <input class="form-control" name="third_party[${index}][destination]" placeholder="Destination">
-            </div>
-            <div class="col">
-                <input class="form-control" name="third_party[${index}][order_nb]" placeholder="N° Ordre">
-            </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger remove">✕</button>
             </div>
