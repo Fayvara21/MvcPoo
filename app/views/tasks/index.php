@@ -169,6 +169,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
     $hasVerifStock = !empty($task['verif_stock']);
+    $hasThirdParty = !empty($task['third_party']);
 
     // Determine specific task type
     $specificType = null;
@@ -178,6 +179,8 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
         $specificType = 'appro';
     } elseif ($hasRetour) {
         $specificType = 'retour';
+    } elseif ($hasThirdParty) {
+        $specificType = 'third_party';
     }
 
     // Type match logic - if no active types, show all
@@ -207,6 +210,11 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
         // RETOUR task
         if (!empty($activeRetourStates)) {
             $stateMatch = in_array($state, $activeRetourStates);
+        }
+    } elseif ($hasThirdParty) {
+        // THIRD PARTY task
+        if (!empty($activeThirdPartyStates)) {
+            $stateMatch = in_array($state, $activeThirdPartyStates);
         }
     }
 

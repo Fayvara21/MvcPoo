@@ -89,6 +89,7 @@
                 <?php include __DIR__ . '/partials/appro.php'; ?>
                 <?php include __DIR__ . '/partials/retour.php'; ?>
                 <?php include __DIR__ . '/partials/verif_stock.php'; ?>
+                <?php include __DIR__ . '/partials/third_party.php'; ?>
             </div>
 
         </div>
@@ -100,6 +101,7 @@
 <script defer src="/js/tasks/create/appro.js"></script>
 <script defer src="/js/tasks/create/retour.js"></script>
 <script defer src="/js/tasks/create/verif_stock.js"></script>
+<script defer src="/js/tasks/create/third_party.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 

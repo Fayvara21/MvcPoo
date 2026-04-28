@@ -101,6 +101,7 @@ function e($str)
                 <?php include __DIR__ . '/edit/appro.php'; ?>
                 <?php include __DIR__ . '/edit/retour.php'; ?>
                 <?php include __DIR__ . '/edit/verif_stock.php'; ?>
+                <?php include __DIR__ . '/edit/third_party.php'; ?>
             </div>
 
         </div>
@@ -111,6 +112,7 @@ function e($str)
 <script defer src="/js/tasks/edit/appro.js"></script>
 <script defer src="/js/tasks/edit/retour.js"></script>
 <script defer src="/js/tasks/edit/verif_stock.js"></script>
+<script defer src="/js/tasks/edit/third_party.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 
