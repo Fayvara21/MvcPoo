@@ -2,7 +2,7 @@
 
 require_once '../core/Database.php';
 
-class expedition
+class Expedition
 {
     /**
      * Create a single expedition entry

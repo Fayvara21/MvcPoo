@@ -35,8 +35,8 @@
         </div>
 
         <div class="expedition-compte-field" style="display: none;">
-            <label class="form-label fw-medium">Compte :</label>
-            <input class="form-control" type="text" name="expedition_account" placeholder="Numéro de compte">
+            <label class="form-label fw-medium">Nom de compte tiers :</label>
+            <input class="form-control" type="text" name="expedition_account" placeholder="Nom de compte tiers">
         </div>
 
         <!-- Third Party Checkbox -->
