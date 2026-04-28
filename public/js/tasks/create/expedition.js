@@ -39,20 +39,26 @@ document.getElementById('expeditionList')?.addEventListener('click', function(e)
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const expeditionCheckbox = document.getElementById('expedition_third_party');
-    const accountField = document.getElementById('expedition_account_field');
-    const accountInput = document.querySelector('input[name="expedition_account"]');
-
-    if (expeditionCheckbox) {
-        expeditionCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                accountField.style.display = 'block';
-            } else {
-                accountField.style.display = 'none';
-                if (accountInput) {
-                    accountInput.value = '';
+    // Handle existing compte transport checkboxes
+    const compteTriggers = document.querySelectorAll('.compte-trigger');
+    
+    compteTriggers.forEach(trigger => {
+        const compteField = trigger.closest('.expedition-item').querySelector('.compte-field');
+        
+        // Set initial state
+        if (compteField) {
+            compteField.style.display = trigger.checked ? 'block' : 'none';
+        }
+        
+        // Add change event
+        trigger.addEventListener('change', function() {
+            if (compteField) {
+                compteField.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) {
+                    const compteInput = compteField.querySelector('input');
+                    if (compteInput) compteInput.value = '';
                 }
             }
         });
-    }
+    });
 });
