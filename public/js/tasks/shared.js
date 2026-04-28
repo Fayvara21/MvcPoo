@@ -31,9 +31,9 @@ document.addEventListener('click', function (e) {
             itemToRemove.remove();
         }
     }
-        // FOR THIRD PARTY
-    if (e.target.classList && e.target.classList.contains('remove-third-party')) {
-        const itemToRemove = e.target.closest('.third-party-item');
+        // FOR expedition
+    if (e.target.classList && e.target.classList.contains('remove-expedition')) {
+        const itemToRemove = e.target.closest('.expedition-item');
         if (itemToRemove) {
             itemToRemove.remove();
         }

@@ -4,9 +4,10 @@
 $approList = Appro::findByTaskId($task['id']) ?? [];
 $retourList = Retour::findByTaskId($task['id']) ?? [];
 $verifStockList = Verif_Stock::findByTaskId($task['id']) ?? [];
+$expeditionList = Expedition::findByTaskId($task['id']) ?? [];
 
 // Determine task type
-$selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : (!empty($verifStockList) ? 'verif_stock' : ''));
+$selectedType = !empty($approList) ? 'appro' : (!empty($retourList) ? 'retour' : (!empty($verifStockList) ? 'verif_stock' : (!empty($expeditionList) ? 'expedition' : '')));
 
 // Safe escaping
 function e($str)
@@ -80,7 +81,7 @@ function e($str)
                                     <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>RETOUR
                                     </option>
                                         <option value="verif_stock" <?= $selectedType === 'verif_stock' ? 'selected' : '' ?>>VERIF STOCK</option>
-                                        <option value="third_party" <?= $selectedType === 'third_party' ? 'selected' : '' ?>>3RD PARTY</option>
+                                        <option value="expedition" <?= $selectedType === 'expedition' ? 'selected' : '' ?>>EXPEDITION</option>
                                 </select>
                             </div>
                         </div>
@@ -102,7 +103,7 @@ function e($str)
                 <?php include __DIR__ . '/edit/appro.php'; ?>
                 <?php include __DIR__ . '/edit/retour.php'; ?>
                 <?php include __DIR__ . '/edit/verif_stock.php'; ?>
-                <?php include __DIR__ . '/edit/third_party.php'; ?>
+                <?php include __DIR__ . '/edit/expedition.php'; ?>
             </div>
 
         </div>
@@ -113,7 +114,7 @@ function e($str)
 <script defer src="/js/tasks/edit/appro.js"></script>
 <script defer src="/js/tasks/edit/retour.js"></script>
 <script defer src="/js/tasks/edit/verif_stock.js"></script>
-<script defer src="/js/tasks/edit/third_party.js"></script>
+<script defer src="/js/tasks/edit/expedition.js"></script>
 <script defer src="/js/tasks/shared.js"></script>
 <script defer src="/js/tasks/task-type-toggle.js"></script>
 

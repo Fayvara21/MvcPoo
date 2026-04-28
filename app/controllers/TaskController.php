@@ -4,7 +4,7 @@ require_once '../app/controllers/BaseController.php';
 require_once '../app/models/Appro.php';
 require_once '../app/models/Retour.php';
 require_once '../app/models/Verif_Stock.php';
-require_once '../app/models/ThirdParty.php';
+require_once '../app/models/Expedition.php';
 
 class TaskController extends BaseController
 {
@@ -112,22 +112,26 @@ class TaskController extends BaseController
                 }
             }
 
-            // === THIRD PARTY ===
-            if ($type === 'third_party' && !empty($_POST['third_party'])) {
-                $thirdPartyRows = $_POST['third_party'];
+            // === expedition ===
+            if ($type === 'expedition' && !empty($_POST['expedition'])) {
+                $expeditionRows = $_POST['expedition'];
 
-                $sharedDestination = $_POST['third_party_destination'] ?? null;
-                $sharedOrderNb = $_POST['third_party_order_nb'] ?? null;
+                $sharedDestination = $_POST['expedition_destination'] ?? null;
+                $sharedOrderNb = $_POST['expedition_order_nb'] ?? null;
+                $sharedLocation = $_POST['expedition_location'] ?? null;
+                $sharedAccount = $_POST['expedition_account'] ?? null;
 
-                foreach ($thirdPartyRows as $row) {
-                    ThirdParty::create(
+                foreach ($expeditionRows as $row) {
+                    Expedition::create(
                         $taskId,
-                        $row['bp'] ?? null,
-                        $row['equipement'] ?? null,
+                        $row['pn'] ?? null,
                         $row['nb'] ?? 1,
                         $sharedDestination ?? $row['destination'] ?? null,
                         $sharedOrderNb ?? $row['order_nb'] ?? null,
-                    );
+                        $sharedLocation ?? $row['location'] ?? null,
+                        $sharedAccount ?? $row['account'] ?? null,
+                        $row['third_party'] ?? 0,
+                        );
                 }
             }
 
@@ -160,7 +164,7 @@ class TaskController extends BaseController
 
         // FETCH DATA FOR THIS TASK
         $verifStockList = Verif_stock::findByTaskId($task['id']);
-        $thirdPartyList = ThirdParty::findByTaskId($task['id']);
+        $expeditionList = Expedition::findByTaskId($task['id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -178,7 +182,7 @@ class TaskController extends BaseController
             Appro::deleteByTaskId($task['id']);
             Retour::deleteByTaskId($task['id']);
             Verif_stock::deleteByTaskId($task['id']);
-            ThirdParty::deleteByTaskId($task['id']);
+            Expedition::deleteByTaskId($task['id']);
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {
@@ -223,16 +227,19 @@ class TaskController extends BaseController
                 }
             }
 
-            // === THIRD PARTY ===
-            if ($type === 'third_party' && !empty($_POST['third_party'])) {
-                foreach ($_POST['third_party'] as $row) {
-                    ThirdParty::create(
+            // === EXPEDITION ===
+            if ($type === 'expedition' && !empty($_POST['expedition'])) {
+                foreach ($_POST['expedition'] as $row) {
+                    Expedition::create(
                         $task['id'],
-                        $row['bp'] ?? null,
-                        $row['equipement'] ?? null,
+                        $row['pn'] ?? null,
                         $row['nb'] ?? 1,
-                        $row['destination'] ?? null,
+                        $row['name'] ?? null,
+                        $row['location'] ?? null,
                         $row['order_nb'] ?? null,
+                        $row['destination'] ?? null,
+                        $row['account'] ?? null,
+                        $row['third_party'] ?? 0,
                     );
                 }
             }
@@ -304,14 +311,14 @@ class TaskController extends BaseController
             case 'adv':
                 return [
                     "verif_stock" => "VERIF STOCK",
-                    "third_party" => "3RD PARTY"
+                    "expedition" => "EXPEDITION"
                 ];
             default:
                 return [
                     'appro' => 'APPRO',
                     'retour' => 'RETOUR',
                     'verif_stock' => 'VERIF STOCK',
-                    'third_party' => '3RD PARTY'
+                    'expedition' => 'EXPEDITION'
                 ];
         }
     }

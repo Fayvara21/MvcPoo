@@ -25,10 +25,6 @@
             <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
         </div>
         <div class="mb-1">
-            <label class="form-label fw-medium">Avion :</label>
-            <input class="form-control mb-2" name="appro_plane" placeholder="Avion">
-        </div>
-        <div class="mb-1">
             <label class="form-label fw-medium">OE :</label>
             <input class="form-control mb-2" name="appro_oe" placeholder="OE">
         </div>

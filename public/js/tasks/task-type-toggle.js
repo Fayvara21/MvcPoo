@@ -3,12 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const approFields = document.getElementById("approFields");
     const retourFields = document.getElementById("retourFields");
     const verifStockFields = document.getElementById("verifStockFields");
-    const thirdPartyFields = document.getElementById("thirdPartyFields");
+    const expeditionFields = document.getElementById("expeditionFields");
     
     const approList = document.getElementById('approList');
     const retourList = document.getElementById('retourList');
     const verifStockList = document.getElementById('verifStockList');
-    const thirdPartyList = document.getElementById('thirdPartyList');
+    const expeditionList = document.getElementById('expeditionList');
 
     function setDisabled(container, disabled) {
         if (!container) return;
@@ -24,17 +24,17 @@ document.addEventListener("DOMContentLoaded", function () {
         if (approFields) approFields.style.display = "none";
         if (retourFields) retourFields.style.display = "none";
         if (verifStockFields) verifStockFields.style.display = "none";
-        if (thirdPartyFields) thirdPartyFields.style.display = "none";
+        if (expeditionFields) expeditionFields.style.display = "none";
 
         setDisabled(approFields, true);
         setDisabled(retourFields, true);
         setDisabled(verifStockFields, true);
-        setDisabled(thirdPartyFields, true);
+        setDisabled(expeditionFields, true);
 
         if (typeSelect && typeSelect.value === "appro") {
             clearContainer(retourList);
             clearContainer(verifStockList);
-            clearContainer(thirdPartyList);
+            clearContainer(expeditionList);
             
             if (approFields) {
                 approFields.style.display = "block";
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (typeSelect && typeSelect.value === "retour") {
             clearContainer(approList);
             clearContainer(verifStockList);
-            clearContainer(thirdPartyList);
+            clearContainer(expeditionList);
             
             if (retourFields) {
                 retourFields.style.display = "block";
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (typeSelect && typeSelect.value === "verif_stock") {
             clearContainer(approList);
             clearContainer(retourList);
-            clearContainer(thirdPartyList);
+            clearContainer(expeditionList);
             
             if (verifStockFields) {
                 verifStockFields.style.display = "block";
@@ -76,18 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        if (typeSelect && typeSelect.value === "third_party") {
+        if (typeSelect && typeSelect.value === "expedition") {
             clearContainer(approList);
             clearContainer(retourList);
             clearContainer(verifStockList);
             
-            if (thirdPartyFields) {
-                thirdPartyFields.style.display = "block";
-                setDisabled(thirdPartyFields, false);
+            if (expeditionFields) {
+                expeditionFields.style.display = "block";
+                setDisabled(expeditionFields, false);
             }
             
-            if (thirdPartyList && thirdPartyList.children.length === 0 && window.addThirdPartyItem) {
-                window.addThirdPartyItem();
+            if (expeditionList && expeditionList.children.length === 0 && window.addexpeditionItem) {
+                window.addexpeditionItem();
             }
         }
     }

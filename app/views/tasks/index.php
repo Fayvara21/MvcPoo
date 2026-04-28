@@ -51,12 +51,12 @@ if (!is_array($activeVerifStates)) {
 }
 $activeVerifStates = array_map('intval', $activeVerifStates);
 
-// For 3RD PARTY
-$activeThirdPartyStates = $_GET['third_party_states'] ?? [];
-if (!is_array($activeThirdPartyStates)) {
-    $activeThirdPartyStates = [$activeThirdPartyStates];
+// For EXPEDITION
+$activeExpeditionStates = $_GET['expedition_states'] ?? [];
+if (!is_array($activeExpeditionStates)) {
+    $activeExpeditionStates = [$activeExpeditionStates];
 }
-$activeThirdPartyStates = array_map('intval', $activeThirdPartyStates);
+$activeExpeditionStates = array_map('intval', $activeExpeditionStates);
 
 // Ensure $activeTypes is always an array, even when not present in URL
 $activeTypes = $_GET['types'] ?? [];
@@ -76,14 +76,14 @@ $activeTypes = array_map('strval', $activeTypes);
 $approCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $retourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
-$thirdPartyCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
+$expeditionCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 
 foreach ($originalTasks as $t) {
     $state = (int) ($t['is_completed'] ?? 0);
     $hasAppro = !empty($t['appro']);
     $hasRetour = !empty($t['retour']);
     $hasVerifStock = !empty($t['verif_stock']);
-    $hasThirdParty = !empty($t['third_party']);
+    $hasExpedition = !empty($t['expedition']);
 
     if ($hasVerifStock) {
         if (isset($verifStockCounts[$state])) {
@@ -97,9 +97,9 @@ foreach ($originalTasks as $t) {
         if (isset($retourCounts[$state])) {
             $retourCounts[$state]++;
         }
-    } elseif ($hasThirdParty) {
-        if (isset($thirdPartyCounts[$state])) {
-            $thirdPartyCounts[$state]++;
+    } elseif ($hasExpedition) {
+        if (isset($expeditionCounts[$state])) {
+            $expeditionCounts[$state]++;
         }
     }
 }
@@ -107,8 +107,8 @@ foreach ($originalTasks as $t) {
 $totalAppro = array_sum($approCounts);
 $totalRetour = array_sum($retourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
-$totalThirdParty = array_sum($thirdPartyCounts);
-$totalTasks = $totalAppro + $totalRetour + $totalVerifStock + $totalThirdParty;
+$totalExpedition = array_sum($expeditionCounts);
+$totalTasks = $totalAppro + $totalRetour + $totalVerifStock + $totalExpedition;
 
 // ============================================================
 // 3. LABELS & WORKFLOWS
@@ -169,7 +169,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
     $hasAppro = !empty($task['appro']);
     $hasRetour = !empty($task['retour']);
     $hasVerifStock = !empty($task['verif_stock']);
-    $hasThirdParty = !empty($task['third_party']);
+    $hasExpedition = !empty($task['expedition']);
 
     // Determine specific task type
     $specificType = null;
@@ -179,8 +179,8 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
         $specificType = 'appro';
     } elseif ($hasRetour) {
         $specificType = 'retour';
-    } elseif ($hasThirdParty) {
-        $specificType = 'third_party';
+    } elseif ($hasExpedition) {
+        $specificType = 'expedition';
     }
 
     // Type match logic - if no active types, show all
@@ -211,10 +211,10 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
         if (!empty($activeRetourStates)) {
             $stateMatch = in_array($state, $activeRetourStates);
         }
-    } elseif ($hasThirdParty) {
-        // THIRD PARTY task
-        if (!empty($activeThirdPartyStates)) {
-            $stateMatch = in_array($state, $activeThirdPartyStates);
+    } elseif ($hasExpedition) {
+        // expedition task
+        if (!empty($activeExpeditionStates)) {
+            $stateMatch = in_array($state, $activeExpeditionStates);
         }
     }
 
@@ -225,7 +225,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
 $showApproFilters = !empty($activeTypes) && (in_array('appro', $activeTypes));
 $showRetourFilters = !empty($activeTypes) && (in_array('retour', $activeTypes));
 $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
-$showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $activeTypes);
+$showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeTypes);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
@@ -271,8 +271,8 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
 
                     <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
-                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'third_party' => '3RD PARTY'];
-                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'third_party' => 'danger'];
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => '3RD PARTY'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
 
                         foreach ($typeLabels as $type => $label):
                             $isActive = in_array($type, $activeTypes);
@@ -287,7 +287,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                 'appro_states' => $activeApproStates,
                                 'retour_states' => $activeRetourStates,
                                 'verif_states' => $activeVerifStates,
-                                'third_party_states' => $activeThirdPartyStates,
+                                'expedition_states' => $activeExpeditionStates,
                                 'types' => $newTypes
                             ]);
                             switch ($type) {
@@ -300,8 +300,8 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                 case 'verif_stock':
                                     $count = $totalVerifStock;
                                     break;
-                                case 'third_party':
-                                    $count = $totalThirdParty;
+                                case 'expedition':
+                                    $count = $totalExpedition;
                                     break;
                                 default:
                                     $count = 0;
@@ -418,24 +418,24 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                     </div>
                 </div>
 
-                <!-- Fourth row: 3RD PARTY State Filters (hidden by default, appears only when 3RD PARTY type is selected) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showThirdPartyFilters ? '' : 'style="display: none !important;"' ?>>
-                    <span class="text-muted small me-2">États 3RD PARTY :</span>
+                <!-- Fourth row: EXPEDITION State Filters (hidden by default, appears only when EXPEDITION type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showExpeditionFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États EXPEDITION :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
-                        $thirdPartyStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
-                        foreach ($thirdPartyStatesList as $state):
+                        $expeditionStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
+                        foreach ($expeditionStatesList as $state):
                             $label = $labels[$state] ?? '?';
-                            $count = $thirdPartyCounts[$state] ?? 0;
-                            $isActive = in_array($state, $activeThirdPartyStates);
-                            $newThirdPartyStates = $activeThirdPartyStates;
+                            $count = $expeditionCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeExpeditionStates);
+                            $newExpeditionStates = $activeExpeditionStates;
                             if ($isActive) {
-                                $newThirdPartyStates = array_diff($activeThirdPartyStates, [$state]);
+                                $newExpeditionStates = array_diff($activeExpeditionStates, [$state]);
                             } else {
-                                $newThirdPartyStates[] = $state;
+                                $newExpeditionStates[] = $state;
                             }
                             $query = http_build_query([
-                                'third_party_states' => $newThirdPartyStates,
+                                'expedition_states' => $newExpeditionStates,
                                 'types' => $activeTypes,
                             ]);
                             ?>
@@ -482,7 +482,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                         $approList = $task['appro'] ?? [];
                         $retourList = $task['retour'] ?? [];
                         $verifStockList = $task['verif_stock'] ?? [];
-                        $thirdPartyList = $task['third_party'] ?? [];
+                        $expeditionList = $task['expedition'] ?? [];
 
                         $s = (int) ($task['is_completed'] ?? 0);
                         $isVerifStock = !empty($verifStockList);
@@ -541,7 +541,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                     <span class="badge bg-warning text-dark">RETOUR</span>
                                 <?php elseif (!empty($verifStockList)): ?>
                                     <span class="badge bg-success">VERIF STOCK</span>
-                                <?php elseif (!empty($thirdPartyList)): ?>
+                                <?php elseif (!empty($expeditionList)): ?>
                                     <span class="badge bg-danger">3RD PARTY</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
@@ -719,8 +719,8 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                             </tr>
                         <?php endforeach; ?>
 
-                        <!-- SUB-TASK ROWS FOR 3RD PARTY -->
-                        <?php foreach ($thirdPartyList as $t): ?>
+                        <!-- SUB-TASK ROWS FOR EXPEDITION -->
+                        <?php foreach ($expeditionList as $t): ?>
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold">
@@ -729,23 +729,17 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                 <td class="task-description" colspan="8">
                                     <div class="small fw-semibold mb-1 text-danger">3RD PARTY</div>
                                     <div class="d-flex gap-4 mb-1">
-                                        <div><strong>BP:</strong>
-                                            <?= e($t['bp'] ?? '') ?>
-                                        </div>
-                                        <div><strong>Équipement:</strong>
-                                            <?= e($t['equipement'] ?? '') ?>
-                                        </div>
-                                        <div><strong>Qté:</strong>
-                                            <?= (int) ($t['nb'] ?? 0) ?>
-                                        </div>
+                                        <div><strong>PN:</strong> <?= e($t['pn'] ?? '') ?></div>
+                                        <div><strong>Qté:</strong> <?= (int) ($t['nb'] ?? 0) ?></div>
+                                        <div><strong>Nom:</strong> <?= e($t['name'] ?? '') ?></div>
                                     </div>
                                     <div class="small d-flex gap-3">
-                                        <div><strong>Destination:</strong>
-                                            <?= e($t['destination'] ?? '') ?>
-                                        </div>
-                                        <div><strong>N° Ordre:</strong>
-                                            <?= e($t['order_nb'] ?? '') ?>
-                                        </div>
+                                        <div><strong>Emplacement:</strong> <?= e($t['location'] ?? '') ?></div>
+                                        <div><strong>N° Commande:</strong> <?= e($t['order_number'] ?? '') ?></div>
+                                        <div><strong>Destinataire:</strong> <?= e($t['recipient'] ?? '') ?></div>
+                                        <div><strong>Compte:</strong> <?= e($t['account'] ?? '') ?></div>                                        <div>
+                                            <strong>3rd Party:</strong>
+                                            <input type="checkbox" disabled <?= !empty($t['is_third_party']) ? 'checked' : '' ?>>
                                     </div>
                                 </td>
                             </tr>
