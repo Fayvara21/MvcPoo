@@ -526,26 +526,68 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                     <?php endif; ?>
 
                                     <?php if (!empty($nextStates) && $canSetState): ?>
-                                        <div class="btn-group">
-                                            <?php foreach ($nextStates as $nextState): ?>
-                                                <?php if ($isVerifStock && $nextState == 7 && !$canUseState7) {
-                                                    continue;
-                                                } ?>
-                                                <form method="POST"
-                                                    action="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/mark-completed"
-                                                    class="d-inline m-1">
-                                                    <input type="hidden" name="state" value="<?= (int) $nextState ?>">
-                                                    <button type="submit"
-                                                        class="btn btn-sm <?= 'btn-' . ($stateClass[$nextState] ?? 'secondary') ?>">
-                                                        <i class="bi bi-arrow-return-right"></i>
+                                        <div class="ms-2">
+                                            <select class="form-select form-select-sm state-select"
+                                                data-task-id="<?= $task['id'] ?>" data-project-id="<?= $project['id'] ?>"
+                                                style="width: auto;">
+                                                <option value="">Changer l'état...</option>
+                                                <?php foreach ($nextStates as $nextState): ?>
+                                                    <?php if ($isVerifStock && $nextState == 7 && !$canUseState7) {
+                                                        continue;
+                                                    } ?>
+                                                    <option value="<?= (int) $nextState ?>"
+                                                        data-state-label="<?= e($currentLabels[$nextState]) ?>"
+                                                        class="bg-<?= $stateClass[$nextState] ?? 'secondary' ?> text-white">
                                                         <?= e($currentLabels[$nextState]) ?>
-                                                    </button>
-                                                </form>
-                                            <?php endforeach; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                     <?php endif; ?>
                                 </div>
                             </td>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const stateSelects = document.querySelectorAll('.state-select');
+
+                                    stateSelects.forEach(select => {
+                                        select.addEventListener('change', function () {
+                                            const selectedOption = this.options[this.selectedIndex];
+                                            const stateValue = this.value;
+
+                                            if (!stateValue) return;
+
+                                            const stateLabel = selectedOption.dataset.stateLabel;
+                                            const taskId = this.dataset.taskId;
+                                            const projectId = this.dataset.projectId;
+
+                                            // Confirmation prompt
+                                            const confirmMessage = `Confirmer le passage à l'état "${stateLabel}" ?`;
+
+                                            if (confirm(confirmMessage)) {
+                                                // Create and submit form
+                                                const form = document.createElement('form');
+                                                form.method = 'POST';
+                                                form.action = `/projects/${projectId}/tasks/${taskId}/mark-completed`;
+
+                                                const input = document.createElement('input');
+                                                input.type = 'hidden';
+                                                input.name = 'state';
+                                                input.value = stateValue;
+
+                                                form.appendChild(input);
+                                                document.body.appendChild(form);
+                                                form.submit();
+                                            } else {
+                                                // Reset select to default option
+                                                this.value = '';
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
                         </tr>
 
                         <!-- SUB-TASK ROWS FOR APPRO -->
