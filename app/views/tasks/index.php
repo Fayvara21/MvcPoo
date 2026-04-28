@@ -526,7 +526,7 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                     <?php endif; ?>
 
                                     <?php if (!empty($nextStates) && $canSetState): ?>
-                                        <div class="ms-2">
+                                        <div class="d-inline-flex ms-2">
                                             <select class="form-select form-select-sm state-select"
                                                 data-task-id="<?= $task['id'] ?>" data-project-id="<?= $project['id'] ?>"
                                                 style="width: auto;">
