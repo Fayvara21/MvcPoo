@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 setDisabled(expeditionFields, false);
             }
             
-            if (expeditionList && expeditionList.children.length === 0 && window.addexpeditionItem) {
-                window.addexpeditionItem();
+            if (expeditionList && expeditionList.children.length === 0 && window.addExpeditionItem) {
+                window.addExpeditionItem();
             }
         }
     }
