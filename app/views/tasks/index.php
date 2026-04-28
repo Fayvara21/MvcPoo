@@ -44,11 +44,19 @@ if (!is_array($activeRetourStates)) {
 }
 $activeRetourStates = array_map('intval', $activeRetourStates);
 
+// For VERIF STOCK
 $activeVerifStates = $_GET['verif_states'] ?? [];
 if (!is_array($activeVerifStates)) {
     $activeVerifStates = [$activeVerifStates];
 }
 $activeVerifStates = array_map('intval', $activeVerifStates);
+
+// For 3RD PARTY
+$activeThirdPartyStates = $_GET['third_party_states'] ?? [];
+if (!is_array($activeThirdPartyStates)) {
+    $activeThirdPartyStates = [$activeThirdPartyStates];
+}
+$activeThirdPartyStates = array_map('intval', $activeThirdPartyStates);
 
 // Ensure $activeTypes is always an array, even when not present in URL
 $activeTypes = $_GET['types'] ?? [];
@@ -68,12 +76,14 @@ $activeTypes = array_map('strval', $activeTypes);
 $approCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $retourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $verifStockCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
+$thirdPartyCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0];
 
 foreach ($originalTasks as $t) {
     $state = (int) ($t['is_completed'] ?? 0);
     $hasAppro = !empty($t['appro']);
     $hasRetour = !empty($t['retour']);
     $hasVerifStock = !empty($t['verif_stock']);
+    $hasThirdParty = !empty($t['third_party']);
 
     if ($hasVerifStock) {
         if (isset($verifStockCounts[$state])) {
@@ -87,13 +97,18 @@ foreach ($originalTasks as $t) {
         if (isset($retourCounts[$state])) {
             $retourCounts[$state]++;
         }
+    } elseif ($hasThirdParty) {
+        if (isset($thirdPartyCounts[$state])) {
+            $thirdPartyCounts[$state]++;
+        }
     }
 }
 
 $totalAppro = array_sum($approCounts);
 $totalRetour = array_sum($retourCounts);
 $totalVerifStock = array_sum($verifStockCounts);
-$totalTasks = $totalAppro + $totalRetour + $totalVerifStock;
+$totalThirdParty = array_sum($thirdPartyCounts);
+$totalTasks = $totalAppro + $totalRetour + $totalVerifStock + $totalThirdParty;
 
 // ============================================================
 // 3. LABELS & WORKFLOWS
@@ -202,6 +217,7 @@ $tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, 
 $showApproFilters = !empty($activeTypes) && (in_array('appro', $activeTypes));
 $showRetourFilters = !empty($activeTypes) && (in_array('retour', $activeTypes));
 $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
+$showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $activeTypes);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
@@ -393,6 +409,8 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                         <?php endforeach; ?>
                     </div>
                 </div>
+
+                
             </div>
 
         </div>
@@ -648,6 +666,38 @@ $showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $active
                                     <div class="small d-flex gap-3">
                                         <div><strong>Emplacement:</strong> <?= e($v['location'] ?? '') ?></div>
                                         <div><strong>Remarques:</strong> <?= e($v['remarks'] ?? '') ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+
+                        <!-- SUB-TASK ROWS FOR 3RD PARTY -->
+                        <?php foreach ($thirdPartyList as $t): ?>
+                            <?php $subIndex++; ?>
+                            <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
+                                <td class="p-2 fw-semibold">
+                                    <?= $subIndex ?>
+                                </td>
+                                <td class="task-description" colspan="8">
+                                    <div class="small fw-semibold mb-1 text-success">3RD PARTY</div>
+                                    <div class="d-flex gap-4 mb-1">
+                                        <div><strong>BP:</strong>
+                                            <?= e($t['bp'] ?? '') ?>
+                                        </div>
+                                        <div><strong>Équipement:</strong>
+                                            <?= e($t['equipement'] ?? '') ?>
+                                        </div>
+                                        <div><strong>Qté:</strong>
+                                            <?= (int) ($t['nb'] ?? 0) ?>
+                                        </div>
+                                    </div>
+                                    <div class="small d-flex gap-3">
+                                        <div><strong>Destination:</strong>
+                                            <?= e($t['destination'] ?? '') ?>
+                                        </div>
+                                        <div><strong>N° Ordre:</strong>
+                                            <?= e($t['order_nb'] ?? '') ?>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

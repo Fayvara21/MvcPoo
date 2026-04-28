@@ -4,6 +4,7 @@ require_once '../app/controllers/BaseController.php';
 require_once '../app/models/Appro.php';
 require_once '../app/models/Retour.php';
 require_once '../app/models/Verif_Stock.php';
+require_once '../app/models/ThirdParty.php';
 
 class TaskController extends BaseController
 {
@@ -94,17 +95,12 @@ class TaskController extends BaseController
 
             // === VERIF STOCK ===
             if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
-
                 $verifStockRows = $_POST['verif_stock'];
 
                 $sharedLocation = $_POST['verif_stock_location'] ?? null;
                 $sharedRemarks = $_POST['verif_stock_remarks'] ?? null;
 
                 foreach ($verifStockRows as $row) {
-                    $data = array_merge($row, [
-                        'location' => $sharedLocation,
-                        'remarks' => $sharedRemarks,
-                    ]);
                     Verif_stock::create(
                         $taskId,
                         $row['pn'] ?? null,
@@ -112,6 +108,25 @@ class TaskController extends BaseController
                         $row['name'] ?? null,
                         $sharedLocation,
                         $sharedRemarks,
+                    );
+                }
+            }
+
+            // === THIRD PARTY ===
+            if ($type === 'third_party' && !empty($_POST['third_party'])) {
+                $thirdPartyRows = $_POST['third_party'];
+
+                $sharedDestination = $_POST['third_party_destination'] ?? null;
+                $sharedOrderNb = $_POST['third_party_order_nb'] ?? null;
+
+                foreach ($thirdPartyRows as $row) {
+                    ThirdParty::create(
+                        $taskId,
+                        $row['bp'] ?? null,
+                        $row['equipement'] ?? null,
+                        $row['nb'] ?? 1,
+                        $sharedDestination ?? $row['destination'] ?? null,
+                        $sharedOrderNb ?? $row['order_nb'] ?? null,
                     );
                 }
             }
@@ -143,8 +158,9 @@ class TaskController extends BaseController
             return;
         }
 
-        // FETCH VERIF_STOCK DATA FOR THIS TASK
+        // FETCH DATA FOR THIS TASK
         $verifStockList = Verif_stock::findByTaskId($task['id']);
+        $thirdPartyList = ThirdParty::findByTaskId($task['id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -162,6 +178,7 @@ class TaskController extends BaseController
             Appro::deleteByTaskId($task['id']);
             Retour::deleteByTaskId($task['id']);
             Verif_stock::deleteByTaskId($task['id']);
+            ThirdParty::deleteByTaskId($task['id']);
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {
@@ -206,12 +223,26 @@ class TaskController extends BaseController
                 }
             }
 
+            // === THIRD PARTY ===
+            if ($type === 'third_party' && !empty($_POST['third_party'])) {
+                foreach ($_POST['third_party'] as $row) {
+                    ThirdParty::create(
+                        $task['id'],
+                        $row['bp'] ?? null,
+                        $row['equipement'] ?? null,
+                        $row['nb'] ?? 1,
+                        $row['destination'] ?? null,
+                        $row['order_nb'] ?? null,
+                    );
+                }
+            }
+
             // Redirect to avoid duplicate POST
             header("Location: /projects/{$task['project_id']}/tasks");
             exit;
         }
 
-        // PASS VERIF_STOCK DATA TO THE VIEW
+        // PASS DATA TO THE VIEW
         include __DIR__ . '/../views/tasks/edit.php';
     }
 
@@ -266,18 +297,21 @@ class TaskController extends BaseController
         header('Content-Type: application/json');
         echo json_encode($tasks);
     }
+
     public static function getAllowedTypes()
     {
         switch ($_SESSION["group"] ?? '') {
             case 'adv':
                 return [
-                    "verif_stock" => "VERIF STOCK"
+                    "verif_stock" => "VERIF STOCK",
+                    "third_party" => "3RD PARTY"
                 ];
             default:
                 return [
                     'appro' => 'APPRO',
                     'retour' => 'RETOUR',
-                    'verif_stock' => 'VERIF STOCK'
+                    'verif_stock' => 'VERIF STOCK',
+                    'third_party' => '3RD PARTY'
                 ];
         }
     }

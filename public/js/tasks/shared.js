@@ -31,6 +31,13 @@ document.addEventListener('click', function (e) {
             itemToRemove.remove();
         }
     }
+        // FOR THIRD PARTY
+    if (e.target.classList && e.target.classList.contains('remove-third-party')) {
+        const itemToRemove = e.target.closest('.third-party-item');
+        if (itemToRemove) {
+            itemToRemove.remove();
+        }
+    }
 });
 
 // Shared function to disable/enable inputs in a container
