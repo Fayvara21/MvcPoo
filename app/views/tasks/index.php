@@ -271,8 +271,8 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
 
                     <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
-                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK'];
-                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success'];
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'third_party' => '3RD PARTY'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'third_party' => 'danger'];
 
                         foreach ($typeLabels as $type => $label):
                             $isActive = in_array($type, $activeTypes);
@@ -287,6 +287,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                 'appro_states' => $activeApproStates,
                                 'retour_states' => $activeRetourStates,
                                 'verif_states' => $activeVerifStates,
+                                'third_party_states' => $activeThirdPartyStates,
                                 'types' => $newTypes
                             ]);
                             switch ($type) {
@@ -298,6 +299,9 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                     break;
                                 case 'verif_stock':
                                     $count = $totalVerifStock;
+                                    break;
+                                case 'third_party':
+                                    $count = $totalThirdParty;
                                     break;
                                 default:
                                     $count = 0;
@@ -335,7 +339,6 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                             // FIX: Use 'appro_states' parameter instead of 'ar_states'
                             $query = http_build_query([
                                 'appro_states' => $newApproStates,
-                                'verif_states' => $activeVerifStates,
                                 'types' => $activeTypes,
                             ]);
                             ?>
@@ -367,7 +370,6 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                             // FIX: Use 'retour_states' parameter
                             $query = http_build_query([
                                 'retour_states' => $newRetourStates,
-                                'verif_states' => $activeVerifStates,
                                 'types' => $activeTypes,
                             ]);
                             ?>
@@ -403,8 +405,6 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                 $newVerifStates[] = $state;
                             }
                             $query = http_build_query([
-                                'appro_states' => $activeApproStates,
-                                'retour_states' => $activeRetourStates,
                                 'verif_states' => $newVerifStates,
                                 'types' => $activeTypes,
                             ]);
@@ -418,7 +418,41 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                     </div>
                 </div>
 
-                
+                <!-- Fourth row: 3RD PARTY State Filters (hidden by default, appears only when 3RD PARTY type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showThirdPartyFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États 3RD PARTY :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $thirdPartyStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
+                        foreach ($thirdPartyStatesList as $state):
+                            $label = $thirdPartyLabels[$state] ?? '?';
+                            $count = $thirdPartyCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeThirdPartyStates);
+                            $newThirdPartyStates = $activeThirdPartyStates;
+                            if ($isActive) {
+                                $newThirdPartyStates = array_diff($activeThirdPartyStates, [$state]);
+                            } else {
+                                $newThirdPartyStates[] = $state;
+                            }
+                            $query = http_build_query([
+                                'third_party_states' => $newThirdPartyStates,
+                                'types' => $activeTypes,
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span>
+                                    <?= e($label) ?>
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    <?= $count ?>
+                                </span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+
             </div>
 
         </div>
@@ -448,6 +482,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                         $approList = $task['appro'] ?? [];
                         $retourList = $task['retour'] ?? [];
                         $verifStockList = $task['verif_stock'] ?? [];
+                        $thirdPartyList = $task['third_party'] ?? [];
 
                         $s = (int) ($task['is_completed'] ?? 0);
                         $isVerifStock = !empty($verifStockList);
@@ -463,13 +498,16 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                         if ($currentUserGroup === 'admin') {
                             $canEdit = true;
                             $canSetState = true;
-                        } elseif ($currentUserGroup === 'magasin' && !$isVerifStock && in_array($s, [0, 1, 2, 4, 5])) {
+                        }
+                        elseif (!$isVerifStock) {
+                            if ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
+                                $canSetState = true;
+                            }
+                        } elseif ( $currentUserGroup === 'magasin') {
                             $canSetState = true;
-                        } elseif ($isVerifStock && $currentUserGroup === 'magasin') {
-                            $canSetState = true;
-                        } elseif ($s === 0 && !in_array($currentUserGroup, ['admin', 'magasin'])) {
+                        } elseif ($s === 0 && $currentUserGroup === 'magasin') {
                             $canEdit = true;
-                        } elseif (!in_array($currentUserGroup, ['admin', 'magasin']) && in_array($s, [3])) {
+                        } elseif ( $currentUserGroup === 'magasin' && in_array($s, [3])) {
                             $canSetState = true;
                         }
 
@@ -503,6 +541,8 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                     <span class="badge bg-warning text-dark">RETOUR</span>
                                 <?php elseif (!empty($verifStockList)): ?>
                                     <span class="badge bg-success">VERIF STOCK</span>
+                                <?php elseif (!empty($thirdPartyList)): ?>
+                                    <span class="badge bg-danger">3RD PARTY</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
