@@ -2,7 +2,7 @@
     style="display: <?= $selectedType === 'expedition' ? 'block' : 'none' ?>;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge bg-danger">3RD PARTY</span>
+            <span class="badge bg-danger">EXPEDITION</span>
             <h5 class="fw-semibold mb-0">Informations Tiers</h5>
         </div>
 
@@ -10,7 +10,7 @@
 
         <div id="expeditionList">
             <?php foreach ($expeditionList as $i => $t): ?>
-                <div class="third-party-item border rounded p-2 mb-2">
+                <div class="expedition-item border rounded p-2 mb-2">
                     <div class="d-flex flex-column gap-2">
                         <div>
                             <label class="form-label fw-medium">PN</label>

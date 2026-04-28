@@ -271,7 +271,7 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
 
                     <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
-                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => '3RD PARTY'];
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => 'EXPEDITION'];
                         $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
 
                         foreach ($typeLabels as $type => $label):
@@ -542,7 +542,7 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
                                 <?php elseif (!empty($verifStockList)): ?>
                                     <span class="badge bg-success">VERIF STOCK</span>
                                 <?php elseif (!empty($expeditionList)): ?>
-                                    <span class="badge bg-danger">3RD PARTY</span>
+                                    <span class="badge bg-danger">EXPEDITION</span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
@@ -727,7 +727,7 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
                                     <?= $subIndex ?>
                                 </td>
                                 <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-danger">3RD PARTY</div>
+                                    <div class="small fw-semibold mb-1 text-danger">EXPEDITION</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($t['pn'] ?? '') ?></div>
                                         <div><strong>Qté:</strong> <?= (int) ($t['nb'] ?? 0) ?></div>
