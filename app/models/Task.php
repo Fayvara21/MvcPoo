@@ -253,12 +253,22 @@ class Task
             $verifStockByTask[$row['TaskID']][] = $row;
         }
 
+        // 3RD PARTY
+        $stmt = $db->prepare("SELECT TaskID, bp, equipement, nb, ID, destination, order_nb FROM 3rd_party WHERE TaskID IN ($placeholders)");
+        $stmt->execute($taskIds);
+        $thirdPartyRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $thirdPartyByTask = [];
+        foreach ($thirdPartyRows as $row) {
+            $thirdPartyByTask[$row['TaskID']][] = $row;
+        }
+
         // Attach all
         foreach ($tasks as &$task) {
             $id = $task['id'];
             $task['appro'] = $approByTask[$id] ?? [];
             $task['retour'] = $retourByTask[$id] ?? [];
-            $task['verif_stock'] = $verifStockByTask[$id] ?? []; // ADD THIS
+            $task['verif_stock'] = $verifStockByTask[$id] ?? [];
+            $task['third_party'] = $thirdPartyByTask[$id] ?? [];
         }
 
         return $tasks;

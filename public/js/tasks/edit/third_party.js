@@ -1,41 +1,41 @@
-function addVerifStockItem() {
-    const container = document.getElementById('verifStockList');
+function addThirdPartyItem() {
+    const container = document.getElementById('thirdPartyList');
     const index = Date.now();
     const div = document.createElement('div');
-    div.className = 'verif-stock-item border rounded p-2 mb-2';
+    div.className = 'third-party-item border rounded p-2 mb-2';
     div.innerHTML = `
         <div class="d-flex flex-column gap-2">
             <div>
-                <label class="form-label fw-medium">PN :</label>
-                <input class="form-control" name="verif_stock[${index}][pn]" placeholder="PN" required>
+                <label class="form-label fw-medium">BP :</label>
+                <input class="form-control" name="third_party[${index}][bp]" placeholder="BP">
+            </div>
+            <div>
+                <label class="form-label fw-medium">Équipement :</label>
+                <input class="form-control" name="third_party[${index}][equipement]" placeholder="Équipement">
             </div>
             <div>
                 <label class="form-label fw-medium">Quantité :</label>
-                <input class="form-control" type="number" name="verif_stock[${index}][nb]" value="1">
+                <input class="form-control" type="number" name="third_party[${index}][nb]" value="1">
             </div>
             <div>
-                <label class="form-label fw-medium">Libellé :</label>
-                <input class="form-control" name="verif_stock[${index}][name]" placeholder="Libellé">
+                <label class="form-label fw-medium">Destination :</label>
+                <input class="form-control" name="third_party[${index}][destination]" placeholder="Destination">
             </div>
             <div>
-                <label class="form-label fw-medium">Emplacement :</label>
-                <input class="form-control" name="verif_stock[${index}][location]" placeholder="Emplacement">
+                <label class="form-label fw-medium">N° Ordre :</label>
+                <input class="form-control" name="third_party[${index}][order_nb]" placeholder="N° Ordre">
             </div>
-            <div>
-                <label class="form-label fw-medium">Remarques :</label>
-                <input class="form-control" name="verif_stock[${index}][remarks]" placeholder="Remarques">
-            </div>
-            <button type="button" class="btn btn-danger btn-sm remove-verif-stock mt-1">✕</button>
+            <button type="button" class="btn btn-danger btn-sm remove-third-party mt-1">✕</button>
         </div>
     `;
     container.appendChild(div);
 }
 
-window.addVerifStockItem = addVerifStockItem;
+window.addThirdPartyItem = addThirdPartyItem;
 
-const addVerifStockBtn = document.getElementById('addVerifStock');
-if (addVerifStockBtn) {
-    const newBtn = addVerifStockBtn.cloneNode(true);
-    addVerifStockBtn.parentNode.replaceChild(newBtn, addVerifStockBtn);
-    newBtn.addEventListener('click', addVerifStockItem);
+const addThirdPartyBtn = document.getElementById('addThirdParty');
+if (addThirdPartyBtn) {
+    const newBtn = addThirdPartyBtn.cloneNode(true);
+    addThirdPartyBtn.parentNode.replaceChild(newBtn, addThirdPartyBtn);
+    newBtn.addEventListener('click', addThirdPartyItem);
 }

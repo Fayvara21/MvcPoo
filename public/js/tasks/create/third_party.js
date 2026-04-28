@@ -1,3 +1,4 @@
+// Make sure this function is defined and exposed globally
 function addThirdPartyItem() {
     const index = Date.now();
     const div = document.createElement('div');
@@ -29,11 +30,15 @@ function addThirdPartyItem() {
     document.getElementById('thirdPartyList').appendChild(div);
 }
 
+// Expose to global scope
 window.addThirdPartyItem = addThirdPartyItem;
 
-const addThirdPartyBtn = document.getElementById('addThirdParty');
-if (addThirdPartyBtn) {
-    const newBtn = addThirdPartyBtn.cloneNode(true);
-    addThirdPartyBtn.parentNode.replaceChild(newBtn, addThirdPartyBtn);
-    newBtn.addEventListener('click', addThirdPartyItem);
-}
+// Handle removal of items (if not already present)
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove')) {
+        const item = e.target.closest('.third-party-item, .border.rounded.p-2.mb-2');
+        if (item) {
+            item.remove();
+        }
+    }
+});

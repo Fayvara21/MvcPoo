@@ -10,6 +10,7 @@ require_once __DIR__ . "/../app/controllers/ContactController.php";
 require_once __DIR__ . '/../app/models/Retour.php';
 require_once __DIR__ . '/../app/models/Appro.php';
 require_once __DIR__ . '/../app/models/Verif_Stock.php';
+require_once __DIR__ . "/../app/models/ThirdParty.php";
 require_once __DIR__ . '/../app/controllers/ProjectController.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 
