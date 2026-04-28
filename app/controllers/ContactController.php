@@ -39,15 +39,16 @@ class ContactController
 
         }
 
+        require '../public/navbar.php';
+
         if (isset($_SESSION['group']) && $_SESSION['group'] === 'admin') {
             $contacts = Contact::view();
-            require '../public/navbar.php';
+            
             require "../app/views/contacts/index.php";
         }
-        else{
-            require '../public/navbar.php';
-            require '../app/views/contacts/create.php';
-        }
+
+        require '../app/views/contacts/create.php';
+
         
 
     }
