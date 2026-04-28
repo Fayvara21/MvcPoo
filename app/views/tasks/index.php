@@ -425,7 +425,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                         <?php
                         $thirdPartyStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
                         foreach ($thirdPartyStatesList as $state):
-                            $label = $thirdPartyLabels[$state] ?? '?';
+                            $label = $labels[$state] ?? '?';
                             $count = $thirdPartyCounts[$state] ?? 0;
                             $isActive = in_array($state, $activeThirdPartyStates);
                             $newThirdPartyStates = $activeThirdPartyStates;
@@ -727,7 +727,7 @@ $showThirdPartyFilters = !empty($activeTypes) && in_array('third_party', $active
                                     <?= $subIndex ?>
                                 </td>
                                 <td class="task-description" colspan="8">
-                                    <div class="small fw-semibold mb-1 text-success">3RD PARTY</div>
+                                    <div class="small fw-semibold mb-1 text-danger">3RD PARTY</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>BP:</strong>
                                             <?= e($t['bp'] ?? '') ?>
