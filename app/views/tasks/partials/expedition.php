@@ -34,10 +34,11 @@
                 Compte de transport tiers
             </label>
         </div>
-        
-        <div class="mb-2" id="expedition_account_field" style="display: none;">
+
+        <div class="compte-field" style="display: <?= (isset($t['account']) && $t['account']) ? 'block' : 'none' ?>;">
             <label class="form-label fw-medium">Compte :</label>
-            <input class="form-control" name="expedition_account" placeholder="Compte">
+            <input class="form-control" type="text" name="expedition[<?= $i ?>][account]"
+                value="<?= e($t['account'] ?? '') ?>" placeholder="Numéro de compte">
         </div>
 
         <!-- Third Party Checkbox -->
