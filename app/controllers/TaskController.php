@@ -234,10 +234,9 @@ class TaskController extends BaseController
                         $task['id'],
                         $row['pn'] ?? null,
                         $row['nb'] ?? 1,
-                        $row['name'] ?? null,
-                        $row['location'] ?? null,
-                        $row['order_nb'] ?? null,
                         $row['destination'] ?? null,
+                        $row['order_nb'] ?? null,
+                        $row['location'] ?? null,
                         $row['account'] ?? null,
                         $row['third_party'] ?? 0,
                     );

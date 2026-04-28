@@ -26,17 +26,25 @@
             <input class="form-control" name="expedition_order_nb" placeholder="N° Commande">
         </div>
 
-        <!-- Account Field (hidden by default) -->
+        <!-- Compte de transport tiers checkbox (controls account field visibility) -->
+        <div class="form-check">
+            <input class="form-check-input compte-trigger" type="checkbox" value="1" id="compte_transport_<?= $i ?>"
+                <?= isset($t['account']) && $t['account'] ? 'checked' : '' ?>>
+            <label class="form-check-label" for="compte_transport_<?= $i ?>">
+                Compte de transport tiers
+            </label>
+        </div>
+        
         <div class="mb-2" id="expedition_account_field" style="display: none;">
             <label class="form-label fw-medium">Compte :</label>
             <input class="form-control" name="expedition_account" placeholder="Compte">
         </div>
 
         <!-- Third Party Checkbox -->
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" name="expedition_third_party" value="1"
-                id="expedition_third_party">
-            <label class="form-check-label" for="expedition_third_party">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="expedition[<?= $i ?>][third_party]" value="1"
+                id="third_party_<?= $i ?>" <?= isset($t['third_party']) && $t['third_party'] ? 'checked' : '' ?>>
+            <label class="form-check-label" for="third_party_<?= $i ?>">
                 Third Party
             </label>
         </div>
