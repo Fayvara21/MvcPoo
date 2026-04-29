@@ -12,7 +12,7 @@ function addExpeditionItem() {
                 <input class="form-control" name="expedition[${index}][pn]" placeholder="PN">
             </div>
             <div class="col"> 
-                <input class="form-control" name="expedition[${index}][name]" placeholder="Nom">
+                <input class="form-control" name="expedition[${index}][name]" placeholder="Libellé">
             </div>
             <div class="col"> 
                 <input class="form-control" type="number" name="expedition[${index}][nb]" value="1" placeholder="Quantité">

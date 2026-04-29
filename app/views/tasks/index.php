@@ -442,8 +442,8 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         <?php endif; ?>
 
                         <input type="text" id="task-search" name="search" class="form-control"
-                            placeholder="Rechercher (titre, PN...)"
-                            value="<?= e($searchQuery) ?>" style="width: 300px;">
+                            placeholder="Rechercher (titre, PN, OF, etc.)" value="<?= e($searchQuery) ?>"
+                            style="width: 300px;">
 
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i>
@@ -456,7 +456,8 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         <?php endif; ?>
                     </form>
 
-                    <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary rounded-pill fw-semibold">
+                    <a href="/projects/<?= (int) $project['id'] ?>/tasks/create"
+                        class="btn btn-primary rounded-pill fw-semibold">
                         + Nouvelle demande
                     </a>
                 </div>
@@ -736,10 +737,10 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             if ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
                                 $canSetState = true;
                             }
-                        } elseif ($currentUserGroup === 'magasin') {
-                            $canSetState = true;
-                        } elseif ($s === 0 && $currentUserGroup === 'magasin') {
+                        } elseif ($s === 0 && in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
                             $canEdit = true;
+                        } elseif (in_array($currentUserGroup, ['magasin'])) {
+                            $canEdit = false;
                         } elseif ($currentUserGroup === 'magasin' && in_array($s, [3])) {
                             $canSetState = true;
                         }
@@ -1071,7 +1072,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                 });
             });
         });
-        
+
         // Auto-submit search when typing (optional - with debounce)
         let searchTimeout;
         const searchInput = document.getElementById('task-search');
@@ -1087,31 +1088,31 @@ $baseUrl = '?' . http_build_query($paginationParams);
             });
             */
         }
-        
+
         // Highlight search terms in the results (optional feature)
         <?php if (!empty($searchQuery)): ?>
-        function highlightText(element, searchTerm) {
-            if (!element || !searchTerm) return;
-            const text = element.textContent;
-            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
-            if (regex.test(text)) {
-                element.innerHTML = text.replace(regex, '<mark class="bg-warning">$1</mark>');
+            function highlightText(element, searchTerm) {
+                if (!element || !searchTerm) return;
+                const text = element.textContent;
+                const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+                if (regex.test(text)) {
+                    element.innerHTML = text.replace(regex, '<mark class="bg-warning">$1</mark>');
+                }
             }
-        }
-        
-        function escapeRegex(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-        
-        // Highlight search terms in titles and descriptions
-        document.querySelectorAll('.task-title, .description').forEach(el => {
-            highlightText(el, '<?= addslashes($searchQuery) ?>');
-        });
-        
-        // Highlight in sub-tasks
-        document.querySelectorAll('.task-description').forEach(el => {
-            highlightText(el, '<?= addslashes($searchQuery) ?>');
-        });
+
+            function escapeRegex(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+            // Highlight search terms in titles and descriptions
+            document.querySelectorAll('.task-title, .description').forEach(el => {
+                highlightText(el, '<?= addslashes($searchQuery) ?>');
+            });
+
+            // Highlight in sub-tasks
+            document.querySelectorAll('.task-description').forEach(el => {
+                highlightText(el, '<?= addslashes($searchQuery) ?>');
+            });
         <?php endif; ?>
     });
 </script>
