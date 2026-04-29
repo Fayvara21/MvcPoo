@@ -163,8 +163,7 @@ class TaskController extends BaseController
         }
 
         // FETCH DATA FOR THIS TASK
-        $verifStockList = Verif_stock::findByTaskId($task['id']);
-        $expeditionList = Expedition::findByTaskId($task['id']);
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -201,7 +200,7 @@ class TaskController extends BaseController
             }
 
             // === RETOUR ===
-            if ($type === 'retour' && !empty($_POST['retour'])) {
+            elseif ($type === 'retour' && !empty($_POST['retour'])) {
                 foreach ($_POST['retour'] as $row) {
                     Retour::create(
                         $task['id'],
@@ -214,7 +213,7 @@ class TaskController extends BaseController
             }
 
             // === VERIF STOCK ===
-            if ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
+            elseif ($type === 'verif_stock' && !empty($_POST['verif_stock'])) {
                 foreach ($_POST['verif_stock'] as $row) {
                     Verif_stock::create(
                         $task['id'],
@@ -228,7 +227,7 @@ class TaskController extends BaseController
             }
 
             // === EXPEDITION ===
-            if ($type === 'expedition' && !empty($_POST['expedition'])) {
+            elseif ($type === 'expedition' && !empty($_POST['expedition'])) {
                 foreach ($_POST['expedition'] as $row) {
                     Expedition::create(
                         $task['id'],
@@ -242,10 +241,11 @@ class TaskController extends BaseController
                     );
                 }
             }
+            var_dump($_POST);
 
             // Redirect to avoid duplicate POST
-            header("Location: /projects/{$task['project_id']}/tasks");
-            exit;
+            // header("Location: /projects/{$task['project_id']}/tasks");
+            //exit;
         }
 
         // PASS DATA TO THE VIEW
