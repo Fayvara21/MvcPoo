@@ -1,5 +1,5 @@
-function addExpeditionItem() {
-    const container = document.getElementById('expeditionList');
+function addApproItem() {
+    const container = document.getElementById('approList');
     const index = Date.now();
     const div = document.createElement('div');
     div.className = 'expedition-item border rounded p-2 mb-2';
@@ -7,18 +7,26 @@ function addExpeditionItem() {
         <div class="d-flex flex-column gap-2">
             <div>
                 <label class="form-label fw-medium">PN :</label>
-                <input class="form-control" name="expedition[${index}][pn]" placeholder="PN">
+                <input class="form-control" name="appro[${index}][pn]" placeholder="PN">
             </div>
             <div>
                 <label class="form-label fw-medium">Nom :</label>
-                <input class="form-control" name="expedition[${index}][name]" placeholder="Nom">
+                <input class="form-control" name="appro[${index}][name]" placeholder="Nom">
             </div>
             <div>
                 <label class="form-label fw-medium">Quantité :</label>
-                <input class="form-control" type="number" name="expedition[${index}][nb]" value="1">
+                <input class="form-control" type="number" name="appro[${index}][nb]" value="1">
             </div>
             <button type="button" class="btn btn-danger btn-sm remove-expedition mt-1">✕</button>
         </div>
     `;
     container.appendChild(div);
+}
+window.addApproItem = addApproItem;
+
+const addApproBtn = document.getElementById('addAppro');
+if (addApproBtn) {
+    const newBtn = addApproBtn.cloneNode(true);
+    addApproBtn.parentNode.replaceChild(newBtn, addApproBtn);
+    newBtn.addEventListener('click', addApproItem);
 }
