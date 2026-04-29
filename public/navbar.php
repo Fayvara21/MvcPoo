@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<nav class="navbar navbar-expand-lg custom-navbar sticky-top px-3" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg custom-navbar sticky-top px-3 backdrop-blur-sm" data-bs-theme="dark">
   <div class="container-fluid custom-container">
 
     <!-- Logo -->

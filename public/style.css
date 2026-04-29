@@ -580,6 +580,12 @@ form {
   white-space: nowrap;
 }
 
+.backdrop-blur-sm {
+    --bs-backdrop-blur: blur(4px);
+    backdrop-filter: var(--bs-backdrop-blur);
+    -webkit-backdrop-filter: var(--bs-backdrop-blur);
+}
+
 /* Revert hover effect - buttons become white with dark text */
 .custom-navbar .btn-outline-light:hover {
   background-color: white;
