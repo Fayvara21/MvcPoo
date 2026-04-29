@@ -44,7 +44,7 @@ class AuthController
 
             $part = $_POST['part'];
 
-            $allowed = ['magasin', 'adv', 'part145', 'part21', 'be', 'qualite'];
+            $allowed = ['magasin', 'adv', 'part145', 'part21', 'be', 'qualite', 'achat'];
 
             // Only admin can create admin accounts
             if (isset($_SESSION['group']) && $_SESSION['group'] === 'admin') {

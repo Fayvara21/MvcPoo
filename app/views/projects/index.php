@@ -164,9 +164,10 @@
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Implémentation de la pagination des demandes</li>
-                    <li class="lis-t-group-item">Modification de la logique de recherche:</li>
+                    <li class="list-group-item">Modification de la logique de recherche:</li>
                     <li class="list-group-item">- La recherche se fait désormais dans tous les champs (titre, description, PN, OF, etc.)</li>
                     <li class="list-group-item">- Les résultats de la recherche sont compatibles avec les filtres</li>
+                    <li class="list-group-item">Ajout du service Achat dans la liste des services</li>
                 </ul>
             </div>
 

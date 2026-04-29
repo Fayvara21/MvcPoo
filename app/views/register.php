@@ -43,6 +43,7 @@
 					<option value="part21">PART21</option>
 					<option value="qualite">Qualité</option>
 					<option value="be">BE</option>
+					<option value="achat">Achat</option>
 
 					<?php if ($_SESSION['group'] === 'admin'): ?>
 						<option value="admin">Admin</option>
