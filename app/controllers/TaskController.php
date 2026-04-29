@@ -112,7 +112,7 @@ class TaskController extends BaseController
                 }
             }
 
-            // === expedition ===
+            // === EXPEDITION ===
             if ($type === 'expedition' && !empty($_POST['expedition'])) {
                 $expeditionRows = $_POST['expedition'];
 
@@ -120,6 +120,8 @@ class TaskController extends BaseController
                 $sharedOrderNb = $_POST['expedition_order_nb'] ?? null;
                 $sharedLocation = $_POST['expedition_location'] ?? null;
                 $sharedAccount = $_POST['expedition_account'] ?? null;
+                $sharedThirdParty = isset($_POST['expedition_third_party']) ? 1 : 0;
+
 
                 foreach ($expeditionRows as $row) {
                     Expedition::create(
@@ -130,8 +132,8 @@ class TaskController extends BaseController
                         $sharedOrderNb ?? $row['order_nb'] ?? null,
                         $sharedLocation ?? $row['location'] ?? null,
                         $sharedAccount ?? $row['account'] ?? null,
-                        $row['third_party'] ?? 0,
-                        );
+                        $sharedThirdParty,
+                    );
                 }
             }
 
@@ -244,8 +246,8 @@ class TaskController extends BaseController
             var_dump($_POST);
 
             // Redirect to avoid duplicate POST
-            // header("Location: /projects/{$task['project_id']}/tasks");
-            //exit;
+            header("Location: /projects/{$task['project_id']}/tasks");
+            exit;
         }
 
         // PASS DATA TO THE VIEW
