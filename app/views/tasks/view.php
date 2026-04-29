@@ -280,6 +280,8 @@
                         } else if (task.isVerifStock) {
                             reference = task.verifStockFirst.pn ?? '-';
                         } else if (task.isExpedition) {
+                            reference = task.expeditionFirst.pn ?? '-';
+                        }
 
                             const rowClass = getDeadlineClassJS(task.due_date);
 
@@ -310,8 +312,7 @@
                                 </td>
                             </tr>
                         `);
-                        }
-                    });
+                        });
 
                     tbody.innerHTML = html.join('');
                 });
