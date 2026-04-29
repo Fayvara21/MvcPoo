@@ -44,7 +44,7 @@
                         <div>
                             <label class="form-label fw-medium">Compte</label>
                             <input class="form-control" name="expedition[<?= $i ?>][account]"
-                                value="<?= e($t['account'] ?? '') ?>">
+                                value="<?= e($t['account'] ?? 'ASI') ?>">
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="expedition[<?= $i ?>][third_party]"

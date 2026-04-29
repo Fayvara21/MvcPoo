@@ -96,14 +96,18 @@ function getDeadlineClass($dueDate)
                                         $appro = $task['appro'] ?? [];
                                         $retour = $task['retour'] ?? [];
                                         $verifStock = $task['verif_stock'] ?? [];
+                                        $expedition = $task['expedition'] ?? [];
 
                                         $isAppro = !empty($appro);
                                         $isRetour = !empty($retour);
                                         $isVerifStock = !empty($verifStock);
+                                        $isExpedition = !empty($expedition);
+
 
                                         $approFirst = $appro[0] ?? [];
                                         $retourFirst = $retour[0] ?? [];
                                         $verifStockFirst = $verifStock[0] ?? [];
+                                        $expeditionFirst = $expedition[0] ?? [];
 
                                         $deadlineClass = getDeadlineClass($task['due_date']);
 
@@ -118,6 +122,8 @@ function getDeadlineClass($dueDate)
                                                     <span class="badge bg-warning text-dark">RETOUR</span>
                                                 <?php elseif ($isVerifStock): ?>
                                                     <span class="badge bg-success">VERIF STOCK</span>
+                                                <?php elseif ($isExpedition): ?>
+                                                    <span class="badge bg-info">EXPEDITION</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-secondary">AUTRE</span>
                                                 <?php endif; ?>
@@ -126,7 +132,7 @@ function getDeadlineClass($dueDate)
                                             <td>
                                                 <?= $isAppro
                                                     ? ($approFirst['pn'] ?? '-')
-                                                    : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : '-')) ?>
+                                                    : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : ($isExpedition ? ($expeditionFirst['pn'] ?? '-') : '-'))) ?>
                                             </td>
                                             <td>
                                                 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
@@ -226,14 +232,17 @@ function getDeadlineClass($dueDate)
                     const appro = task.appro || [];
                     const retour = task.retour || [];
                     const verifStock = task.verif_stock || [];
+                    const expedition = task.expedition || [];
 
                     task.approFirst = appro[0] || {};
                     task.retourFirst = retour[0] || {};
                     task.verifStockFirst = verifStock[0] || {};
+                    task.expeditionFirst = expedition[0] || {};
 
                     task.isAppro = appro.length > 0;
                     task.isRetour = retour.length > 0;
                     task.isVerifStock = verifStock.length > 0;
+                    task.isExpedition = expedition.length > 0;
 
                     if (!projects[task.project_id]) {
                         projects[task.project_id] = { title: task.project_title, tasks: [] };
@@ -257,6 +266,8 @@ function getDeadlineClass($dueDate)
                             typeBadge = '<span class="badge bg-warning text-dark">RETOUR</span>';
                         } else if (task.isVerifStock) {
                             typeBadge = '<span class="badge bg-success">VERIF STOCK</span>';
+                        } else if (task.isExpedition) {
+                            typeBadge = '<span class="badge bg-info">EXPEDITION</span>';
                         } else {
                             typeBadge = '<span class="badge bg-secondary">AUTRE</span>';
                         }
@@ -268,7 +279,7 @@ function getDeadlineClass($dueDate)
                             reference = task.retourFirst.pn ?? '-';
                         } else if (task.isVerifStock) {
                             reference = task.verifStockFirst.pn ?? '-';
-                        }
+                        } else if (task.isExpedition) {
 
                         const rowClass = getDeadlineClassJS(task.due_date);
 
