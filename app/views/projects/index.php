@@ -168,6 +168,7 @@
                     <li class="list-group-item">- La recherche se fait désormais dans tous les champs (titre, description, PN, OF, etc.)</li>
                     <li class="list-group-item">- Les résultats de la recherche sont compatibles avec les filtres</li>
                     <li class="list-group-item">Ajout du service Achat dans la liste des services</li>
+                    <li class="list-group-item">Ajout d'animations et d'autres modifications visuelles</li>
                 </ul>
             </div>
 

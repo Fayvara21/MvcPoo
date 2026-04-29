@@ -688,8 +688,9 @@ form {
         height: 28px;    /* Even smaller on XS */
     }
 }
-/* ===== ELEGANT FOCUS BLUR BACKGROUND ===== */
-/* Smooth, cinematic focus transitions */
+
+
+/* ===== SCALING BLUR BACKGROUND WITH FOCUS ===== */
 
 /* Base state */
 body:has(.login), 
@@ -697,7 +698,7 @@ body:has(.register) {
   position: relative;
 }
 
-/* Dreamy blur layer with soft start */
+/* Dreamy blur layer with default scale */
 body:has(.login)::before, 
 body:has(.register)::before {
   content: "";
@@ -711,64 +712,36 @@ body:has(.register)::before {
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  filter: blur(4px) brightness(0.98);
+  filter: blur(6px);
   z-index: -1;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  transform: scale(1);
+  transform: scale(1.02);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Elegant focus effect */
+/* Focus effect - scales up more */
 body:has(.login :focus)::before, 
 body:has(.register :focus)::before {
-  filter: blur(14px) brightness(0.92) saturate(1.1);
-  transform: scale(1.02);
-  transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  transform: scale(1.05);
+  filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* Subtle pulsing animation when no focus (ambient) */
-@keyframes ambientBreath {
-  0%, 100% {
-    filter: blur(4px) brightness(0.98);
-  }
-  50% {
-    filter: blur(5px) brightness(0.96);
-  }
+/* Optional hover effect */
+body:has(.login):hover::before, 
+body:has(.register):hover::before {
+  transform: scale(1.03);
+  filter: blur(8px);
 }
 
-body:has(.login):not(:has(:focus))::before,
-body:has(.register):not(:has(:focus))::before {
-  animation: ambientBreath 8s ease-in-out infinite;
-}
-
-/* Focus ring replacement - soft glow on inputs */
-.login input:focus, 
-.register input:focus,
-.login textarea:focus,
-.register textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 0 0 6px rgba(255, 255, 255, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-/* Optional: Elegant transition for form elements */
 .login, .register {
   min-height: 100vh;
   padding: 1rem 0;
   flex-direction: column;
-  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 .card {
-  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Subtle scale on focus for inputs */
-.login input, .register input {
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.login input:focus, .register input:focus {
-  transform: scale(1.01);
+  animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 /* Responsive */
@@ -782,60 +755,23 @@ body:has(.register):not(:has(:focus))::before {
   body:has(.login)::before, 
   body:has(.register)::before {
     background-attachment: scroll;
+    transform: scale(1.02);
   }
   
-  /* Smoother focus on mobile */
-  .login input:focus, .register input:focus {
-    transform: scale(1.02);
+  body:has(.login :focus)::before, 
+  body:has(.register :focus)::before {
+    transform: scale(1.05);
   }
 }
 
-/* Elegant fade + slide animation */
+/* Animations */
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
-    filter: blur(2px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
-
-/* Optional: Smooth scroll behavior for focus */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Focus visual effect for the entire form container */
-.login:has(:focus), .register:has(:focus) {
-  position: relative;
-}
-
-.login:has(:focus)::after, 
-.register:has(:focus)::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-              rgba(255,255,255,0.05) 0%, 
-              transparent 100%);
-  z-index: 1;
-  animation: subtleReveal 0.4s ease-out;
-}
-
-@keyframes subtleReveal {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
