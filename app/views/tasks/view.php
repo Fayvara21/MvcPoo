@@ -18,45 +18,45 @@
     <?php
 
     $allProjects = Task::getAllProjects();
-$tasks = Task::getAllTasksForAllProjects();
+    $tasks = Task::getAllTasksForAllProjects();
 
-$projects = [];
+    $projects = [];
 
-foreach ($allProjects as $p) {
-    $projects[$p['id']] = [
-        'title' => $p['title'],
-        'tasks' => [],
-    ];
-}
-
-foreach ($tasks as $task) {
-    if (isset($projects[$task['project_id']])) {
-        $projects[$task['project_id']]['tasks'][] = $task;
+    foreach ($allProjects as $p) {
+        $projects[$p['id']] = [
+            'title' => $p['title'],
+            'tasks' => [],
+        ];
     }
-}
 
-function getDeadlineClass($dueDate)
-{
-    if (!$dueDate) {
+    foreach ($tasks as $task) {
+        if (isset($projects[$task['project_id']])) {
+            $projects[$task['project_id']]['tasks'][] = $task;
+        }
+    }
+
+    function getDeadlineClass($dueDate)
+    {
+        if (!$dueDate) {
+            return '';
+        }
+
+        $due = strtotime($dueDate);
+        $todayStart = strtotime('today');
+        $tomorrowStart = strtotime('tomorrow');
+
+        if ($due < $todayStart) {
+            return 'table-danger'; // expired (past)
+        }
+
+        if ($due >= $todayStart && $due < $tomorrowStart) {
+            return 'table-warning'; // today
+        }
+
         return '';
     }
 
-    $due = strtotime($dueDate);
-    $todayStart = strtotime('today');
-    $tomorrowStart = strtotime('tomorrow');
-
-    if ($due < $todayStart) {
-        return 'table-danger'; // expired (past)
-    }
-
-    if ($due >= $todayStart && $due < $tomorrowStart) {
-        return 'table-warning'; // today
-    }
-
-    return '';
-}
-
-?>
+    ?>
 
     <div id="taskContainer">
 
@@ -281,22 +281,22 @@ function getDeadlineClass($dueDate)
                             reference = task.verifStockFirst.pn ?? '-';
                         } else if (task.isExpedition) {
 
-                        const rowClass = getDeadlineClassJS(task.due_date);
+                            const rowClass = getDeadlineClassJS(task.due_date);
 
-                        const loadingIcon = task.is_completed === 1
-                            ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
-                            : '';
+                            const loadingIcon = task.is_completed === 1
+                                ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
+                                : '';
 
-                        let designationOrRef = '-';
-                        if (task.isAppro) {
-                            designationOrRef = task.approFirst.designation ?? '-';
-                        } else if (task.isRetour) {
-                            designationOrRef = task.retourFirst.sn ?? '-';
-                        } else if (task.isVerifStock) {
-                            designationOrRef = task.verifStockFirst.name ?? '-';
-                        }
+                            let designationOrRef = '-';
+                            if (task.isAppro) {
+                                designationOrRef = task.approFirst.designation ?? '-';
+                            } else if (task.isRetour) {
+                                designationOrRef = task.retourFirst.sn ?? '-';
+                            } else if (task.isVerifStock) {
+                                designationOrRef = task.verifStockFirst.name ?? '-';
+                            }
 
-                        html.push(`
+                            html.push(`
                             <tr class="${rowClass}">
                                 <td class="ps-4 fw-medium">${task.id}</td>
                                 <td>${typeBadge}</td>
@@ -310,6 +310,7 @@ function getDeadlineClass($dueDate)
                                 </td>
                             </tr>
                         `);
+                        }
                     });
 
                     tbody.innerHTML = html.join('');
