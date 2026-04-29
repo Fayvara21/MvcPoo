@@ -132,7 +132,7 @@ class TaskController extends BaseController
                         $sharedDestination ?? $row['destination'] ?? null,
                         $sharedOrderNb ?? $row['order_nb'] ?? null,
                         $sharedLocation ?? $row['location'] ?? null,
-                        !empty($sharedAccount) ? $row['account'] : 'CHOCOLAT',
+                        !empty($sharedAccount) ? $row['account'] : 'ASI',
                         $sharedThirdParty,
                     );
                 }
@@ -239,7 +239,7 @@ class TaskController extends BaseController
                         $row['location'] ?? null,
                         $row['order_nb'] ?? null,
                         $row['destination'] ?? null,
-                        !empty($row['account']) ? $row['account'] : 'CHOCOLAT',
+                        !empty($row['account']) ? $row['account'] : 'ASI',
                         isset($row['third_party']) ? 1 : 0,
                     );
                 }
