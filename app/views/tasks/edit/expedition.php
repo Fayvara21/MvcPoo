@@ -6,7 +6,7 @@
             <h5 class="fw-semibold mb-0">Informations Tiers</h5>
         </div>
 
-        <button type="button" id="addexpedition" class="btn btn-sm btn-danger mb-3">+ Ajouter Équipement</button>
+        <button type="button" id="addExpedition" class="btn btn-sm btn-danger mb-3">+ Ajouter Équipement</button>
 
         <div id="expeditionList">
             <?php foreach ($expeditionList as $i => $t): ?>
