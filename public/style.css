@@ -689,8 +689,7 @@ form {
     }
 }
 
-
-/* ===== SIMPLE BLUR BACKGROUND WITH ANIMATIONS ===== */
+/* ===== BLUR BACKGROUND WITH FOCUS EFFECT ===== */
 
 /* Base blur backdrop */
 body:has(.login), 
@@ -717,14 +716,19 @@ body:has(.register)::before {
   transition: filter 0.4s ease-out;
 }
 
-/* Interactive animation - blur intensifies on hover */
-body:has(.login):hover::before, 
-body:has(.register):hover::before {
-  filter: blur(10px);
+/* Focus effect - when any input inside login/register is focused */
+body:has(.login :focus)::before, 
+body:has(.register :focus)::before {
+  filter: blur(12px);
   transition: filter 0.3s ease-out;
 }
 
-/* Entrance animation for forms */
+/* Optional hover effect (less intense than focus) */
+body:has(.login):hover::before, 
+body:has(.register):hover::before {
+  filter: blur(8px);
+}
+
 .login, .register {
   min-height: 100vh;
   padding: 1rem 0;
@@ -732,7 +736,6 @@ body:has(.register):hover::before {
   animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* Card entrance animation */
 .card {
   animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
