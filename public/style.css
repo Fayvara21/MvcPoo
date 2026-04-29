@@ -721,6 +721,7 @@ body:has(.register)::before {
 body:has(.login):hover::before, 
 body:has(.register):hover::before {
   filter: blur(10px);
+  transition: filter 0.3s ease-out;
 }
 
 /* Entrance animation for forms */
