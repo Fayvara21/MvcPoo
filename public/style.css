@@ -499,6 +499,10 @@ form {
 
 }
 
+.project-table{
+  
+}
+
 .login::before, .register::before {
     background-size: contain; /* or try 'cover' with responsive adjustments */
     background-position: center top;

@@ -123,7 +123,7 @@ function getDeadlineClass($dueDate)
                                                 <?php elseif ($isVerifStock): ?>
                                                     <span class="badge bg-success">VERIF STOCK</span>
                                                 <?php elseif ($isExpedition): ?>
-                                                    <span class="badge bg-info">EXPEDITION</span>
+                                                    <span class="badge bg-danger">EXPEDITION</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-secondary">AUTRE</span>
                                                 <?php endif; ?>
