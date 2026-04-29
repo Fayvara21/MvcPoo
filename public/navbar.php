@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <nav class="navbar navbar-expand-lg custom-navbar sticky-top px-3" data-bs-theme="dark">
-  <div class="container-fluid">
+  <div class="container-fluid custom-container">
 
     <!-- Logo -->
     <a class="navbar-brand d-flex align-items-center" href="/">

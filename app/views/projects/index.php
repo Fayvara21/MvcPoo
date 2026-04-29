@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid custom-container px-4 py-4">
     <!-- Header -->
 
     <div class="card shadow-sm border-0 mb-4">
