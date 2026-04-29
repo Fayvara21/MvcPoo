@@ -442,21 +442,21 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         <?php endif; ?>
 
                         <input type="text" id="task-search" name="search" class="form-control"
-                            placeholder="Rechercher par titre, description, PN, OF, SN..."
+                            placeholder="Rechercher (titre, PN...)"
                             value="<?= e($searchQuery) ?>" style="width: 300px;">
 
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i> Rechercher
+                            <i class="bi bi-search"></i>
                         </button>
 
                         <?php if (!empty($searchQuery)): ?>
                             <a href="<?= $baseUrl ?>" class="btn btn-outline-secondary">
-                                <i class="bi bi-x-circle"></i> Effacer
+                                <i class="bi bi-x-circle"></i>
                             </a>
                         <?php endif; ?>
                     </form>
 
-                    <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
+                    <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary rounded-pill fw-semibold">
                         + Nouvelle demande
                     </a>
                 </div>
