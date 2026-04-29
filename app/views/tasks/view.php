@@ -267,7 +267,7 @@
                         } else if (task.isVerifStock) {
                             typeBadge = '<span class="badge bg-success">VERIF STOCK</span>';
                         } else if (task.isExpedition) {
-                            typeBadge = '<span class="badge bg-info">EXPEDITION</span>';
+                            typeBadge = '<span class="badge bg-danger">EXPEDITION</span>';
                         } else {
                             typeBadge = '<span class="badge bg-secondary">AUTRE</span>';
                         }
