@@ -129,9 +129,9 @@ class TaskController extends BaseController
                         $row['pn'] ?? null,
                         $row['name'] ?? null,
                         $row['nb'] ?? 1,
-                        $sharedDestination ?? $row['destination'] ?? null,
-                        $sharedOrderNb ?? $row['order_nb'] ?? null,
                         $sharedLocation ?? $row['location'] ?? null,
+                        $sharedOrderNb ?? $row['order_nb'] ?? null,
+                        $sharedDestination ?? $row['destination'] ?? null,
                         !empty($sharedAccount) ? $row['account'] : 'ASI',
                         $sharedThirdParty,
                     );

@@ -24,7 +24,7 @@ class Expedition
     /**
      * Create multiple expedition entries
      */
-    public static function createMultiple($taskId, array $expeditionRows, $sharedDestination = null, $sharedOrderNb = null, $sharedLocation = null, $sharedAccount = "ASI", $sharedExpedition = null)
+    public static function createMultiple($taskId, array $expeditionRows,$sharedLocation = null , $sharedOrderNb = null, $sharedDestination = null, $sharedAccount = "ASI", $sharedExpedition = null)
     {
         $db = Database::getInstance()->getPdo();
 
@@ -71,16 +71,16 @@ class Expedition
     /**
      * Edit multiple expedition rows (delete old, insert new)
      */
-    public static function editMultiple($taskId, array $expeditionRows, $sharedDestination = null, $sharedOrderNb = null, $sharedLocation = null, $sharedAccount = "ASI", $sharedExpedition = null)
+    public static function editMultiple($taskId, array $expeditionRows, $sharedLocation = null, $sharedOrderNb = null, $sharedDestination = null, $sharedAccount = "ASI", $sharedExpedition = null)
     {
         self::deleteByTaskId($taskId);
-        self::createMultiple($taskId, $expeditionRows, $sharedDestination, $sharedOrderNb, $sharedLocation, $sharedAccount, $sharedExpedition);
+        self::createMultiple($taskId, $expeditionRows, $sharedLocation, $sharedOrderNb, $sharedDestination, $sharedAccount, $sharedExpedition);
     }
 
     /**
      * Update multiple expedition rows (preserve IDs)
      */
-    public static function updateMultiple($taskId, array $expeditionRows, $sharedDestination = null, $sharedOrderNb = null, $sharedLocation = null, $sharedAccount = "ASI", $sharedExpedition = null)
+    public static function updateMultiple($taskId, array $expeditionRows, $sharedLocation = null, $sharedOrderNb = null, $sharedDestination = null, $sharedAccount = "ASI", $sharedExpedition = null)
     {
         $db = Database::getInstance()->getPdo();
 

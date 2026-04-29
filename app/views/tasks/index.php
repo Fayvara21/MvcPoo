@@ -737,10 +737,11 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             if ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
                                 $canSetState = true;
                             }
-                        } elseif ($s === 0 && in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
+                            elseif ($s === 0 && $currentUserGroup != "magasin" && in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
+                                $canEdit = true;
+                            }
+                        } elseif ($s === 0 && $currentUserGroup != 'magasin') {
                             $canEdit = true;
-                        } elseif (in_array($currentUserGroup, ['magasin'])) {
-                            $canEdit = false;
                         } elseif ($currentUserGroup === 'magasin' && in_array($s, [3])) {
                             $canSetState = true;
                         }
