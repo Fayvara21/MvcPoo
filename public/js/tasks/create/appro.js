@@ -4,7 +4,7 @@ function addApproItem() {
     const div = document.createElement('div');
     div.className = 'expedition-item border rounded p-2 mb-2';
     div.innerHTML = `
-        <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-row gap-2">
             <div>
                 <label class="form-label fw-medium">PN :</label>
                 <input class="form-control" name="appro[${index}][pn]" placeholder="PN">
