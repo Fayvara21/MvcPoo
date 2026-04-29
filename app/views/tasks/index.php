@@ -423,7 +423,7 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
                     <span class="text-muted small me-2">États EXPEDITION :</span>
                     <div class="d-flex gap-2 flex-wrap">
                         <?php
-                        $expeditionStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
+                        $expeditionStatesList = [0, 1, 2, 3, 4, 5];
                         foreach ($expeditionStatesList as $state):
                             $label = $labels[$state] ?? '?';
                             $count = $expeditionCounts[$state] ?? 0;

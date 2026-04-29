@@ -163,7 +163,8 @@
                 <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>
 
                 <ul class="list-group list-group-flush">
-
+                    <li class="list-group-item">Ajout du type de tache "Expédition"</li>
+                    <li class="list-group-item">Ajout d'un champ "compte" dans les demandes d'expédition, avec valeur par défaut "ASI"</li>
                     <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
                     <li class="list-group-item">Les boutons d'actions sont desormais formattées en listes déroulantes</li>
                     <li class="list-group-item">Les changements d'état auront un pop-up de confirmation pour éviter les erreurs</li>
