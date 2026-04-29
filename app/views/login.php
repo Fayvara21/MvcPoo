@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
-<div class="login d-flex justify-content-center align-items-center vh-100">
+<div class="login dream-state d-flex justify-content-center align-items-center vh-100">
 	
 	<div class="card shadow p-4" style="width:350px;">
 	
