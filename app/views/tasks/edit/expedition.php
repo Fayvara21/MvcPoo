@@ -50,7 +50,7 @@
                             <input class="form-check-input" type="checkbox" name="expedition[<?= $i ?>][third_party]"
                                 value="1" id="third_party_<?= $i ?>" <?= isset($t['third_party']) && $t['third_party'] ? 'checked' : '' ?>>
                             <label class="form-check-label" for="third_party_<?= $i ?>">
-                                Tiers
+                                Third Party
                             </label>
                         </div>
                         <?php if (!empty($t['ID'])): ?>

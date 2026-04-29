@@ -498,16 +498,15 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
                         if ($currentUserGroup === 'admin') {
                             $canEdit = true;
                             $canSetState = true;
-                        }
-                        elseif (!$isVerifStock) {
+                        } elseif (!$isVerifStock) {
                             if ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
                                 $canSetState = true;
                             }
-                        } elseif ( $currentUserGroup === 'magasin') {
+                        } elseif ($currentUserGroup === 'magasin') {
                             $canSetState = true;
                         } elseif ($s === 0 && $currentUserGroup === 'magasin') {
                             $canEdit = true;
-                        } elseif ( $currentUserGroup === 'magasin' && in_array($s, [3])) {
+                        } elseif ($currentUserGroup === 'magasin' && in_array($s, [3])) {
                             $canSetState = true;
                         }
 
@@ -735,11 +734,13 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
                                     </div>
                                     <div class="small d-flex gap-3">
                                         <div><strong>Emplacement:</strong> <?= e($t['location'] ?? '') ?></div>
-                                        <div><strong>N° Commande:</strong> <?= e($t['order_number'] ?? '') ?></div>
-                                        <div><strong>Destinataire:</strong> <?= e($t['recipient'] ?? '') ?></div>
-                                        <div><strong>Compte:</strong> <?= e($t['account'] ?? '') ?></div>                                        <div>
+                                        <div><strong>N° Commande:</strong> <?= e($t['order_nb'] ?? '') ?></div>
+                                        <div><strong>Destinataire:</strong> <?= e($t['destination'] ?? '') ?></div>
+                                        <div><strong>Compte:</strong> <?= e($t['account'] ?? '') ?></div>
+                                        <div>
                                             <strong>3rd Party:</strong>
-                                            <input type="checkbox" disabled <?= !empty($t['is_third_party']) ? 'checked' : '' ?>>
+                                            <input type="checkbox" disabled <?= !empty($t['third_party']) ? 'checked' : '' ?>>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
