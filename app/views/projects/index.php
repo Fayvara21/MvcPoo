@@ -160,7 +160,7 @@
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
         <div class="mb-3 p-4 border rounded shadow-sm bg-light">
-                <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>
+                <h4 class="mb-2 text-primary">Mise à jour v260429:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Implémentation de la pagination des demandes</li>

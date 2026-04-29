@@ -479,34 +479,6 @@ form {
     margin: 0 1rem; /* relative margin for small screens */
 }
 
-.login, .register {
-    min-height: 100vh;
-    padding: 1rem 0; /* prevent cut-off on tall narrow screens */
-    flex-direction: column; /* stack elements on portrait */
-}
-
-@media (max-width: 700px) {
-    .login, .register {
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 3rem; /* space below navbar */
-    }
-
-    #taskContainer {
-        gap: 0.25rem;
-    }
-
-
-}
-
-.project-table{
-  
-}
-
-.login::before, .register::before {
-    background-size: contain; /* or try 'cover' with responsive adjustments */
-    background-position: center top;
-}
 
 .custom-navbar {
   background-color: #013966;
@@ -717,11 +689,19 @@ form {
     }
 }
 
-body:has(.login), body:has(.register) {
+/* ===== ARTISTIC BLUR BACKGROUND SYSTEM ===== */
+/* Dreamy overlay effect with interactive states */
+
+/* Base blur backdrop */
+body:has(.glass-pane), 
+body:has(.dream-state) {
   position: relative;
+  overflow-x: hidden;
 }
 
-body:has(.login)::before, body:has(.register)::before{
+/* Animated blur layer */
+body:has(.glass-pane)::before, 
+body:has(.dream-state)::before {
   content: "";
   position: fixed;
   top: 0;
@@ -733,6 +713,120 @@ body:has(.login)::before, body:has(.register)::before{
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  filter: blur(6px); /* Add blur effect */
+  filter: blur(8px) brightness(0.9);
+  z-index: -2;
+  transition: filter 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: filter;
+}
+
+/* Interactive focus enhancement */
+body:has(.glass-pane:hover)::before,
+body:has(.dream-state:focus-within)::before {
+  filter: blur(12px) brightness(0.85) saturate(1.2);
+  transform: scale(1.02);
+  transition: filter 0.4s ease-out;
+}
+
+/* Secondary ambient overlay for depth */
+body:has(.glass-pane)::after,
+body:has(.dream-state)::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.3) 100%);
+  pointer-events: none;
   z-index: -1;
+  opacity: 0.6;
+}
+
+/* Main container styling - glass morphism effect */
+.glass-pane, 
+.dream-state {
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  transition: all 0.3s ease;
+}
+
+/* Interactive hover state on the pane itself */
+.glass-pane:hover,
+.dream-state:hover {
+  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Content cards inside - frosty aesthetic */
+.glass-pane > *,
+.dream-state > * {
+  background: rgba(20, 20, 30, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-pane > *:hover,
+.dream-state > *:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 700px) {
+  .glass-pane, 
+  .dream-state {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+    min-height: auto;
+  }
+  
+  .glass-pane > *,
+  .dream-state > * {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    width: 90%;
+  }
+  
+  /* Soft edge for mobile */
+  body:has(.glass-pane)::before,
+  body:has(.dream-state)::before {
+    background-attachment: scroll;
+    filter: blur(6px);
+  }
+}
+
+/* Optional loading animation */
+@keyframes dreamEntrance {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(2px);
+    transform: scale(1);
+  }
+}
+
+.glass-pane, 
+.dream-state {
+  animation: dreamEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Extra artistic flair - vignette on blur */
+body:has(.glass-pane)::before,
+body:has(.dream-state)::before {
+  mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
 }
