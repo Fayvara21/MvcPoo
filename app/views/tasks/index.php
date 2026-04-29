@@ -230,16 +230,143 @@ $showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeT
 
 
 // ============================================================
-// 5. PAGINATION SETUP
+// 5. SEARCH FUNCTIONALITY (with URL parameter)
 // ============================================================
-$itemsPerPage = 20; // Number of tasks per page
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+$searchQuery = htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8');
+
+// ============================================================
+// 6. FILTER TASKS BASED ON ACTIVE FILTERS AND SEARCH
+// ============================================================
+$tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, $activeRetourStates, $activeVerifStates, $activeExpeditionStates, $activeTypes, $searchQuery) {
+    $state = (int) $task['is_completed'];
+    $hasAppro = !empty($task['appro']);
+    $hasRetour = !empty($task['retour']);
+    $hasVerifStock = !empty($task['verif_stock']);
+    $hasExpedition = !empty($task['expedition']);
+
+    // Determine specific task type
+    $specificType = null;
+    if ($hasVerifStock) {
+        $specificType = 'verif_stock';
+    } elseif ($hasAppro) {
+        $specificType = 'appro';
+    } elseif ($hasRetour) {
+        $specificType = 'retour';
+    } elseif ($hasExpedition) {
+        $specificType = 'expedition';
+    }
+
+    // Type match logic - if no active types, show all
+    $typeMatch = true;
+    if (!empty($activeTypes)) {
+        $typeMatch = in_array($specificType, $activeTypes);
+    }
+
+    if (!$typeMatch) {
+        return false;
+    }
+
+    // State match - completely separate by type
+    $stateMatch = true;
+
+    if ($hasVerifStock) {
+        // VERIF STOCK task
+        if (!empty($activeVerifStates)) {
+            $stateMatch = in_array($state, $activeVerifStates);
+        }
+    } elseif ($hasAppro) {
+        // APPRO task
+        if (!empty($activeApproStates)) {
+            $stateMatch = in_array($state, $activeApproStates);
+        }
+    } elseif ($hasRetour) {
+        // RETOUR task
+        if (!empty($activeRetourStates)) {
+            $stateMatch = in_array($state, $activeRetourStates);
+        }
+    } elseif ($hasExpedition) {
+        // expedition task
+        if (!empty($activeExpeditionStates)) {
+            $stateMatch = in_array($state, $activeExpeditionStates);
+        }
+    }
+
+    if (!$stateMatch) {
+        return false;
+    }
+
+    // SEARCH MATCH LOGIC
+    if (!empty($searchQuery)) {
+        $searchableContent = '';
+
+        // Add task main info
+        $searchableContent .= strtolower($task['title'] ?? '') . ' ';
+        $searchableContent .= strtolower($task['description'] ?? '') . ' ';
+        $searchableContent .= strtolower($task['user_name'] ?? '') . ' ';
+
+        // Add sub-items based on task type
+        if ($hasAppro) {
+            foreach ($task['appro'] as $item) {
+                $searchableContent .= strtolower($item['pn'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['designation'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['of'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['plane'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['location'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['oe'] ?? '') . ' ';
+            }
+        } elseif ($hasRetour) {
+            foreach ($task['retour'] as $item) {
+                $searchableContent .= strtolower($item['pn'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['sn'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['certif'] ?? '') . ' ';
+            }
+        } elseif ($hasVerifStock) {
+            foreach ($task['verif_stock'] as $item) {
+                $searchableContent .= strtolower($item['pn'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['name'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['location'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['remarks'] ?? '') . ' ';
+            }
+        } elseif ($hasExpedition) {
+            foreach ($task['expedition'] as $item) {
+                $searchableContent .= strtolower($item['pn'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['name'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['location'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['order_nb'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['destination'] ?? '') . ' ';
+                $searchableContent .= strtolower($item['account'] ?? '') . ' ';
+            }
+        }
+
+        // Check if search query exists in content
+        if (strpos($searchableContent, strtolower($searchQuery)) === false) {
+            return false;
+        }
+    }
+
+    return true;
+});
+
+// ============================================================
+// 7. PAGINATION SETUP
+// ============================================================
+// Get items per page from URL or default to 20
+$perPageParam = $_GET['per_page'] ?? '';
+if ($perPageParam === 'all') {
+    $itemsPerPage = PHP_INT_MAX;
+} else {
+    $itemsPerPage = isset($_GET['per_page']) ? max(1, (int) $_GET['per_page']) : 20;
+    $itemsPerPage = min($itemsPerPage, 200);
+}
+
 $currentPage = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
 // Get total number of filtered tasks
 $totalFilteredTasks = count($tasks);
 
 // Calculate total pages
-$totalPages = ceil($totalFilteredTasks / $itemsPerPage);
+$totalPages = $itemsPerPage == PHP_INT_MAX ? 1 : ceil($totalFilteredTasks / $itemsPerPage);
 
 // Adjust current page if it exceeds total pages
 if ($currentPage > $totalPages && $totalPages > 0) {
@@ -250,11 +377,16 @@ if ($currentPage > $totalPages && $totalPages > 0) {
 $offset = ($currentPage - 1) * $itemsPerPage;
 
 // Slice the tasks array for current page
-$paginatedTasks = array_slice($tasks, $offset, $itemsPerPage);
+if ($itemsPerPage == PHP_INT_MAX) {
+    $paginatedTasks = $tasks;
+} else {
+    $paginatedTasks = array_slice($tasks, $offset, $itemsPerPage);
+}
 
 // Build pagination URL parameters (preserve all filters)
 $paginationParams = $_GET;
 unset($paginationParams['page']);
+unset($paginationParams['per_page']);
 $baseUrl = '?' . http_build_query($paginationParams);
 
 
@@ -281,16 +413,56 @@ $baseUrl = '?' . http_build_query($paginationParams);
                     <?php endif; ?>
                 </div>
 
+                <!-- Search input with value from URL -->
                 <div class="d-flex gap-2 align-items-center flex-wrap">
-                    <input type="text" id="task-search" class="form-control" placeholder="Rechercher..."
-                        style="width: 220px;">
+                    <form method="GET" action="" id="search-form" class="d-flex gap-2">
+                        <!-- Preserve all existing filters as hidden inputs -->
+                        <?php foreach ($activeApproStates as $state): ?>
+                            <input type="hidden" name="appro_states[]" value="<?= $state ?>">
+                        <?php endforeach; ?>
+
+                        <?php foreach ($activeRetourStates as $state): ?>
+                            <input type="hidden" name="retour_states[]" value="<?= $state ?>">
+                        <?php endforeach; ?>
+
+                        <?php foreach ($activeVerifStates as $state): ?>
+                            <input type="hidden" name="verif_states[]" value="<?= $state ?>">
+                        <?php endforeach; ?>
+
+                        <?php foreach ($activeExpeditionStates as $state): ?>
+                            <input type="hidden" name="expedition_states[]" value="<?= $state ?>">
+                        <?php endforeach; ?>
+
+                        <?php foreach ($activeTypes as $type): ?>
+                            <input type="hidden" name="types[]" value="<?= $type ?>">
+                        <?php endforeach; ?>
+
+                        <?php if (isset($_GET['per_page'])): ?>
+                            <input type="hidden" name="per_page" value="<?= e($_GET['per_page']) ?>">
+                        <?php endif; ?>
+
+                        <input type="text" id="task-search" name="search" class="form-control"
+                            placeholder="Rechercher par titre, description, PN, OF, SN..."
+                            value="<?= e($searchQuery) ?>" style="width: 300px;">
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Rechercher
+                        </button>
+
+                        <?php if (!empty($searchQuery)): ?>
+                            <a href="<?= $baseUrl ?>" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Effacer
+                            </a>
+                        <?php endif; ?>
+                    </form>
 
                     <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
                         + Nouvelle demande
                     </a>
-
                 </div>
             </div>
+
+
 
             <!-- Divider -->
             <hr class="my-3">
@@ -305,9 +477,9 @@ $baseUrl = '?' . http_build_query($paginationParams);
                     <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
                         <?php
                         $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => 'EXPEDITION'];
-                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger']; ?>
 
-                        foreach ($typeLabels as $type => $label):
+                        <?php foreach ($typeLabels as $type => $label):
                             $isActive = in_array($type, $activeTypes);
                             $newTypes = $activeTypes;
                             if ($isActive) {
@@ -315,14 +487,28 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             } else {
                                 $newTypes[] = $type;
                             }
-                            // Build query preserving both state filters
-                            $query = http_build_query([
+
+                            // Build query preserving all filters including search
+                            $filterParams = [
                                 'appro_states' => $activeApproStates,
                                 'retour_states' => $activeRetourStates,
                                 'verif_states' => $activeVerifStates,
                                 'expedition_states' => $activeExpeditionStates,
                                 'types' => $newTypes
-                            ]);
+                            ];
+
+                            // Add search query if present
+                            if (!empty($searchQuery)) {
+                                $filterParams['search'] = $searchQuery;
+                            }
+
+                            // Add per_page if present
+                            if (isset($_GET['per_page'])) {
+                                $filterParams['per_page'] = $_GET['per_page'];
+                            }
+
+                            $query = http_build_query($filterParams);
+
                             switch ($type) {
                                 case 'appro':
                                     $count = $totalAppro;
@@ -370,16 +556,31 @@ $baseUrl = '?' . http_build_query($paginationParams);
                                 $newApproStates[] = $state;
                             }
                             // FIX: Use 'appro_states' parameter instead of 'ar_states'
-                            $query = http_build_query([
+                            $filterParams = [
                                 'appro_states' => $newApproStates,
                                 'types' => $activeTypes,
-                            ]);
+                            ];
+
+                            // Preserve search
+                            if (!empty($searchQuery)) {
+                                $filterParams['search'] = $searchQuery;
+                            }
+
+                            // Preserve per_page
+                            if (isset($_GET['per_page'])) {
+                                $filterParams['per_page'] = $_GET['per_page'];
+                            }
+
+                            $query = http_build_query($filterParams);
                             ?>
+
                             <a href="?<?= e($query) ?>"
                                 class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
                                 <span><?= e($label) ?></span>
                                 <span class="badge bg-light text-dark"><?= $count ?></span>
                             </a>
+
+
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -870,36 +1071,47 @@ $baseUrl = '?' . http_build_query($paginationParams);
                 });
             });
         });
-
-        // Search function
+        
+        // Auto-submit search when typing (optional - with debounce)
+        let searchTimeout;
         const searchInput = document.getElementById('task-search');
         if (searchInput) {
-            searchInput.addEventListener('input', function () {
-                const query = searchInput.value.toLowerCase().trim();
-                document.querySelectorAll('.task-row').forEach(function (taskRow) {
-                    const taskId = taskRow.dataset.task;
-                    const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
-                    const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
-
-                    let match = title.includes(query) || description.includes(query);
-
-                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                        if (subRow.textContent.toLowerCase().includes(query)) match = true;
-                    });
-
-                    if (match || query === '') {
-                        taskRow.style.display = '';
-                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                            subRow.style.display = 'table-row';
-                        });
-                    } else {
-                        taskRow.style.display = 'none';
-                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
-                            subRow.style.display = 'none';
-                        });
-                    }
-                });
+            // Remove any existing form submission on input
+            // We'll use the form submit button only, or you can uncomment below for auto-search
+            /*
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    document.getElementById('search-form').submit();
+                }, 500);
             });
+            */
         }
+        
+        // Highlight search terms in the results (optional feature)
+        <?php if (!empty($searchQuery)): ?>
+        function highlightText(element, searchTerm) {
+            if (!element || !searchTerm) return;
+            const text = element.textContent;
+            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+            if (regex.test(text)) {
+                element.innerHTML = text.replace(regex, '<mark class="bg-warning">$1</mark>');
+            }
+        }
+        
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Highlight search terms in titles and descriptions
+        document.querySelectorAll('.task-title, .description').forEach(el => {
+            highlightText(el, '<?= addslashes($searchQuery) ?>');
+        });
+        
+        // Highlight in sub-tasks
+        document.querySelectorAll('.task-description').forEach(el => {
+            highlightText(el, '<?= addslashes($searchQuery) ?>');
+        });
+        <?php endif; ?>
     });
 </script>
