@@ -157,7 +157,7 @@
 
 
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
-        <div class="container my-4">
+        <div class="container my-4 overflow-y-auto" style="max-height: 400px;">
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>

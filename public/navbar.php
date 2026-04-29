@@ -20,7 +20,7 @@
     <!-- Content -->
     <div class="collapse navbar-collapse" id="navbarMain">
 
-      <!-- Left menu -->
+      <!-- Left menu -->s
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-2">
 
         <li class="nav-item">
