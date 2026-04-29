@@ -9,13 +9,13 @@ function addExpeditionItem() {
     div.innerHTML = `
         <div class="row g-2">
             <div class="col"> 
-                <input class="form-control" name="expedition_items[${index}][pn]" placeholder="PN">
+                <input class="form-control" name="expedition[${index}][pn]" placeholder="PN">
             </div>
             <div class="col"> 
-                <input class="form-control" name="expedition_items[${index}][name]" placeholder="Nom">
+                <input class="form-control" name="expedition[${index}][name]" placeholder="Nom">
             </div>
             <div class="col"> 
-                <input class="form-control" type="number" name="expedition_items[${index}][nb]" value="1" placeholder="Quantité">
+                <input class="form-control" type="number" name="expedition[${index}][nb]" value="1" placeholder="Quantité">
             </div>
             <div class="col-auto"> 
                 <button type="button" class="btn btn-danger btn-sm remove-expedition-item">✕</button> 
