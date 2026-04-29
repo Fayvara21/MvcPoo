@@ -30,113 +30,48 @@ $currentUserGroup = $_SESSION['group'] ?? '';
 $originalTasks = $tasks;
 
 // ============================================================
-// 1. PARSE SEARCH QUERY (keywords: type:appro état:envoyé word)
+// 1. INITIALIZE FILTERS FROM URL (must be done first)
 // ============================================================
-$searchQuery = $_GET['q'] ?? '';
-
-// Parse search query for filters
-$parsedFilters = [
-    'types' => [],
-    'states' => [], // state names instead of IDs
-    'searchText' => ''
-];
-
-// Extract type:xxx and état:xxx patterns
-if (!empty($searchQuery)) {
-    // Pattern for type:xxx
-    preg_match_all('/type:([a-z_]+)/i', $searchQuery, $typeMatches);
-    if (!empty($typeMatches[1])) {
-        $parsedFilters['types'] = array_map('strtolower', $typeMatches[1]);
-    }
-    
-    // Pattern for état:xxx
-    preg_match_all('/état:([a-zéèêëçàîïôûùüÿñ\s]+)/i', $searchQuery, $stateMatches);
-    if (!empty($stateMatches[1])) {
-        $parsedFilters['states'] = array_map('trim', $stateMatches[1]);
-    }
-    
-    // Remove the keywords from search text
-    $searchText = preg_replace('/\s*type:[a-z_]+\s*/i', ' ', $searchQuery);
-    $searchText = preg_replace('/\s*état:[a-zéèêëçàîïôûùüÿñ\s]+\s*/i', ' ', $searchText);
-    $parsedFilters['searchText'] = trim($searchText);
+$activeApproStates = $_GET['appro_states'] ?? [];
+if (!is_array($activeApproStates)) {
+    $activeApproStates = [$activeApproStates];
 }
+$activeApproStates = array_map('intval', $activeApproStates);
 
-// Build active filters from parsed query
-$activeTypes = array_unique($parsedFilters['types']);
-$activeStateNames = array_map('strtolower', $parsedFilters['states']);
-$searchText = $parsedFilters['searchText'];
-
-// ============================================================
-// 2. LABELS & WORKFLOWS & STATE MAPPING
-// ============================================================
-// Labels for APPRO/RETOUR/EXPEDITION
-$labels = [
-    0 => 'envoyé', 
-    4 => 'en achat', 
-    5 => 'en sous-traitance', 
-    1 => 'traitement', 
-    2 => 'livré', 
-    3 => 'soldé'
-];
-
-// Verif stock labels
-$verifStockLabels = [
-    0 => 'envoyé',
-    1 => 'traitement',
-    2 => 'ok',
-    3 => 'nok',
-    4 => 'ok sans cc',
-    5 => 'ok avec cc',
-    6 => 'ok form1',
-    7 => 'soldé',
-];
-
-$stateClass = [
-    0 => 'blue',
-    1 => 'red',
-    2 => 'orange',
-    3 => 'yellow',
-    4 => 'indigo',
-    5 => 'pink',
-    6 => 'primary',
-    7 => 'secondary',
-];
-
-// Create reverse mapping from label to state ID
-$labelToStateAppro = array_flip($labels);
-$labelToStateVerif = array_flip($verifStockLabels);
-
-// Normalize label mapping (handle case insensitivity)
-function getStateIdFromLabel($label, $isVerifStock) {
-    global $labelToStateAppro, $labelToStateVerif;
-    $label = strtolower(trim($label));
-    
-    if ($isVerifStock) {
-        // Try exact match
-        if (isset($labelToStateVerif[$label])) {
-            return $labelToStateVerif[$label];
-        }
-        // Try partial match (e.g., "ok" matches "ok sans cc" not recommended)
-        foreach ($labelToStateVerif as $key => $id) {
-            if (strpos($key, $label) !== false || strpos($label, $key) !== false) {
-                return $id;
-            }
-        }
-    } else {
-        if (isset($labelToStateAppro[$label])) {
-            return $labelToStateAppro[$label];
-        }
-        foreach ($labelToStateAppro as $key => $id) {
-            if (strpos($key, $label) !== false || strpos($label, $key) !== false) {
-                return $id;
-            }
-        }
-    }
-    return null;
+$activeRetourStates = $_GET['retour_states'] ?? [];
+if (!is_array($activeRetourStates)) {
+    $activeRetourStates = [$activeRetourStates];
 }
+$activeRetourStates = array_map('intval', $activeRetourStates);
+
+// For VERIF STOCK
+$activeVerifStates = $_GET['verif_states'] ?? [];
+if (!is_array($activeVerifStates)) {
+    $activeVerifStates = [$activeVerifStates];
+}
+$activeVerifStates = array_map('intval', $activeVerifStates);
+
+// For EXPEDITION
+$activeExpeditionStates = $_GET['expedition_states'] ?? [];
+if (!is_array($activeExpeditionStates)) {
+    $activeExpeditionStates = [$activeExpeditionStates];
+}
+$activeExpeditionStates = array_map('intval', $activeExpeditionStates);
+
+// Ensure $activeTypes is always an array, even when not present in URL
+$activeTypes = $_GET['types'] ?? [];
+if (!is_array($activeTypes)) {
+    $activeTypes = [$activeTypes];
+}
+// Remove empty values
+$activeTypes = array_filter($activeTypes, function ($value) {
+    return $value !== '';
+});
+
+$activeTypes = array_map('strval', $activeTypes);
 
 // ============================================================
-// 3. CALCULATE COUNTS FOR EACH STATE (for badge display)
+// 2. CALCULATE COUNTS FOR EACH STATE (for badge display)
 // ============================================================
 $approCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 $retourCounts = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
@@ -176,105 +111,35 @@ $totalExpedition = array_sum($expeditionCounts);
 $totalTasks = $totalAppro + $totalRetour + $totalVerifStock + $totalExpedition;
 
 // ============================================================
-// 4. FILTER TASKS based on search query
+// 3. LABELS & WORKFLOWS
 // ============================================================
-$filteredTasks = [];
+// Colors for APPRO/RETOUR
+$labels = [0 => 'Envoyé', 4 => 'En achat', 5 => 'En sous-traitance', 1 => 'Traitement', 2 => 'Livré', 3 => 'Soldé'];
 
-foreach ($originalTasks as $task) {
-    $state = (int) $task['is_completed'];
-    $hasAppro = !empty($task['appro']);
-    $hasRetour = !empty($task['retour']);
-    $hasVerifStock = !empty($task['verif_stock']);
-    $hasExpedition = !empty($task['expedition']);
-    
-    // Determine specific task type
-    $specificType = null;
-    $currentLabels = null;
-    $isVerifStock = false;
-    
-    if ($hasVerifStock) {
-        $specificType = 'verif_stock';
-        $currentLabels = $verifStockLabels;
-        $isVerifStock = true;
-    } elseif ($hasAppro) {
-        $specificType = 'appro';
-        $currentLabels = $labels;
-    } elseif ($hasRetour) {
-        $specificType = 'retour';
-        $currentLabels = $labels;
-    } elseif ($hasExpedition) {
-        $specificType = 'expedition';
-        $currentLabels = $labels;
-    }
-    
-    // Type filter
-    $typeMatch = true;
-    if (!empty($activeTypes)) {
-        $typeMatch = in_array($specificType, $activeTypes);
-    }
-    
-    if (!$typeMatch) {
-        continue;
-    }
-    
-    // State filter (by name)
-    $stateMatch = true;
-    if (!empty($activeStateNames)) {
-        $currentStateName = strtolower($currentLabels[$state] ?? '');
-        $stateMatch = false;
-        foreach ($activeStateNames as $stateName) {
-            if (strpos($currentStateName, $stateName) !== false || strpos($stateName, $currentStateName) !== false) {
-                $stateMatch = true;
-                break;
-            }
-        }
-    }
-    
-    if (!$stateMatch) {
-        continue;
-    }
-    
-    // Text search
-    $textMatch = true;
-    if (!empty($searchText)) {
-        $searchableText = strtolower(
-            ($task['title'] ?? '') . ' ' . 
-            ($task['description'] ?? '') . ' ' .
-            ($task['user_name'] ?? '')
-        );
-        
-        // Also search in sub-items
-        foreach (['appro', 'retour', 'verif_stock', 'expedition'] as $subType) {
-            if (!empty($task[$subType])) {
-                foreach ($task[$subType] as $item) {
-                    $searchableText .= ' ' . implode(' ', array_values($item));
-                }
-            }
-        }
-        
-        $textMatch = strpos($searchableText, strtolower($searchText)) !== false;
-    }
-    
-    if ($textMatch) {
-        $filteredTasks[] = $task;
-    }
-}
+// Verif stock labels
+$verifStockLabels = [
+    0 => 'Envoyé',
+    1 => 'Traitement',
+    2 => 'OK',
+    3 => 'NOK',
+    4 => 'OK Sans CC',
+    5 => 'OK Avec CC',
+    6 => 'OK Form1',
+    7 => 'Soldé',
+];
 
-$tasks = $filteredTasks;
+$stateClass = [
+    0 => 'blue',
+    1 => 'red',
+    2 => 'orange',
+    3 => 'yellow',
+    4 => 'indigo',
+    5 => 'pink',
+    6 => 'primary',
+    7 => 'secondary',
+];
 
-// ============================================================
-// 5. PAGINATION
-// ============================================================
-$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$perPage = 20;
-$totalItems = count($tasks);
-$totalPages = ceil($totalItems / $perPage);
-$offset = ($page - 1) * $perPage;
-$tasks = array_slice($tasks, $offset, $perPage);
-
-// ============================================================
-// 6. WORKFLOW TRANSITIONS (for state changes)
-// ============================================================
+// WORKFLOW for APPRO/RETOUR
 $transitions = [
     0 => [1],
     1 => [2, 4, 5],
@@ -284,6 +149,7 @@ $transitions = [
     5 => [1],
 ];
 
+// WORKFLOW for VERIF STOCK
 $verifStockTransitions = [
     0 => [1],
     1 => [2, 3],
@@ -294,6 +160,72 @@ $verifStockTransitions = [
     6 => [],
     7 => [],
 ];
+
+// ============================================================
+// 4. FILTER TASKS BASED ON ACTIVE FILTERS
+// ============================================================
+$tasks = array_filter($originalTasks, function ($task) use ($activeApproStates, $activeRetourStates, $activeVerifStates, $activeTypes) {
+    $state = (int) $task['is_completed'];
+    $hasAppro = !empty($task['appro']);
+    $hasRetour = !empty($task['retour']);
+    $hasVerifStock = !empty($task['verif_stock']);
+    $hasExpedition = !empty($task['expedition']);
+
+    // Determine specific task type
+    $specificType = null;
+    if ($hasVerifStock) {
+        $specificType = 'verif_stock';
+    } elseif ($hasAppro) {
+        $specificType = 'appro';
+    } elseif ($hasRetour) {
+        $specificType = 'retour';
+    } elseif ($hasExpedition) {
+        $specificType = 'expedition';
+    }
+
+    // Type match logic - if no active types, show all
+    $typeMatch = true;
+    if (!empty($activeTypes)) {
+        $typeMatch = in_array($specificType, $activeTypes);
+    }
+
+    if (!$typeMatch) {
+        return false;
+    }
+
+    // State match - completely separate by type
+    $stateMatch = true;
+
+    if ($hasVerifStock) {
+        // VERIF STOCK task
+        if (!empty($activeVerifStates)) {
+            $stateMatch = in_array($state, $activeVerifStates);
+        }
+    } elseif ($hasAppro) {
+        // APPRO task
+        if (!empty($activeApproStates)) {
+            $stateMatch = in_array($state, $activeApproStates);
+        }
+    } elseif ($hasRetour) {
+        // RETOUR task
+        if (!empty($activeRetourStates)) {
+            $stateMatch = in_array($state, $activeRetourStates);
+        }
+    } elseif ($hasExpedition) {
+        // expedition task
+        if (!empty($activeExpeditionStates)) {
+            $stateMatch = in_array($state, $activeExpeditionStates);
+        }
+    }
+
+    return $typeMatch && $stateMatch;
+});
+
+// Determine visibility of state filter rows - HIDDEN BY DEFAULT
+$showApproFilters = !empty($activeTypes) && (in_array('appro', $activeTypes));
+$showRetourFilters = !empty($activeTypes) && (in_array('retour', $activeTypes));
+$showVerifStockFilters = !empty($activeTypes) && in_array('verif_stock', $activeTypes);
+$showExpeditionFilters = !empty($activeTypes) && in_array('expedition', $activeTypes);
 ?>
 
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
@@ -317,135 +249,212 @@ $verifStockTransitions = [
                 </div>
 
                 <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <input type="text" id="task-search" class="form-control" placeholder="Rechercher..."
+                        style="width: 220px;">
+
                     <a href="/projects/<?= (int) $project['id'] ?>/tasks/create" class="btn btn-primary fw-semibold">
                         + Nouvelle demande
                     </a>
+
                 </div>
             </div>
 
             <!-- Divider -->
             <hr class="my-3">
 
-            <!-- Search & Filters -->
+            <!-- Filters -->
             <div class="d-flex flex-column gap-3">
-                
-                <!-- Search bar with keyword hints -->
-                <div class="position-relative">
-                    <form method="GET" class="d-flex gap-2" id="search-form">
-                        <div class="flex-grow-1">
-                            <input type="text" 
-                                   id="search-input" 
-                                   name="q" 
-                                   class="form-control" 
-                                   placeholder="Recherche par mots-clés... Exemple: type:appro état:envoyé urgent"
-                                   value="<?= e($searchQuery) ?>"
-                                   autocomplete="off">
-                            <small class="text-muted">
-                                Filtres disponibles: <code>type:appro</code>, <code>type:retour</code>, <code>type:verif_stock</code>, <code>type:expedition</code> | 
-                                <code>état:envoyé</code>, <code>état:traitement</code>, <code>état:livré</code>, <code>état:soldé</code>
-                            </small>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Rechercher</button>
-                        <?php if (!empty($searchQuery)): ?>
-                            <a href="?" class="btn btn-outline-secondary">Effacer</a>
-                        <?php endif; ?>
-                    </form>
-                </div>
 
-                <!-- Active filters badges -->
-                <?php if (!empty($activeTypes) || !empty($activeStateNames) || !empty($searchText)): ?>
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <span class="text-muted small">Filtres actifs:</span>
-                        <?php foreach ($activeTypes as $type): ?>
-                            <?php
-                            $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => 'EXPEDITION'];
-                            $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
-                            $newQuery = preg_replace('/\s*type:' . preg_quote($type) . '\s*/i', ' ', $searchQuery);
-                            $newQuery = trim(preg_replace('/\s+/', ' ', $newQuery));
+                <!-- First row: Type filters + Total (always visible) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="text-muted small me-2">Filtres :</span>
+
+                    <div class="d-flex gap-2 pe-2" style="border-right:2px solid #dee2e6;">
+                        <?php
+                        $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => 'EXPEDITION'];
+                        $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
+
+                        foreach ($typeLabels as $type => $label):
+                            $isActive = in_array($type, $activeTypes);
+                            $newTypes = $activeTypes;
+                            if ($isActive) {
+                                $newTypes = array_diff($activeTypes, [$type]);
+                            } else {
+                                $newTypes[] = $type;
+                            }
+                            // Build query preserving both state filters
+                            $query = http_build_query([
+                                'appro_states' => $activeApproStates,
+                                'retour_states' => $activeRetourStates,
+                                'verif_states' => $activeVerifStates,
+                                'expedition_states' => $activeExpeditionStates,
+                                'types' => $newTypes
+                            ]);
+                            switch ($type) {
+                                case 'appro':
+                                    $count = $totalAppro;
+                                    break;
+                                case 'retour':
+                                    $count = $totalRetour;
+                                    break;
+                                case 'verif_stock':
+                                    $count = $totalVerifStock;
+                                    break;
+                                case 'expedition':
+                                    $count = $totalExpedition;
+                                    break;
+                                default:
+                                    $count = 0;
+                            }
                             ?>
-                            <a href="?q=<?= e(urlencode($newQuery)) ?>" class="badge bg-<?= $typeColors[$type] ?> text-decoration-none">
-                                <?= $typeLabels[$type] ?> ✕
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
+                                <?= e($label) ?>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
                             </a>
                         <?php endforeach; ?>
-                        <?php foreach ($activeStateNames as $stateName): ?>
-                            <?php
-                            $newQuery = preg_replace('/\s*état:' . preg_quote($stateName) . '\s*/i', ' ', $searchQuery);
-                            $newQuery = trim(preg_replace('/\s+/', ' ', $newQuery));
-                            ?>
-                            <a href="?q=<?= e(urlencode($newQuery)) ?>" class="badge bg-info text-dark text-decoration-none">
-                                état:<?= e($stateName) ?> ✕
-                            </a>
-                        <?php endforeach; ?>
-                        <?php if (!empty($searchText) && empty($activeTypes) && empty($activeStateNames)): ?>
-                            <span class="badge bg-secondary">
-                                "<?= e($searchText) ?>" ✕
-                                <a href="?" class="text-white text-decoration-none ms-1">✕</a>
-                            </span>
-                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
 
-                <!-- Type filter buttons (quick filters) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap pt-2 border-top">
-                    <span class="text-muted small me-2">Type :</span>
-                    
-                    <?php
-                    $typeLabels = ['appro' => 'APPRO', 'retour' => 'RETOUR', 'verif_stock' => 'VERIF STOCK', 'expedition' => 'EXPEDITION'];
-                    $typeColors = ['appro' => 'primary', 'retour' => 'warning', 'verif_stock' => 'success', 'expedition' => 'danger'];
-                    
-                    foreach ($typeLabels as $type => $label):
-                        $isActive = in_array($type, $activeTypes);
-                        $newQuery = $searchQuery;
-                        if ($isActive) {
-                            $newQuery = preg_replace('/\s*type:' . preg_quote($type) . '\s*/i', ' ', $newQuery);
-                        } else {
-                            $newQuery = trim($newQuery . ' type:' . $type);
-                        }
-                        $newQuery = trim(preg_replace('/\s+/', ' ', $newQuery));
-                        ?>
-
-                        <a href="?q=<?= e(urlencode($newQuery)) ?>"
-                            class="btn btn-sm <?= $isActive ? 'btn-' . $typeColors[$type] : 'btn-outline-' . $typeColors[$type] ?> d-flex align-items-center gap-1">
-                            <?= $label ?>
-                        </a>
-                    <?php endforeach; ?>
-                    
                     <div class="ms-2">
                         <a href="?" class="btn btn-sm btn-outline-dark"><?= $totalTasks ?> total</a>
                     </div>
                 </div>
 
-                <!-- State filter buttons (quick filters) -->
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span class="text-muted small me-2">État :</span>
-                    <?php
-                    $allStateLabels = ['envoyé', 'traitement', 'livré', 'soldé', 'en achat', 'en sous-traitance', 'ok', 'nok'];
-                    foreach ($allStateLabels as $stateLabel):
-                        $isActive = in_array($stateLabel, $activeStateNames);
-                        $newQuery = $searchQuery;
-                        if ($isActive) {
-                            $newQuery = preg_replace('/\s*état:' . preg_quote($stateLabel) . '\s*/i', ' ', $newQuery);
-                        } else {
-                            $newQuery = trim($newQuery . ' état:' . $stateLabel);
-                        }
-                        $newQuery = trim(preg_replace('/\s+/', ' ', $newQuery));
-                        ?>
-                        <a href="?q=<?= e(urlencode($newQuery)) ?>"
-                            class="btn btn-sm <?= $isActive ? 'btn-info' : 'btn-outline-info' ?>">
-                            <?= e($stateLabel) ?>
-                        </a>
-                    <?php endforeach; ?>
+                <!-- Second row: APPRO State Filters (hidden by default, appears only when APPRO type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showApproFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États APPRO :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $approStatesList = [0, 1, 2, 3, 4, 5];
+                        foreach ($approStatesList as $state):
+                            $label = $labels[$state] ?? '?';
+                            $count = $approCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeApproStates);
+                            $newApproStates = $activeApproStates;
+                            if ($isActive) {
+                                $newApproStates = array_diff($activeApproStates, [$state]);
+                            } else {
+                                $newApproStates[] = $state;
+                            }
+                            // FIX: Use 'appro_states' parameter instead of 'ar_states'
+                            $query = http_build_query([
+                                'appro_states' => $newApproStates,
+                                'types' => $activeTypes,
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span><?= e($label) ?></span>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+
+                <!-- Third row: RETOUR State Filters (hidden by default, appears only when RETOUR type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showRetourFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États Retour :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $retourStatesList = [0, 1, 2, 3, 4, 5];
+                        foreach ($retourStatesList as $state):
+                            $label = $labels[$state] ?? '?';
+                            $count = $retourCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeRetourStates);
+                            $newRetourStates = $activeRetourStates;
+                            if ($isActive) {
+                                $newRetourStates = array_diff($activeRetourStates, [$state]);
+                            } else {
+                                $newRetourStates[] = $state;
+                            }
+                            // FIX: Use 'retour_states' parameter
+                            $query = http_build_query([
+                                'retour_states' => $newRetourStates,
+                                'types' => $activeTypes,
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span>
+                                    <?= e($label) ?>
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    <?= $count ?>
+                                </span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+
+
+                <!-- Fourth row: VERIF STOCK State Filters (hidden by default, appears only when VERIF STOCK type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showVerifStockFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États VERIF STOCK :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $verifStatesList = [0, 1, 2, 3, 4, 5, 6, 7];
+                        foreach ($verifStatesList as $state):
+                            $label = $verifStockLabels[$state] ?? '?';
+                            $count = $verifStockCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeVerifStates);
+                            $newVerifStates = $activeVerifStates;
+                            if ($isActive) {
+                                $newVerifStates = array_diff($activeVerifStates, [$state]);
+                            } else {
+                                $newVerifStates[] = $state;
+                            }
+                            $query = http_build_query([
+                                'verif_states' => $newVerifStates,
+                                'types' => $activeTypes,
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span><?= e($label) ?></span>
+                                <span class="badge bg-light text-dark"><?= $count ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Fourth row: EXPEDITION State Filters (hidden by default, appears only when EXPEDITION type is selected) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" <?= $showExpeditionFilters ? '' : 'style="display: none !important;"' ?>>
+                    <span class="text-muted small me-2">États EXPEDITION :</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?php
+                        $expeditionStatesList = [0, 1, 2, 3, 4, 5];
+                        foreach ($expeditionStatesList as $state):
+                            $label = $labels[$state] ?? '?';
+                            $count = $expeditionCounts[$state] ?? 0;
+                            $isActive = in_array($state, $activeExpeditionStates);
+                            $newExpeditionStates = $activeExpeditionStates;
+                            if ($isActive) {
+                                $newExpeditionStates = array_diff($activeExpeditionStates, [$state]);
+                            } else {
+                                $newExpeditionStates[] = $state;
+                            }
+                            $query = http_build_query([
+                                'expedition_states' => $newExpeditionStates,
+                                'types' => $activeTypes,
+                            ]);
+                            ?>
+                            <a href="?<?= e($query) ?>"
+                                class="btn btn-sm <?= $isActive ? 'btn-' . $stateClass[$state] : 'btn-outline-' . $stateClass[$state] ?> d-flex align-items-center gap-1">
+                                <span>
+                                    <?= e($label) ?>
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    <?= $count ?>
+                                </span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
 
             </div>
 
-        </div>
-    </div>
-
-    <!-- Results count info -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="text-muted small">
-            Affichage de <?= count($tasks) ?> résultat(s) sur <?= $totalItems ?> total
         </div>
     </div>
 
@@ -481,7 +490,7 @@ $verifStockTransitions = [
                         // Use appropriate transitions and labels based on task type
                         $currentTransitions = $isVerifStock ? $verifStockTransitions : $transitions;
                         $currentLabels = $isVerifStock ? $verifStockLabels : $labels;
-                        $currentStateLabel = $currentLabels[$s] ?? 'Unknown';
+                        $currentStateLabel = $currentLabels[$s] ?? $labels[$s] ?? 'Unknown';
 
                         $canEdit = false;
                         $canSetState = false;
@@ -738,78 +747,10 @@ $verifStockTransitions = [
                         <?php endforeach; ?>
 
                     <?php endforeach; ?>
-                    
-                    <?php if (empty($tasks)): ?>
-                        <tr>
-                            <td colspan="9" class="text-center py-5 text-muted">
-                                Aucune demande trouvée
-                            </td>
-                        </tr>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
-    
-    <!-- Pagination -->
-    <?php if ($totalPages > 1): ?>
-    <div class="d-flex justify-content-center mt-4">
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <!-- Previous button -->
-                <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" 
-                       href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">
-                        &laquo; Précédent
-                    </a>
-                </li>
-                
-                <!-- Page numbers -->
-                <?php
-                $startPage = max(1, $page - 2);
-                $endPage = min($totalPages, $page + 2);
-                
-                if ($startPage > 1): ?>
-                    <li class="page-item">
-                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => 1])) ?>">1</a>
-                    </li>
-                    <?php if ($startPage > 2): ?>
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    <?php endif;
-                endif;
-                
-                for ($i = $startPage; $i <= $endPage; $i++): ?>
-                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>">
-                            <?= $i ?>
-                        </a>
-                    </li>
-                <?php endfor;
-                
-                if ($endPage < $totalPages): ?>
-                    <?php if ($endPage < $totalPages - 1): ?>
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    <?php endif; ?>
-                    <li class="page-item">
-                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => $totalPages])) ?>">
-                            <?= $totalPages ?>
-                        </a>
-                    </li>
-                <?php endif;
-                ?>
-                
-                <!-- Next button -->
-                <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
-                    <a class="page-link" 
-                       href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">
-                        Suivant &raquo;
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <?php endif; ?>
-    
 </div>
 
 <script>
@@ -824,21 +765,36 @@ $verifStockTransitions = [
                 });
             });
         });
-        
-        // Initialize all sub-rows as visible by default
-        document.querySelectorAll('[class*="sub-task-"]').forEach(function (subRow) {
-            subRow.style.display = 'table-row';
-        });
+
+        // Search function
+        const searchInput = document.getElementById('task-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const query = searchInput.value.toLowerCase().trim();
+                document.querySelectorAll('.task-row').forEach(function (taskRow) {
+                    const taskId = taskRow.dataset.task;
+                    const title = taskRow.querySelector('.task-title')?.textContent.toLowerCase() || '';
+                    const description = taskRow.querySelector('.description')?.textContent.toLowerCase() || '';
+
+                    let match = title.includes(query) || description.includes(query);
+
+                    document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                        if (subRow.textContent.toLowerCase().includes(query)) match = true;
+                    });
+
+                    if (match || query === '') {
+                        taskRow.style.display = '';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'table-row';
+                        });
+                    } else {
+                        taskRow.style.display = 'none';
+                        document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
+                            subRow.style.display = 'none';
+                        });
+                    }
+                });
+            });
+        }
     });
 </script>
-
-<style>
-.square-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-}
-.square-btn i {
-    font-size: 14px;
-}
-</style>
