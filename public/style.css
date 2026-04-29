@@ -566,7 +566,7 @@ form {
 }
 
 /* Button styling with revert effect */
-.custom-navbar .btn-outline-light {
+.custom-navbar .btn-outline-light, .custom-navbar .btn-outline-danger {
   border: 2px solid #ffffff;
   color: #ffffff;
   background-color: transparent;

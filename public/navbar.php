@@ -54,7 +54,7 @@
           <i class="bi bi-person-plus me-1"></i>Créer un compte
         </a>
 
-        <a href="/logout" class="btn btn-danger rounded-pill px-3">
+        <a href="/logout" class="btn btn-outline-danger rounded-pill px-3">
           <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
         </a>
 
