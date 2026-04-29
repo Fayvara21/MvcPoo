@@ -281,7 +281,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light lenticular">
                 <h4 class="mb-2 text-primary">Mise à jour v260409:</h4>
 
                 <ul class="list-group list-group-flush">

@@ -775,3 +775,126 @@ body:has(.register):hover::before {
     transform: translateY(0);
   }
 }
+
+/* ===== LENTICULAR CARD CLASS ===== */
+/* Creates a 3D holographic shifting effect like a lenticular print */
+
+.lenticular {
+  /* Base styling */
+  position: relative;
+  overflow: hidden;
+  
+  /* Lenticular gradient layers */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  
+  /* Animated shimmer that shifts on hover/move */
+  transition: all 0.3s ease;
+}
+
+/* The lenticular effect - multiple shifting layers */
+.lenticular::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.03) 40px,
+    rgba(255, 255, 255, 0.08) 60px,
+    transparent 60px,
+    transparent 100px
+  );
+  animation: lenticularShift 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Second layer for depth */
+.lenticular::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 30% 40%,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 60%
+  );
+  animation: lenticularGlow 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Interactive hover - shifts perspective */
+.lenticular:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+}
+
+.lenticular:hover::before {
+  animation: lenticularShiftFast 3s linear infinite;
+}
+
+/* Shifting animation - creates the lenticular "moving image" effect */
+@keyframes lenticularShift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(10px, 5px) rotate(2deg);
+  }
+  50% {
+    transform: translate(0, 10px) rotate(0deg);
+  }
+  75% {
+    transform: translate(-10px, 5px) rotate(-2deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes lenticularShiftFast {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(15px, 8px) rotate(3deg);
+  }
+  50% {
+    transform: translate(0, 15px) rotate(0deg);
+  }
+  75% {
+    transform: translate(-15px, 8px) rotate(-3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes lenticularGlow {
+  0%, 100% {
+    opacity: 0.5;
+    background-position: 30% 40%;
+  }
+  50% {
+    opacity: 1;
+    background-position: 70% 60%;
+  }
+}
+
+/* Optional: 3D tilt that follows mouse cursor */
+.lenticular.tilt-3d {
+  transition: transform 0.1s ease-out;
+}
+
