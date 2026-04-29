@@ -168,6 +168,7 @@
                     <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
                     <li class="list-group-item">Les boutons d'actions sont desormais formattées en listes déroulantes</li>
                     <li class="list-group-item">Les changements d'état auront un pop-up de confirmation pour éviter les erreurs</li>
+                    <li class="list-group-item">Refactorisation de l'interface utilisateur</li>
 
                 </ul>
             </div>
