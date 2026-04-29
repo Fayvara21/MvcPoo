@@ -302,9 +302,7 @@
                     <li class="list-group-item">Recherche globale dans toute la base de données</li>
                     <li class="list-group-item">Priorisation des OF avec date souhaitée pour gérer les urgences</li>
                     <li class="list-group-item">Demandes d'enlevements (dont colisage)</li>
-                    <li class="list-group-item">Demandes de livraison (dont 3rd party) </li>
                     <li class="list-group-item">Trier les demandes par date, statut, ou autre critère</li>
-                    <li class="list-group-item">Vue améliorée des MaJ</li>
                     <li class="list-group-item">Système de réponses aux demandes</li>
                 </ul>
 
