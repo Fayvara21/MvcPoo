@@ -119,7 +119,7 @@ class TaskController extends BaseController
                 $sharedDestination = $_POST['expedition_destination'] ?? null;
                 $sharedOrderNb = $_POST['expedition_order_nb'] ?? null;
                 $sharedLocation = $_POST['expedition_location'] ?? null;
-                $sharedAccount = $_POST['expedition_account'] ?? null;
+                $sharedAccount = $_POST['expedition_account'] ?? "ASI";
                 $sharedThirdParty = isset($_POST['expedition_third_party']) ? 1 : 0;
 
 
@@ -239,7 +239,7 @@ class TaskController extends BaseController
                         $row['location'] ?? null,
                         $row['order_nb'] ?? null,
                         $row['destination'] ?? null,
-                        $row['account'] ?? null,
+                        $row['account'] ?? "ASI",
                         isset($row['third_party']) ? 1 : 0,
                     );
                 }

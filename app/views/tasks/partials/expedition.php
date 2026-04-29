@@ -37,7 +37,7 @@
 
         <div class="expedition-compte-field" style="display: none;">
             <label class="form-label fw-medium">Nom de compte tiers :</label>
-            <input class="form-control" type="text" name="expedition_account" placeholder="Nom de compte tiers">
+            <input class="form-control" type="text" name="expedition_account" placeholder="Compte de transport tiers">
         </div>
 
         <div class="form-check mb-2">
