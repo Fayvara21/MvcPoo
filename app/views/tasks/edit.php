@@ -80,8 +80,10 @@ function e($str)
                                     <option value="appro" <?= $selectedType === 'appro' ? 'selected' : '' ?>>APPRO</option>
                                     <option value="retour" <?= $selectedType === 'retour' ? 'selected' : '' ?>>RETOUR
                                     </option>
-                                        <option value="verif_stock" <?= $selectedType === 'verif_stock' ? 'selected' : '' ?>>VERIF STOCK</option>
-                                        <option value="expedition" <?= $selectedType === 'expedition' ? 'selected' : '' ?>>EXPEDITION</option>
+                                    <option value="verif_stock" <?= $selectedType === 'verif_stock' ? 'selected' : '' ?>>
+                                        VERIF STOCK</option>
+                                    <option value="expedition" <?= $selectedType === 'expedition' ? 'selected' : '' ?>>
+                                        EXPEDITION</option>
                                 </select>
                             </div>
                         </div>

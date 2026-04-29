@@ -127,6 +127,7 @@ class TaskController extends BaseController
                     Expedition::create(
                         $taskId,
                         $row['pn'] ?? null,
+                        $row['name'] ?? null,
                         $row['nb'] ?? 1,
                         $sharedDestination ?? $row['destination'] ?? null,
                         $sharedOrderNb ?? $row['order_nb'] ?? null,
@@ -227,19 +228,19 @@ class TaskController extends BaseController
                     );
                 }
             }
-
             // === EXPEDITION ===
             elseif ($type === 'expedition' && !empty($_POST['expedition'])) {
                 foreach ($_POST['expedition'] as $row) {
                     Expedition::create(
                         $task['id'],
                         $row['pn'] ?? null,
+                        $row['name'] ?? null,
                         $row['nb'] ?? 1,
-                        $row['destination'] ?? null,
-                        $row['order_nb'] ?? null,
                         $row['location'] ?? null,
+                        $row['order_nb'] ?? null,
+                        $row['destination'] ?? null,
                         $row['account'] ?? null,
-                        $row['third_party'] ?? 0,
+                        isset($row['third_party']) ? 1 : 0,
                     );
                 }
             }
