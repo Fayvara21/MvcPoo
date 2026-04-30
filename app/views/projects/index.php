@@ -12,7 +12,8 @@
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
             <p class="text-muted mb-3">
-                Dépôt de nouvelles demandes au magasin, rangées par émetteur
+                Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au magasin. <br>
+                Les demandes sont organisées par projet, et peuvent être suivies et gérées facilement.
             </p>
 
         </div>
