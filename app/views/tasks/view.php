@@ -134,13 +134,16 @@ Vue en temps réel pour l'affichage des tâches
                                             </td>
                                             <td>
                                                 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
+
+                                            </td>
+                                            <td>
                                                 <?php if ($task['is_completed'] == 1): ?>
                                                     <span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
                                         <tr class="<?= $deadlineClass ?>">
-                                            <td colspan="6" class=""
+                                            <td colspan="6" class="py-1"
                                                 style="max-width: 800px; word-wrap: break-word; white-space: normal;">
                                                 <strong>Description:</strong>
                                                 <?= htmlspecialchars($task['description']) ?: '<span class="text-muted small">-</span>' ?>
@@ -281,22 +284,22 @@ Vue en temps réel pour l'affichage des tâches
                             reference = task.expeditionFirst.pn ?? '-';
                         }
 
-                            const rowClass = getDeadlineClassJS(task.due_date);
+                        const rowClass = getDeadlineClassJS(task.due_date);
 
-                            const loadingIcon = task.is_completed === 1
-                                ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
-                                : '';
+                        const loadingIcon = task.is_completed === 1
+                            ? '<span class="spinner-border spinner-border-sm text-warning ms-2"></span>'
+                            : '';
 
-                            let designationOrRef = '-';
-                            if (task.isAppro) {
-                                designationOrRef = task.approFirst.designation ?? '-';
-                            } else if (task.isRetour) {
-                                designationOrRef = task.retourFirst.sn ?? '-';
-                            } else if (task.isVerifStock) {
-                                designationOrRef = task.verifStockFirst.name ?? '-';
-                            }
+                        let designationOrRef = '-';
+                        if (task.isAppro) {
+                            designationOrRef = task.approFirst.designation ?? '-';
+                        } else if (task.isRetour) {
+                            designationOrRef = task.retourFirst.sn ?? '-';
+                        } else if (task.isVerifStock) {
+                            designationOrRef = task.verifStockFirst.name ?? '-';
+                        }
 
-                            html.push(`
+                        html.push(`
                             <tr class="${rowClass}">
                                 <td class="ps-4 fw-medium">${task.id}</td>
                                 <td>${typeBadge}</td>
@@ -310,7 +313,7 @@ Vue en temps réel pour l'affichage des tâches
                                 </td>
                             </tr>
                         `);
-                        });
+                    });
 
                     tbody.innerHTML = html.join('');
                 });
