@@ -13,7 +13,6 @@
 
             <p class="text-muted mb-3">
                 Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au magasin. <br>
-                Les demandes sont organisées par projet, et peuvent être suivies et gérées facilement.
             </p>
 
         </div>
