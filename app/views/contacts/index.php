@@ -6,14 +6,14 @@
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover align-middle">
-                        <thead class="table-dark">
+                        <thead class="bg-secondary text-white">
                             <tr>
                                 <th>ID</th>
                                 <th>Email</th>
                                 <th>Type</th>
                                 <th>Description</th>
-                                <th>User</th>
-                                <th>Created At</th>
+                                <th>Utilisateur</th>
+                                <th>Dâte de création</th>
                             </tr>
                         </thead>
                         <tbody>

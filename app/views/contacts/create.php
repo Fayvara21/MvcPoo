@@ -1,6 +1,6 @@
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
-        <div class="card-body">
+        <div class="card-body px-2 py-4">
             <h1 class="mb-4 text-center">Créer un rapport d'incident</h1>
 
             <form method="POST" action="/contact">
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                    <button type="submit" class="btn btn-primary">Envoyer le rapport</button>
                 </div>
 
             </form>

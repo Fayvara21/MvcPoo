@@ -2,19 +2,6 @@
 
 <div class="container-fluid py-4">
 
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="fw-semibold mb-1">Vue globale</h1>
-                    <p class="text-muted mb-3">Vue sur toutes les demandes en cours</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
     <?php
 
     $allProjects = Task::getAllProjects();
