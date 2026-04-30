@@ -305,10 +305,11 @@ Vue en temps réel pour l'affichage des tâches
                                 <td>${typeBadge}</td>
                                 <td>${task.title}</td>
                                 <td>${reference}</td>
-                                <td>${task.due_date ?? '-'} ${loadingIcon}</td>
+                                <td>${task.due_date ?? '-'}</td>
+                                <td>${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
-                                <td colspan="5" class="p-3" style="max-width: 600px; word-wrap: break-word; white-space: normal;">
+                                <td colspan="6" class="p-0" style="max-width: 600px; word-wrap: break-word; white-space: normal;">
                                     <strong>Description:</strong> ${task.description || '-'}
                                 </td>
                             </tr>
