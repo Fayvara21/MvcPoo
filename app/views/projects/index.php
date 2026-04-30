@@ -6,7 +6,7 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
 
-                  <img src="/images/ASI-blanc.png" class="logo me-2" alt="logo" height="120">
+                  <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
 
 
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
