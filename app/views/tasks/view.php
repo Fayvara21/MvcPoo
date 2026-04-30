@@ -85,7 +85,7 @@ Vue en temps réel pour l'affichage des tâches
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody class="">
 
                                 <?php if (!empty($projectData['tasks'])): ?>
 

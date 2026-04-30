@@ -736,8 +736,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         } elseif (!$isVerifStock) {
                             if ($currentUserGroup === 'magasin' && in_array($s, [0, 1, 2, 4, 5])) {
                                 $canSetState = true;
-                            }
-                            elseif ($s === 0 && $currentUserGroup != "magasin" && in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
+                            } elseif ($s === 0 && $currentUserGroup != "magasin" && in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
                                 $canEdit = true;
                             }
                         } elseif ($s === 0 && $currentUserGroup != 'magasin') {
@@ -886,6 +885,24 @@ $baseUrl = '?' . http_build_query($paginationParams);
                                             }
                                         });
                                     });
+                                });
+
+                                let isProcessing = false;
+
+                                select.addEventListener('change', function () {
+                                    if (isProcessing) {
+                                        this.value = '';
+                                        return;
+                                    }
+
+                                    if (!stateValue) return;
+
+                                    if (confirm(confirmMessage)) {
+                                        isProcessing = true;
+                                        form.submit();
+                                    } else {
+                                        this.value = '';
+                                    }
                                 });
                             </script>
 
@@ -1081,7 +1098,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
             // Remove any existing form submission on input
             // We'll use the form submit button only, or you can uncomment below for auto-search
 
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     document.getElementById('search-form').submit();
