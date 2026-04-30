@@ -1,5 +1,5 @@
 <div class="container mt-5 mb-4">
-    <div class="card shadow-sm border-0">
+    <div class="card shadow border-0">
         <div class="card-body px-2 py-4">
             <h1 class="mb-4 text-center">Créer un rapport d'incident</h1>
 

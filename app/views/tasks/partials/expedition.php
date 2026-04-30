@@ -1,4 +1,4 @@
-<div id="expeditionFields" class="card shadow-sm border-0 mb-3" style="display: none;">
+<div id="expeditionFields" class="card shadow border-0 mb-3" style="display: none;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
             <span class="badge bg-danger">EXPEDITION</span>

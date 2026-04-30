@@ -36,7 +36,7 @@ if ($appro) {
             <!-- LEFT: MAIN FORM -->
             <div class="col-10 col-lg-5">
 
-                <div class="card shadow-sm border-0">
+                <div class="card shadow border-0">
 
                     <div class="card-header bg-white border-0 pt-4 px-4 px-xl-5">
                         <div class="d-flex align-items-center gap-3">
@@ -112,7 +112,7 @@ if ($appro) {
 
                 <!-- APPRO FIELDS -->
                 <div id="approFields" style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
-                    <div class="card shadow-sm border-0 mb-3">
+                    <div class="card shadow border-0 mb-3">
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <span class="badge bg-primary">APPRO</span>
@@ -169,7 +169,7 @@ if ($appro) {
 
                 <!-- RETOUR FIELDS -->
                 <div id="retourFields" style="display: <?= $selectedType === 'retour' ? 'block' : 'none' ?>;">
-                    <div class="card shadow-sm border-0">
+                    <div class="card shadow border-0">
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <span class="badge bg-warning text-dark">RETOUR</span>

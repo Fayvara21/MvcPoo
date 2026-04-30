@@ -59,7 +59,7 @@ Vue en temps réel pour l'affichage des tâches
 
         <?php foreach ($projects as $projectId => $projectData): ?>
 
-            <div class="card shadow-sm border-1 mb-4">
+            <div class="card shadow border-1 mb-4">
 
                 <div class="card-header bg-white border-1 pt-3 px-4">
                     <h3 class="h5 fw-semibold mb-0">

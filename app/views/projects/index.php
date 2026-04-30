@@ -3,7 +3,7 @@
 <div class="container-fluid custom-container px-4 py-4">
     <!-- Header -->
 
-    <div class="card shadow-sm border-0 px-4 pt-2 mb-4">
+    <div class="card shadow border-0 px-4 pt-2 mb-4">
         <div class="card-body">
 
             <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
@@ -34,7 +34,7 @@
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm">
+                    <div class="card h-100 border-0 shadow">
 
                         <div class="card-body">
                             <!-- Project Header -->
@@ -158,11 +158,11 @@
 
 
 
-    <div class=" CHANGELOG card d-flex flex-row shadow-sm border-0 justify-content-end mt-4 px-2">
+    <div class=" CHANGELOG card d-flex flex-row shadow border-0 justify-content-end mt-4 px-2">
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260430:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -175,7 +175,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260429:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -189,7 +189,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260428:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -206,7 +206,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260427:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -221,7 +221,7 @@
                 </ul>
             </div>
 
-            <div class=" mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class=" mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260423:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -240,7 +240,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260420:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -255,7 +255,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260417:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -272,7 +272,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260415:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -284,7 +284,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260410:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -301,7 +301,7 @@
                 </ul>
             </div>
 
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light lenticular">
+            <div class="mb-3 p-4 border rounded shadow bg-light lenticular">
                 <h4 class="mb-2 text-primary">Mise à jour v260409:</h4>
 
                 <ul class="list-group list-group-flush">
@@ -321,7 +321,7 @@
         </div>
 
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
-            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3 p-4 border rounded shadow bg-light">
 
                 <h4 class="mb-2 text-primary">Mises à jour à venir:</h4>
 

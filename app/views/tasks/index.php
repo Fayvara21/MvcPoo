@@ -397,7 +397,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
 
 <div class="container-fluid custom-container px-3 py-4">
 
-    <div class="card shadow-sm border-0 mb-4 px-3 py-2">
+    <div class="card shadow border-0 mb-4 px-3 py-2">
         <div class="card-body">
 
             <!-- Header -->

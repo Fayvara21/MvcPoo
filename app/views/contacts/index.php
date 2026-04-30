@@ -1,5 +1,5 @@
 <div class="container mt-5">
-    <div class="card shadow-sm border-0">
+    <div class="card shadow border-0">
         <div class="card-body p-5">
             <?php if (!empty($contacts)): ?>
                 <h1 class="mb-4">Tous les rapports d'incidents:</h1>
