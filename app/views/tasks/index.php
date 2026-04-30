@@ -807,7 +807,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             <td class="small text-muted"><?= e($task["user_name"]) ?></td>
 
                             <td class="actions">
-                                <div class="d-inline-flex flex-nowrap">
+                                <div class="d-inline-flex flex-nowrap actions">
                                     <?php if ($canEdit): ?>
                                         <a href="/projects/<?= $project['id'] ?>/tasks/<?= $task['id'] ?>/edit"
                                             class="btn btn-sm btn-primary d-flex align-items-center justify-content-center square-btn m-1">
@@ -1066,7 +1066,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
         // Toggle task rows on click
         document.querySelectorAll('.task-row').forEach(function (row) {
             row.addEventListener('click', function (e) {
-                if (e.target.closest('.btn') || e.target.closest('form')) return;
+                if (e.target.closest('.btn') || e.target.closest('form') || e.target.closest('.actions')) return;
                 const taskId = row.dataset.task;
                 document.querySelectorAll('.sub-task-' + taskId).forEach(function (subRow) {
                     subRow.style.display = subRow.style.display === 'none' ? 'table-row' : 'none';
@@ -1080,14 +1080,14 @@ $baseUrl = '?' . http_build_query($paginationParams);
         if (searchInput) {
             // Remove any existing form submission on input
             // We'll use the form submit button only, or you can uncomment below for auto-search
-            /*
+
             searchInput.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     document.getElementById('search-form').submit();
                 }, 500);
             });
-            */
+
         }
 
         // Highlight search terms in the results (optional feature)
