@@ -693,7 +693,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
         </div>
     </div>
 
-    <div class="card shadow-sm border-0">
+    <div class="border-0">
 
         <div class="table-responsive">
             <table class="table table-sm align-middle table-bordered">

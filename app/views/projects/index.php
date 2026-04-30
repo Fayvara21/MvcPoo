@@ -6,13 +6,14 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
 
-                  <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
+            <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
 
 
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
             <p class="text-muted mb-3">
-                Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au magasin. <br>
+                Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au magasin.
+                <br>
             </p>
 
         </div>
@@ -160,13 +161,26 @@
     <div class=" CHANGELOG d-flex justify-content-end mt-4">
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
-        <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260430:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Création du logo CB12</li>
+                    <li class="list-group-item">Les images de l'application sont sauvegardées en cache</li>
+                    
+                    
+                </ul>
+            </div>
+
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260429:</h4>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Implémentation de la pagination des demandes</li>
                     <li class="list-group-item">Modification de la logique de recherche:</li>
-                    <li class="list-group-item">- La recherche se fait désormais dans tous les champs (titre, description, PN, OF, etc.)</li>
+                    <li class="list-group-item">- La recherche se fait désormais dans tous les champs (titre,
+                        description, PN, OF, etc.)</li>
                     <li class="list-group-item">- Les résultats de la recherche sont compatibles avec les filtres</li>
                     <li class="list-group-item">Ajout du service Achat dans la liste des services</li>
                     <li class="list-group-item">Ajout d'animations et d'autres modifications visuelles</li>
@@ -178,10 +192,13 @@
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Ajout du type de tache "Expédition"</li>
-                    <li class="list-group-item">Ajout d'un champ "compte" dans les demandes d'expédition, avec valeur par défaut "ASI"</li>
+                    <li class="list-group-item">Ajout d'un champ "compte" dans les demandes d'expédition, avec valeur
+                        par défaut "ASI"</li>
                     <li class="list-group-item">Correction d'un bug d'affichage lors de la création d'un retour</li>
-                    <li class="list-group-item">Les boutons d'actions sont desormais formattées en listes déroulantes</li>
-                    <li class="list-group-item">Les changements d'état auront un pop-up de confirmation pour éviter les erreurs</li>
+                    <li class="list-group-item">Les boutons d'actions sont desormais formattées en listes déroulantes
+                    </li>
+                    <li class="list-group-item">Les changements d'état auront un pop-up de confirmation pour éviter les
+                        erreurs</li>
                     <li class="list-group-item">Refactorisation de l'interface utilisateur</li>
 
                 </ul>
@@ -326,7 +343,7 @@
                     <li class="list-group-item">Demande d’achat indirect avec notification au responsable</li>
                     <li class="list-group-item">Demande moyens généraux (ex : location de voiture)</li>
                     <li class="list-group-item">Demande d’achat direct (à traiter en dernier car plus complexe)</li>
-                    
+
                 </ul>
 
             </div>

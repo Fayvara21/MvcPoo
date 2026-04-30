@@ -483,7 +483,6 @@ form {
 .custom-navbar {
   background-color: #013966;
   padding: 0.8rem 2rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -506,7 +505,6 @@ form {
   color: #013966 !important;
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .custom-navbar .nav-link.active {
@@ -525,7 +523,7 @@ form {
 }
 
 .custom-navbar .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0s.6);
 }
 
 /* Revert hover effect for form controls */
