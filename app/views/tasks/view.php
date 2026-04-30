@@ -1,5 +1,15 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
+<!-- 
+========================================
+Vue en temps réel pour l'affichage des tâches
+- Affiche tous les projets et leurs tâches associées
+- Rafraîchit automatiquement toutes les 3 secondes pour montrer les nouvelles tâches et les changements de statut
+- Joue un son lorsqu'une tâche passe à "ouverte" ou "fermée"
+- Colorie les tâches expirées en rouge et celles dues aujourd'hui en orange
+========================================
+-->
+
 <div class="container-fluid py-4">
 
     <?php
@@ -71,6 +81,7 @@
                                     <th>Titre</th>
                                     <th style="width:120px">Ref</th>
                                     <th style="width:160px">Date limite</th>
+                                    <th style="width:24px"></th>
                                 </tr>
                             </thead>
 
@@ -129,7 +140,7 @@
                                             </td>
                                         </tr>
                                         <tr class="<?= $deadlineClass ?>">
-                                            <td colspan="5" class="p-3"
+                                            <td colspan="6" class=""
                                                 style="max-width: 800px; word-wrap: break-word; white-space: normal;">
                                                 <strong>Description:</strong>
                                                 <?= htmlspecialchars($task['description']) ?: '<span class="text-muted small">-</span>' ?>
