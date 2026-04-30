@@ -6,7 +6,8 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
 
-            <h1 class="fw-bold mb-2 cb12">CB12</h1>
+                  <img src="/images/ASI-blanc.png" class="logo me-2" alt="logo" height="120">
+
 
             <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
