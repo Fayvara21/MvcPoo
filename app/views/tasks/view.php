@@ -61,14 +61,14 @@ Vue en temps réel pour l'affichage des tâches
 
             <div class="card shadow-sm border-1 mb-4">
 
-                <div class="card-header bg-white border-1 pt-4 px-4">
+                <div class="card-header bg-white border-1 pt-3 px-4">
                     <h3 class="h5 fw-semibold mb-0">
                         <i class="bi bi-folder2-open text-primary me-2"></i>
                         <?= htmlspecialchars($projectData['title']) ?>
                     </h3>
                 </div>
 
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-wrapper">
                     <div class="table-responsive">
 
                         <table class="table table-hover align-middle mb-0 project-table"

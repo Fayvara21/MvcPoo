@@ -1,4 +1,3 @@
-
 .bg-blue {
   background-color: #0d6efd !important;
 }
@@ -415,68 +414,86 @@
   border-color: #ffffff !important;
 }
 
-.cb12{
+.cb12 {
   font-size: 42px !important;
 }
 
 .square-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
 }
 
 #taskContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem; /* use relative units */
-    padding: 0 1rem; /* avoid horizontal overflow */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  /* use relative units */
+  padding: 0 1rem;
+  /* avoid horizontal overflow */
 }
 
-.custom-container{
-    max-width: 1400px;
-    margin: 0 auto;
+.custom-container {
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
+
 th {
   text-align: center
 }
 
 .contactDescription {
-    text-align: left; 
-    text-wrap: wrap ;
+  text-align: left;
+  text-wrap: wrap;
 }
 
 .table-sm td {
-    padding: .3rem !important;
+  padding: .3rem !important;
+}
+
+.table-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.table-wrapper .table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 
 /* let 3rd column take remaining space */
-td.task-desctiption{
-    text-align: left;
+td.task-desctiption {
+  text-align: left;
 
 }
+
 td.task-description {
-    width: 100%;
-    white-space: normal; /* allow wrapping if needed */
-    text-align: left;
+  width: 100%;
+  white-space: normal;
+  /* allow wrapping if needed */
+  text-align: left;
 }
 
 
 
 form {
-    margin: 0 1rem; /* relative margin for small screens */
+  margin: 0 1rem;
+  /* relative margin for small screens */
 }
 
 
@@ -540,7 +557,8 @@ form {
 }
 
 /* Button styling with revert effect */
-.custom-navbar .btn-outline-light, .custom-navbar .btn-outline-danger {
+.custom-navbar .btn-outline-light,
+.custom-navbar .btn-outline-danger {
   border: 2px solid #ffffff;
   color: #ffffff;
   background-color: transparent;
@@ -555,9 +573,9 @@ form {
 }
 
 .backdrop-blur-sm {
-    --bs-backdrop-blur: blur(4px);
-    backdrop-filter: var(--bs-backdrop-blur);
-    -webkit-backdrop-filter: var(--bs-backdrop-blur);
+  --bs-backdrop-blur: blur(4px);
+  backdrop-filter: var(--bs-backdrop-blur);
+  -webkit-backdrop-filter: var(--bs-backdrop-blur);
 }
 
 /* Revert hover effect - buttons become white with dark text */
@@ -604,12 +622,12 @@ form {
   outline: none !important;
 }
 
-.task-row{
-    cursor: pointer;
+.task-row {
+  cursor: pointer;
 }
 
 .task-row:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Form alignment in navbar */
@@ -666,38 +684,45 @@ form {
   outline: 2px solid white;
   outline-offset: 2px;
 }
+
 .navbar .logo {
-    height: 40px;        /* Fits standard navbar height */
-    width: auto;         /* Maintains aspect ratio */
-    max-height: 100%;    /* Never exceeds navbar */
-    object-fit: contain; /* Ensures full logo visible */
-    display: block;
+  height: 40px;
+  /* Fits standard navbar height */
+  width: auto;
+  /* Maintains aspect ratio */
+  max-height: 100%;
+  /* Never exceeds navbar */
+  object-fit: contain;
+  /* Ensures full logo visible */
+  display: block;
 }
 
 /* Responsive for smaller screens */
 @media (max-width: 768px) {
-    .navbar .logo {
-        height: 32px;    /* Smaller on mobile */
-    }
+  .navbar .logo {
+    height: 32px;
+    /* Smaller on mobile */
+  }
 }
 
 @media (max-width: 576px) {
-    .navbar .logo {
-        height: 28px;    /* Even smaller on XS */
-    }
+  .navbar .logo {
+    height: 28px;
+    /* Even smaller on XS */
+  }
 }
 
 
 /* ===== SCALING BLUR BACKGROUND WITH FOCUS ===== */
 
 /* Base state */
-body:has(.login), 
+body:has(.login),
 body:has(.register) {
   position: relative;
 }
 
 /* Dreamy blur layer with default scale */
-body:has(.login)::before, 
+body:has(.login)::before,
 body:has(.register)::before {
   content: "";
   position: fixed;
@@ -717,7 +742,7 @@ body:has(.register)::before {
 }
 
 /* Focus effect - scales up more */
-body:has(.login :focus)::before, 
+body:has(.login :focus)::before,
 body:has(.register :focus)::before {
   transform: scale(1.05);
   filter: blur(10px);
@@ -725,13 +750,14 @@ body:has(.register :focus)::before {
 }
 
 /* Optional hover effect */
-body:has(.login):hover::before, 
+body:has(.login):hover::before,
 body:has(.register):hover::before {
   transform: scale(1.03);
   filter: blur(8px);
 }
 
-.login, .register {
+.login,
+.register {
   min-height: 100vh;
   padding: 1rem 0;
   flex-direction: column;
@@ -744,19 +770,21 @@ body:has(.register):hover::before {
 
 /* Responsive */
 @media (max-width: 700px) {
-  .login, .register {
+
+  .login,
+  .register {
     flex-direction: column;
     justify-content: flex-start;
     padding-top: 3rem;
   }
-  
-  body:has(.login)::before, 
+
+  body:has(.login)::before,
   body:has(.register)::before {
     background-attachment: scroll;
     transform: scale(1.02);
   }
-  
-  body:has(.login :focus)::before, 
+
+  body:has(.login :focus)::before,
   body:has(.register :focus)::before {
     transform: scale(1.05);
   }
@@ -768,6 +796,7 @@ body:has(.register):hover::before {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -781,17 +810,15 @@ body:has(.register):hover::before {
   /* Base styling */
   position: relative;
   overflow: hidden;
-  
+
   /* Lenticular gradient layers */
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 255, 255, 0.05) 75%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-  
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 75%,
+      rgba(255, 255, 255, 0.1) 100%);
+
   /* Animated shimmer that shifts on hover/move */
   transition: all 0.3s ease;
 }
@@ -804,15 +831,13 @@ body:has(.register):hover::before {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 40px,
-    rgba(255, 255, 255, 0.03) 40px,
-    rgba(255, 255, 255, 0.08) 60px,
-    transparent 60px,
-    transparent 100px
-  );
+  background: repeating-linear-gradient(45deg,
+      transparent,
+      transparent 40px,
+      rgba(255, 255, 255, 0.03) 40px,
+      rgba(255, 255, 255, 0.08) 60px,
+      transparent 60px,
+      transparent 100px);
   animation: lenticularShift 8s linear infinite;
   pointer-events: none;
 }
@@ -825,11 +850,9 @@ body:has(.register):hover::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle at 30% 40%,
-    rgba(255, 255, 255, 0.08) 0%,
-    transparent 60%
-  );
+  background: radial-gradient(circle at 30% 40%,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 60%);
   animation: lenticularGlow 6s ease-in-out infinite;
   pointer-events: none;
 }
@@ -848,15 +871,19 @@ body:has(.register):hover::before {
   0% {
     transform: translate(0, 0) rotate(0deg);
   }
+
   25% {
     transform: translate(10px, 5px) rotate(2deg);
   }
+
   50% {
     transform: translate(0, 10px) rotate(0deg);
   }
+
   75% {
     transform: translate(-10px, 5px) rotate(-2deg);
   }
+
   100% {
     transform: translate(0, 0) rotate(0deg);
   }
@@ -866,25 +893,32 @@ body:has(.register):hover::before {
   0% {
     transform: translate(0, 0) rotate(0deg);
   }
+
   25% {
     transform: translate(15px, 8px) rotate(3deg);
   }
+
   50% {
     transform: translate(0, 15px) rotate(0deg);
   }
+
   75% {
     transform: translate(-15px, 8px) rotate(-3deg);
   }
+
   100% {
     transform: translate(0, 0) rotate(0deg);
   }
 }
 
 @keyframes lenticularGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.5;
     background-position: 30% 40%;
   }
+
   50% {
     opacity: 1;
     background-position: 70% 60%;
@@ -895,4 +929,3 @@ body:has(.register):hover::before {
 .lenticular.tilt-3d {
   transition: transform 0.1s ease-out;
 }
-
