@@ -5,7 +5,7 @@
 
 <div class="login dream-state d-flex justify-content-center align-items-center vh-100">
 	
-	<div class="card shadow p-4" style="width:350px;">
+	<div class="card shadow-sm p-4" style="width:350px;">
 	
 		<div class="d-flex flex-row">
 			<h2 class="">Connexion</h2>

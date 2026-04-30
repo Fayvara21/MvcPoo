@@ -1,4 +1,4 @@
-<div id="verifStockFields" class="card shadow border-0 mb-3" style="display: none;">
+<div id="verifStockFields" class="card shadow-sm border-0 mb-3" style="display: none;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
             <span class="badge bg-success">VERIF STOCK</span>

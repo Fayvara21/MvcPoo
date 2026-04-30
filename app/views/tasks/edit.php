@@ -35,7 +35,7 @@ function e($str)
 
             <!-- LEFT -->
             <div class="col-10 col-lg-5">
-                <div class="card shadow border-0">
+                <div class="card shadow-sm border-0">
                     <div class="card-header bg-white border-0 pt-4 px-4 px-xl-5">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-primary bg-opacity-10 p-3 rounded-3">

@@ -553,7 +553,7 @@ form {
   outline: none;
   background-color: rgba(255, 255, 255, 0.25);
   border-color: white;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  box-shadow-sm: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Button styling with revert effect */
@@ -584,13 +584,13 @@ form {
   border-color: white;
   color: #013966;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow-sm: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Active state for buttons */
 .custom-navbar .btn-outline-light:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Search button specific */
@@ -618,7 +618,7 @@ form {
 }
 
 .navbar-toggler:focus {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+  box-shadow-sm: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
   outline: none !important;
 }
 
