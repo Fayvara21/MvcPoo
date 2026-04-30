@@ -3,7 +3,7 @@
 <div class="container-fluid custom-container px-4 py-4">
     <!-- Header -->
 
-    <div class="card shadow-sm border-0 mb-4 px-4">
+    <div class="card shadow-sm border-0 px-4 pt-2 mb-4">
         <div class="card-body">
 
             <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
@@ -158,7 +158,7 @@
 
 
 
-    <div class=" CHANGELOG card d-flex flex-row shadow border-0 justify-content-end mt-4 px-2">
+    <div class=" CHANGELOG card d-flex flex-row shadow-sm border-0 justify-content-end mt-4 px-2">
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
 
@@ -168,6 +168,8 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Création du logo CB12</li>
                     <li class="list-group-item">Les images de l'application sont sauvegardées en cache</li>
+                    <li class="list-group-item">Amélioration des performances de l'application</li>
+                    <li class="list-group-item">Correction de plusieurs éléments mineurs de l'interface</li>
                     
                     
                 </ul>
