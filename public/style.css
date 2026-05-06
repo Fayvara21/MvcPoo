@@ -434,9 +434,8 @@
   /* avoid horizontal overflow */
 }
 
-.custom-container {
-  max-width: 1000px;
-}
+/* .custom-container {
+  } */
 
 table {
   width: 100%;
