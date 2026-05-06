@@ -146,7 +146,7 @@ Vue en temps réel pour l'affichage des tâches
                                         </tr>
                                         <tr class="<?= $deadlineClass ?>">
                                             <td colspan="6" class="py-1"
-                                                style="max-width: 500px; word-wrap: break-word; white-space: normal;">
+                                                style="max-width: 300px; word-wrap: break-word; white-space: normal;">
                                                 <strong>Description:</strong>
                                                 <?= htmlspecialchars($task['description']) ?: '<span class="text-muted small">-</span>' ?>
                                             </td>
