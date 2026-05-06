@@ -60,8 +60,6 @@
         <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
       </a>
     </div>
-
-    <hr>
     
   </div>
 </div>
