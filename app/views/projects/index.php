@@ -136,7 +136,7 @@
                         </div>
 
                         <!-- Footer -->
-                        <div class="card-footer bg-transparent border-1 pt-0 pb-3 px-3">
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
                             <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
                                 class="btn btn-sm btn-outline-primary rounded-pill w-100">
                                 <i class="bi bi-eye me-1"></i>
@@ -161,7 +161,18 @@
     <div class=" CHANGELOG card d-flex flex-row shadow-sm border-1 justify-content-end mt-4 px-2">
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260506:</h4>
 
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Refonte complête de l'interface:</li>
+                    <li class="list-group-item">- Remplacement de la navbar en sidebar</li>
+                    <li class="list-group-item">- Addition d'un thème "papier milimétrique"</li>
+                    <li class="list-group-item">- Amélioration de la lisibilité générale de l'interface</li>
+                    <li class="list-group-item">- Divers ajustements visuels mineurs</li>
+
+                </ul>
+            </div>
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260430:</h4>
 
@@ -170,8 +181,8 @@
                     <li class="list-group-item">Les images de l'application sont sauvegardées en cache</li>
                     <li class="list-group-item">Amélioration des performances de l'application</li>
                     <li class="list-group-item">Correction de plusieurs éléments mineurs de l'interface</li>
-                    
-                    
+
+
                 </ul>
             </div>
 
