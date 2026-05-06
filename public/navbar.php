@@ -12,7 +12,7 @@
 
 <!-- Sidebar -->
 <div class="sidebar custom-navbar" id="sidebar">
-  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="height: 100vh;">
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white" style="height: 100vh;">
     <!-- Logo -->
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
       <img src="/images/ASI-blanc.png" class="logo-sidebar me-2" alt="logo" style="max-height: 40px;">
@@ -62,23 +62,7 @@
     </div>
 
     <hr>
-
-    <!-- Dropdown utilisateur -->
-    <div class="dropdown mt-auto">
-      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i>
-        <strong><?php echo $_SESSION["user"]; ?></strong>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-        <li><a class="dropdown-item" href="/profile">Profil</a></li>
-        <li><a class="dropdown-item" href="/settings">Paramètres</a></li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
-      </ul>
-    </div>
+    
   </div>
 </div>
 
