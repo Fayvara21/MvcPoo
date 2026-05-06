@@ -988,6 +988,10 @@ body {
     .custom-navbar.open{
       margin: auto;
     }
+    .main-content {
+      margin-left: 0;
+      padding: 20px;
+    }
 
 
     .menu-toggle {
