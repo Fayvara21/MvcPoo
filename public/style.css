@@ -971,9 +971,9 @@ body {
 
   .main-content {
     flex: 1;
-    margin-left: 280px;
-    min-height: 100vh;
-    padding: 20px;
+    margin-left: 280px !important;
+    min-height: 100vh !important;
+    padding: 20px !important;
   }
 
   /* Responsive pour mobile */
