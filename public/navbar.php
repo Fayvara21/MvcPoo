@@ -78,6 +78,7 @@
     link.addEventListener('click', () => {
       if (window.innerWidth <= 768) {
         document.getElementById('sidebar').classList.remove('open');
+
       }
     });
   });

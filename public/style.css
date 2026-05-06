@@ -434,9 +434,7 @@
   /* avoid horizontal overflow */
 }
 
-.custom-container {
-  max-width: calc(100vw - 280px);
-}
+
 
 table {
   width: 100%;
@@ -991,9 +989,6 @@ body {
       margin: auto;
     }
 
-    .main-content {
-      margin-left: 0;
-    }
 
     .menu-toggle {
       display: block;
