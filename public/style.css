@@ -950,6 +950,10 @@ body {
         80px 80px;
 }
 
+.container{
+  width: auto !important;
+}
+
 /* Layout principal - Sidebar fixe à gauche */
   .app-wrapper {
     display: flex;
@@ -963,7 +967,6 @@ body {
     left: 0;
     height: 100vh;
     overflow-y: auto;
-    background: #212529;
     z-index: 1000;
   }
 
