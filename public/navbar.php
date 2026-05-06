@@ -16,7 +16,7 @@
     <!-- Logo -->
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
       <img src="/images/ASI-blanc.png" class="logo-sidebar me-2" alt="logo" style="max-height: 40px;">
-      <span class="fs-4">ASI</span>
+      <span class="fs-4">CB12</span>
     </a>
 
     <hr>
