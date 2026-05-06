@@ -54,7 +54,7 @@
   }
 </style>
 
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" style="width: 280px; min-height: 100vh;">
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark navbar" style="width: 280px; min-height: 100vh;">
   
   <!-- Logo -->
   <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
