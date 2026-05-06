@@ -710,7 +710,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         <th class="actions-header">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white">
 
                     <?php foreach ($paginatedTasks as $taskIndex => $task): ?>
                         <?php
