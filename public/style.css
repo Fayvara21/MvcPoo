@@ -1017,7 +1017,7 @@ body {
     }
   }
 
-.project-table td{
+.wordwrap{
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: break-word;
