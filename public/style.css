@@ -464,6 +464,7 @@ th {
   max-height: 500px;
   overflow-y: auto;
   position: relative;
+  max-width: 500px;
 }
 
 .table-wrapper .table thead th {
