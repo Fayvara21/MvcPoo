@@ -78,11 +78,11 @@ Vue en temps réel pour l'affichage des tâches
 
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4" style="width:60px">#</th>
-                                    <th style="width:100px">Type</th>
+                                    <th class="ps-2" style="width:60px">#</th>
+                                    <th style="width:80px">Type</th>
                                     <th>Titre</th>
                                     <th style="width:120px">Ref</th>
-                                    <th style="width:160px">Date limite</th>
+                                    <th style="width:120px">Date limite</th>
                                     <th style="width:24px"></th>
                                 </tr>
                             </thead>
@@ -146,7 +146,7 @@ Vue en temps réel pour l'affichage des tâches
                                         </tr>
                                         <tr class="<?= $deadlineClass ?>">
                                             <td colspan="6" class="py-1"
-                                                style="max-width: 800px; word-wrap: break-word; white-space: normal;">
+                                                style="max-width: 500px; word-wrap: break-word; white-space: normal;">
                                                 <strong>Description:</strong>
                                                 <?= htmlspecialchars($task['description']) ?: '<span class="text-muted small">-</span>' ?>
                                             </td>
