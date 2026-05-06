@@ -928,96 +928,98 @@ body:has(.register):hover::before {
 }
 
 body {
-    background:
-        linear-gradient(-90deg, rgba(0,0,0,.05) 1px, transparent 1px),
-        linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px), 
-        linear-gradient(-90deg, rgba(0, 0, 0, .04) 1px, transparent 1px),
-        linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
-        linear-gradient(transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
-        linear-gradient(-90deg, #aaa 1px, transparent 1px),
-        linear-gradient(-90deg, transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
-        linear-gradient(#aaa 1px, transparent 1px),
-        #ffffff;
-    background-size:
-        4px 4px,
-        4px 4px,
-        80px 80px,
-        80px 80px,
-        80px 80px,
-        80px 80px,
-        80px 80px,
-        80px 80px;
+  background:
+    linear-gradient(-90deg, rgba(0, 0, 0, .05) 1px, transparent 1px),
+    linear-gradient(rgba(0, 0, 0, .05) 1px, transparent 1px),
+    linear-gradient(-90deg, rgba(0, 0, 0, .04) 1px, transparent 1px),
+    linear-gradient(rgba(0, 0, 0, .04) 1px, transparent 1px),
+    linear-gradient(transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
+    linear-gradient(-90deg, #aaa 1px, transparent 1px),
+    linear-gradient(-90deg, transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
+    linear-gradient(#aaa 1px, transparent 1px),
+    #ffffff;
+  background-size:
+    4px 4px,
+    4px 4px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px;
 }
 
 
 /* Layout principal - Sidebar fixe à gauche */
-  .app-wrapper {
-    display: flex;
-    min-height: 100vh;
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  min-height: 100vh !important;
+  padding: 20px !important;
+  margin-right: 0 !important;
+  width: auto !important;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    width: 280px;
   }
 
-  .sidebar {
-    width: 280px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 1000;
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .custom-navbar.open {
+    margin: auto;
   }
 
   .main-content {
-    flex: 1;
-    margin-left: 280px;
-    min-height: 100vh !important;
-    padding: 20px !important;
-    margin-right: 0 !important;
-    width: auto !important;
+    margin-left: 0;
+    padding: 20px;
   }
 
-  /* Responsive pour mobile */
-  @media (max-width: 768px) {
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      width: 280px;
-    }
 
-    .sidebar.open {
-      transform: translateX(0);
-    }
-    .custom-navbar.open{
-      margin: auto;
-    }
-    .main-content {
-      margin-left: 0;
-      padding: 20px;
-    }
-
-
-    .menu-toggle {
-      display: block;
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1001;
-      background: #013966;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-
+  .menu-toggle {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #013966;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
   }
 
-  @media (min-width: 769px) {
-    .menu-toggle {
-      display: none;
-    }
-  }
+}
 
-.wordwrap{
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+.wordwrap {
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: break-word;

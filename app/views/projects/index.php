@@ -4,17 +4,19 @@
     <!-- Header -->
 
     <div class="card shadow-sm border-1 px-4 pt-2 mb-4">
-        <div class="card-body">
+        <div class="card-body d-flex flex-row">
 
             <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
 
+            <div>
+                <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
 
-            <h2 class="fw-semibold mb-1">Demandes Magasin</h2>
-
-            <p class="text-muted mb-3">
-                Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au magasin.
-                <br>
-            </p>
+                <p class="text-muted mb-3">
+                    Plateforme de dépot de demandes d'approvisionnement, de retours, ou autres demandes liées au
+                    magasin.
+                    <br>
+                </p>
+            </div>
 
         </div>
     </div>

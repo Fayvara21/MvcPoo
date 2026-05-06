@@ -326,5 +326,5 @@ Vue en temps réel pour l'affichage des tâches
     }
 
     loadTasks();
-    setInterval(loadTasks, 3000);
+    setInterval(loadTasks, 10000);
 </script>
