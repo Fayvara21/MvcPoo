@@ -311,7 +311,7 @@ Vue en temps réel pour l'affichage des tâches
                                 <td>${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
-                                <td colspan="6" class="p-1" style="max-width: 600px; word-wrap: break-word; white-space: normal;">
+                                <td colspan="6" class="p-1" style="max-width: 500px; word-wrap: break-word; white-space: normal;">
                                     <strong>Description:</strong> ${task.description || '-'}
                                 </td>
                             </tr>
