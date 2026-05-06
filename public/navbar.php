@@ -3,68 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<style>
-  /* Layout principal - Sidebar fixe à gauche */
-  .app-wrapper {
-    display: flex;
-    min-height: 100vh;
-  }
 
-  .sidebar {
-    width: 280px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    overflow-y: auto;
-    background: #212529;
-    z-index: 1000;
-  }
-
-  .main-content {
-    flex: 1;
-    margin-left: 280px;
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  /* Responsive pour mobile */
-  @media (max-width: 768px) {
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      width: 280px;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-
-    .main-content {
-      margin-left: 0;
-    }
-
-    .menu-toggle {
-      display: block;
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1001;
-      background: #013966;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-  }
-
-  @media (min-width: 769px) {
-    .menu-toggle {
-      display: none;
-    }
-  }
-</style>
 
 <!-- Bouton toggle pour mobile -->
 <button class="menu-toggle" id="menuToggle">

@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 
-<div class="container py-4">
+<div class="container py-4 main-content">
 
     <!-- Header -->
     <div class="px-lg-4">

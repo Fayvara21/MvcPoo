@@ -10,7 +10,7 @@ Vue en temps réel pour l'affichage des tâches
 ========================================
 -->
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 main-content">
 
 
 
