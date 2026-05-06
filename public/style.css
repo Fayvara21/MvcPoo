@@ -950,9 +950,6 @@ body {
         80px 80px;
 }
 
-.container{
-  width: auto !important;
-}
 
 /* Layout principal - Sidebar fixe à gauche */
   .app-wrapper {
@@ -976,6 +973,7 @@ body {
     min-height: 100vh !important;
     padding: 20px !important;
     margin-right: 0 !important;
+    width: auto !important;
   }
 
   /* Responsive pour mobile */
