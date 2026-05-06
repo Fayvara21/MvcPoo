@@ -1,4 +1,3 @@
-<?php include __DIR__ . '/../../../public/navbar.php'; ?>
 
 <!-- 
 ========================================
@@ -11,6 +10,9 @@ Vue en temps réel pour l'affichage des tâches
 -->
 
 <div class="container-fluid py-4">
+
+<?php include __DIR__ . '/../../../public/navbar.php'; ?>
+
 
     <?php
 
