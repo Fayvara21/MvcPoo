@@ -128,13 +128,13 @@ Vue en temps réel pour l'affichage des tâches
                                                     <span class="badge bg-secondary">AUTRE</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td><?= htmlspecialchars($task['title']) ?></td>
-                                            <td>
+                                            <td class="word-wrap: break-word; "><?= htmlspecialchars($task['title']) ?></td>
+                                            <td class="word-wrap: break-word; ">
                                                 <?= $isAppro
                                                     ? ($approFirst['pn'] ?? '-')
                                                     : ($isRetour ? ($retourFirst['pn'] ?? '-') : ($isVerifStock ? ($verifStockFirst['pn'] ?? '-') : ($isExpedition ? ($expeditionFirst['pn'] ?? '-') : '-'))) ?>
                                             </td>
-                                            <td>
+                                            <td class='word-wrap: break-word; '>
                                                 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
 
                                             </td>
