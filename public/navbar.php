@@ -11,7 +11,7 @@
 </button>
 
 <!-- Sidebar -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar custom-navbar" id="sidebar">
   <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="height: 100vh;">
     <!-- Logo -->
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
