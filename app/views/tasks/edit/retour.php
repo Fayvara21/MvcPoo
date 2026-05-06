@@ -1,4 +1,4 @@
-<div id="retourFields" class="card shadow-sm border-0" style="display: <?= $selectedType === 'retour' ? 'block' : 'none' ?>;">
+<div id="retourFields" class="card shadow-sm border-1" style="display: <?= $selectedType === 'retour' ? 'block' : 'none' ?>;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
             <span class="badge bg-warning text-dark">RETOUR</span>

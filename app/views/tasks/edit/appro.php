@@ -1,4 +1,4 @@
-<div id="approFields" class="card shadow-sm border-0 mb-3" style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
+<div id="approFields" class="card shadow-sm border-1 mb-3" style="display: <?= $selectedType === 'appro' ? 'block' : 'none' ?>;">
     <div class="card-body">
         <div class="d-flex align-items-center gap-2 mb-3">
             <span class="badge bg-primary">APPRO</span>

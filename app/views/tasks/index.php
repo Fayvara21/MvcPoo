@@ -397,7 +397,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
 
 <div class="container-fluid custom-container px-3 py-4 main-content">
 
-    <div class="card shadow-sm border-0 mb-4 px-3 py-2">
+    <div class="card shadow-sm border-1 mb-4 px-3 py-2">
         <div class="card-body">
 
             <!-- Header -->
@@ -693,7 +693,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
         </div>
     </div>
 
-    <div class="border-0">
+    <div class="border-1">
 
         <div class="table-responsive">
             <table class="table table-sm align-middle table-bordered">

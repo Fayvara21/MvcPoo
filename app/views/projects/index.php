@@ -3,7 +3,7 @@
 <div class="container-fluid custom-container main-content px-4 py-4">
     <!-- Header -->
 
-    <div class="card shadow-sm border-0 px-4 pt-2 mb-4">
+    <div class="card shadow-sm border-1 px-4 pt-2 mb-4">
         <div class="card-body">
 
             <img src="/images/CB12-bleu.png" class="logo me-2" alt="logo" height="120">
@@ -34,7 +34,7 @@
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm">
+                    <div class="card h-100 border-1 shadow-sm">
 
                         <div class="card-body">
                             <!-- Project Header -->
@@ -136,7 +136,7 @@
                         </div>
 
                         <!-- Footer -->
-                        <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
+                        <div class="card-footer bg-transparent border-1 pt-0 pb-3 px-3">
                             <a href="/projects/<?= htmlspecialchars($project['id']) ?>/tasks"
                                 class="btn btn-sm btn-outline-primary rounded-pill w-100">
                                 <i class="bi bi-eye me-1"></i>
@@ -158,7 +158,7 @@
 
 
 
-    <div class=" CHANGELOG card d-flex flex-row shadow-sm border-0 justify-content-end mt-4 px-2">
+    <div class=" CHANGELOG card d-flex flex-row shadow-sm border-1 justify-content-end mt-4 px-2">
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
 
