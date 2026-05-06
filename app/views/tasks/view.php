@@ -305,9 +305,9 @@ Vue en temps réel pour l'affichage des tâches
                             <tr class="${rowClass}">
                                 <td class="ps-4 fw-medium">${task.id}</td>
                                 <td>${typeBadge}</td>
-                                <td>${task.title}</td>
-                                <td>${reference}</td>
-                                <td>${task.due_date ?? '-'}</td>
+                                <td style="word-wrap: break-word;">${task.title}</td>
+                                <td style="word-wrap: break-word;">${reference}</td>
+                                <td style="word-wrap: break-word;">${task.due_date ?? '-'}</td>
                                 <td>${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
