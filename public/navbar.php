@@ -4,75 +4,125 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<nav class="navbar navbar-expand-lg custom-navbar sticky-top px-3 backdrop-blur-sm" data-bs-theme="dark">
-  <div class="container-fluid custom-container">
+<style>
+  .sidebar {
+    width: 280px;
+    background: #212529;
+    transition: all 0.3s;
+  }
+  
+  .sidebar .nav-link {
+    color: #fff;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+  }
+  
+  .sidebar .nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+  }
+  
+  .sidebar .nav-link.active {
+    background: #0d6efd;
+    color: white;
+  }
+  
+  .logo-sidebar {
+    max-height: 40px;
+    width: auto;
+  }
+  
+  .dropdown-menu-dark {
+    background-color: #2b3035;
+    border-color: #373b3e;
+  }
+  
+  .dropdown-menu-dark .dropdown-item:hover {
+    background-color: #0d6efd;
+  }
+  
+  .btn-sidebar-action {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      position: relative;
+    }
+  }
+</style>
 
-    <!-- Logo -->
-    <a class="navbar-brand d-flex align-items-center" href="/">
-      <img src="/images/ASI-blanc.png" class="logo me-2" alt="logo" height="40">
-    </a>
-
-    <!-- Toggle -->
-    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Content -->
-    <div class="collapse navbar-collapse" id="navbarMain">
-
-      <!-- Left menu -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-2">
-
-        <li class="nav-item">
-          <a href="/" class="nav-link">
-            <i class="bi bi-house-door me-1"></i>Accueil
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="/projects/tasks/view" class="btn btn-outline-light rounded-pill px-3">
-            <i class="bi bi-grid-3x3-gap-fill me-1"></i>Vue globale
-          </a>
-        </li>
-
-      </ul>
-
-      <!-- Right menu -->
-      <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-3 mt-lg-0">
-
-        <!-- User -->
-        <span class="text-white small me-lg-2">
-          Bonjour <strong><?php echo $_SESSION["user"]; ?></strong>
-        </span>
-
-        <!-- Actions -->
-        <a href="/contact" class="btn btn-outline-light rounded-pill px-3">
-          <i class="bi bi-send-exclamation-fill me-1"></i>Contact
-        </a>
-
-        <a href="/register" class="btn btn-outline-light rounded-pill px-3">
-          <i class="bi bi-person-plus me-1"></i>Créer un compte
-        </a>
-
-        <a href="/logout" class="btn btn-outline-danger rounded-pill px-3">
-          <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
-        </a>
-
-      </div>
-
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" style="width: 280px; min-height: 100vh;">
+  
+  <!-- Logo -->
+  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
+    <img src="/images/ASI-blanc.png" class="logo-sidebar me-2" alt="logo">
+    <span class="fs-4">ASI</span>
+  </a>
+  
+  <hr>
+  
+  <!-- Menu principal -->
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a href="/" class="nav-link">
+        <i class="bi bi-house-door me-2"></i>
+        Accueil
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/projects/tasks/view" class="nav-link">
+        <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+        Vue globale
+      </a>
+    </li>
+  </ul>
+  
+  <hr>
+  
+  <!-- Section utilisateur -->
+  <div class="mb-3">
+    <div class="text-white small mb-2">
+      Bonjour <strong><?php echo $_SESSION["user"]; ?></strong>
     </div>
   </div>
-</nav>
+  
+  <!-- Actions -->
+  <div class="mb-3">
+    <a href="/contact" class="btn btn-outline-light rounded-pill px-3 btn-sidebar-action">
+      <i class="bi bi-send-exclamation-fill me-1"></i>Contact
+    </a>
+    
+    <a href="/register" class="btn btn-outline-light rounded-pill px-3 btn-sidebar-action">
+      <i class="bi bi-person-plus me-1"></i>Créer un compte
+    </a>
+    
+    <a href="/logout" class="btn btn-outline-danger rounded-pill px-3 btn-sidebar-action">
+      <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+    </a>
+  </div>
+  
+  <hr>
+  
+  <!-- Dropdown utilisateur (optionnel) -->
+  <div class="dropdown mt-auto">
+    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i>
+      <strong><?php echo $_SESSION["user"]; ?></strong>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+      <!-- <li><a class="dropdown-item" href="/profile">Profil</a></li>
+      <li><a class="dropdown-item" href="/settings">Paramètres</a></li>
+      <li><hr class="dropdown-divider"></li> -->
+      <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
+    </ul>
+  </div>
+</div>
 
 <script>
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('mousemove', (e) => {
-      document.body.style.setProperty('--mouse-x', e.clientX + 'px');
-      document.body.style.setProperty('--mouse-y', e.clientY + 'px');
-    });
-  });
-
+  // Gestion de l'effet lenticulaire sur les éléments avec la classe .lenticular
   document.querySelectorAll('.lenticular').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -82,6 +132,16 @@
     });
     card.addEventListener('mouseleave', () => {
       card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    });
+  });
+  
+  // Marquer le lien actif dans la sidebar
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
     });
   });
 </script>
