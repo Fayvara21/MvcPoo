@@ -81,6 +81,7 @@ function e($str)
                                     <?php endfor; ?>
                                 </select>
                             </div>
+                            
                             <div class="col-md-6 col-lg-4">
                                 <label class="form-label fw-medium">Type de tâche</label>
                                 <select class="form-select" name="type" id="taskType" required>

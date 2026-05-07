@@ -84,6 +84,7 @@ Vue en temps réel pour l'affichage des tâches
                                     <th style="width:120px">Ref</th>
                                     <th style="width:120px">Date limite</th>
                                     <th style="width:24px"></th>
+                                    <th style="width:24px"></th>
                                 </tr>
                             </thead>
 
@@ -138,6 +139,7 @@ Vue en temps réel pour l'affichage des tâches
                                                 <?= $task['due_date'] ? date('d/m/Y H:i', strtotime($task['due_date'])) : '-' ?>
 
                                             </td>
+                                            <td><?= $task['priority'] ?></td>
                                             <td>
                                                 <?php if ($task['is_completed'] == 1): ?>
                                                     <span class="ms-2 spinner-border spinner-border-sm text-warning"></span>
@@ -181,6 +183,14 @@ Vue en temps réel pour l'affichage des tâches
 
     let previousTasks = {};        // { taskId: state }
     let notifiedTasks = {};        // { taskId: {open: true/false, close: true/false} }
+
+    const priorityColor = {
+        1: 'blue',
+        2: 'green',
+        3: 'red',
+        4: 'orange',
+        5: 'darkred',
+    };
 
     function getDeadlineClassJS(dueDate) {
         if (!dueDate) return '';
@@ -308,6 +318,7 @@ Vue en temps réel pour l'affichage des tâches
                                 <td class="wordwrap">${task.title}</td>
                                 <td class="wordwrap">${reference}</td>
                                 <td class="wordwrap">${task.due_date ?? '-'}</td>
+                                <td><div class="badge bg-${priorityColor[task.priority]}">${task.priority}</div></td>
                                 <td>${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">

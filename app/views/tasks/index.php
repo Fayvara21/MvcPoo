@@ -706,6 +706,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                         <th>Créé</th>
                         <th>Deadline</th>
                         <th>Complétion</th>
+                        <th>Priorité</th>
                         <th>Demandeur</th>
                         <th class="actions-header">Actions</th>
                     </tr>
@@ -803,6 +804,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             <td class="small text-muted">
                                 <?= $task['completed_at'] ? e(formatDateFr($task['completed_at'])) : '-' ?>
                             </td>
+                            <td class="small text-muted"><?= $task['priority'] ?></td>
                             <td class="small text-muted"><?= e($task["user_name"]) ?></td>
 
                             <td class="actions">

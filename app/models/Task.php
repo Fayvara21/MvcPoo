@@ -94,6 +94,7 @@ class Task
                 t.description,
                 t.created_at,
                 t.due_date,
+                t.priority,
                 t.project_id,
                 t.is_completed,
                 t.completed_at,

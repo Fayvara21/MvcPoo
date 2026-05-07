@@ -177,6 +177,7 @@ class TaskController extends BaseController
                 $_POST['desc'] ?? '',
                 $task['id'],
                 $_POST['dueDate'] ?: null,
+                $_POST['priority'] ?? 1,
             );
 
             $type = $_POST['type'] ?? '';
