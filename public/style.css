@@ -733,6 +733,7 @@ body:has(.register)::before {
   background-size: cover;
   background-attachment: fixed;
   filter: blur(6px);
+  opacity: 0.6;
   z-index: -1;
   transform: scale(1.02);
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
