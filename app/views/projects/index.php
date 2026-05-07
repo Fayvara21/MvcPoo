@@ -35,7 +35,7 @@
 
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="card h-100 border-1 shadow-sm">
 
                         <div class="card-body">
