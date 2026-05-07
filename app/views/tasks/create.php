@@ -60,6 +60,15 @@
                             </div>
 
                             <div class="col-md-6 col-lg-4">
+                                <label class="form-label fw-medium">Priorité</label>
+                                <select class="form-select" name="priority">
+                                    <?php for ($x = 0; $x < 5; $x++): ?>
+                                        <option value="<?= $x + 1 ?>"><?= $x + 1 ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 col-lg-4">
                                 <label class="form-label fw-medium">Type de tâche</label>
                                 <select class="form-select" name="type" id="taskType">
                                     <option value="">-- Choisir --</option>

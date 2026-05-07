@@ -9,15 +9,15 @@ class Task
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create($title, $desc, $projectId, $dueDate = null)
+    public static function create($title, $desc, $projectId, $dueDate = null, $priority = 1)
     {
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->prepare("
             INSERT INTO tasks 
-            (title, is_completed, created_at, project_id, description, due_date, user_id) 
+            (title, is_completed, created_at, project_id, description, due_date, user_id, priority) 
             VALUES 
-            (:title, 0, CURRENT_TIMESTAMP, :project_id, :description, :due_date, :user_id)
+            (:title, 0, CURRENT_TIMESTAMP, :project_id, :description, :due_date, :user_id, :priority)
         ");
 
         $stmt->execute([
@@ -26,6 +26,7 @@ class Task
             'description' => $desc,
             'due_date' => $dueDate ?: null,
             'user_id' => $_SESSION["user_id"],
+            'priority' => $priority,
         ]);
 
         return $db->lastInsertId();
@@ -152,7 +153,7 @@ class Task
         return null;
     }
 
-    public static function edit($title, $desc, $taskId, $dueDate = null)
+    public static function edit($title, $desc, $taskId, $dueDate = null, $priority = 1)
     {
         $db = Database::getInstance()->getPdo();
 
@@ -160,7 +161,8 @@ class Task
             UPDATE tasks 
             SET title = :title, 
                 description = :description, 
-                due_date = :due_date
+                due_date = :due_date,
+                priority = :priority
             WHERE id = :id
         ");
 
@@ -168,6 +170,7 @@ class Task
             'title' => $title,
             'description' => $desc,
             'due_date' => $dueDate ?: null,
+            'priority' => $priority,
             'id' => $taskId,
         ]);
     }
@@ -184,7 +187,7 @@ class Task
         $db = Database::getInstance()->getPdo();
 
         $stmt = $db->query("
-            SELECT t.id, t.title, t.description, t.created_at, t.due_date, t.project_id, t.is_completed, t.completed_at, p.title AS project_title
+            SELECT t.id, t.title, t.description, t.created_at, t.due_date, t.project_id, t.priority, t.is_completed, t.completed_at, p.title AS project_title
             FROM tasks t
             INNER JOIN projects p ON t.project_id = p.id
             ORDER BY t.due_date IS NULL, t.due_date ASC

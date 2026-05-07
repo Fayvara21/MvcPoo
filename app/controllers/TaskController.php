@@ -39,9 +39,10 @@ class TaskController extends BaseController
             $desc = htmlspecialchars($_POST['desc'], ENT_QUOTES, 'UTF-8');
             $dueDate = htmlspecialchars($_POST['dueDate'], ENT_QUOTES, 'UTF-8');
             $type = $_POST['type'] ?? '';
+            $priority = $_POST['priority'] ?? 1;
 
             // Create the main task
-            $taskId = Task::create($title, $desc, $id, $dueDate);
+            $taskId = Task::create($title, $desc, $id, $dueDate, $priority);
 
             // === APPRO ===
             if ($type === 'appro' && !empty($_POST['appro'])) {

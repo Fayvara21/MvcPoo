@@ -74,6 +74,14 @@ function e($str)
                             </div>
 
                             <div class="col-md-6 col-lg-4">
+                                <label class="form-label fw-medium">Priorité</label>
+                                <select class="form-select" name="priority">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <option value="<?= $i ?>" <?= $task['priority'] == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
                                 <label class="form-label fw-medium">Type de tâche</label>
                                 <select class="form-select" name="type" id="taskType" required>
                                     <option value="">-- Choisir --</option>
