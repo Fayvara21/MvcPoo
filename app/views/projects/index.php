@@ -164,6 +164,16 @@
         <div class="container my-4 overflow-y-auto" style="max-height: 500px;">
 
             <div class="mb-3 p-4 border rounded shadow-sm bg-light">
+                <h4 class="mb-2 text-primary">Mise à jour v260507:</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ajout du champ "priorité" lors de la création de taches</li>
+                    <li class="list-group-item">Ajout de la colonne "priorité" pour toutes les vues et tables</li>
+                    <li class="list-group-item">Modifications mineures de l'interface</li>
+                </ul>
+            </div>
+
+            <div class="mb-3 p-4 border rounded shadow-sm bg-light">
                 <h4 class="mb-2 text-primary">Mise à jour v260506:</h4>
 
                 <ul class="list-group list-group-flush">
