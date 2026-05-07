@@ -318,7 +318,7 @@ Vue en temps réel pour l'affichage des tâches
                                 <td class="wordwrap">${task.title}</td>
                                 <td class="wordwrap">${reference}</td>
                                 <td class="wordwrap">${task.due_date ?? '-'}</td>
-                                <td><div class="badge bg-${priorityColor[task.priority]} m-0">${task.priority}</div></td>
+                                <td><div class="badge bg-${priorityColor[task.priority]} mx-0">${task.priority || '-'}</div></td>
                                 <td>${loadingIcon}</td>
                             </tr>
                             <tr class="${rowClass}">
