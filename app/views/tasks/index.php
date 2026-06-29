@@ -916,7 +916,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
+                                <td class="task-description" colspan="9">
                                     <div class="small fw-semibold mb-1 text-primary">APPRO</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($a['pn'] ?? '') ?></div>
@@ -940,7 +940,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
+                                <td class="task-description" colspan="9">
                                     <div class="small fw-semibold mb-1 text-warning">RETOUR</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($r['pn'] ?? '') ?></div>
@@ -959,7 +959,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                             <?php $subIndex++; ?>
                             <tr class="bg-light sub-task-<?= $taskId ?>" style="display: table-row;">
                                 <td class="p-2 fw-semibold"><?= $subIndex ?></td>
-                                <td class="task-description" colspan="8">
+                                <td class="task-description" colspan="9">
                                     <div class="small fw-semibold mb-1 text-success">VERIF STOCK</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($v['pn'] ?? '') ?></div>
@@ -981,7 +981,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                                 <td class="p-2 fw-semibold">
                                     <?= $subIndex ?>
                                 </td>
-                                <td class="task-description" colspan="8">
+                                <td class="task-description" colspan="9">
                                     <div class="small fw-semibold mb-1 text-danger">EXPEDITION</div>
                                     <div class="d-flex gap-4 mb-1">
                                         <div><strong>PN:</strong> <?= e($t['pn'] ?? '') ?></div>
