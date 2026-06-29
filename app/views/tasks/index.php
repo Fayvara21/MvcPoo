@@ -753,6 +753,7 @@ $baseUrl = '?' . http_build_query($paginationParams);
                                 $canUseState7 = true;
                             } elseif (in_array($currentUserGroup, explode(',', $project['groups'] ?? ''))) {
                                 $canUseState7 = true;
+                                $canEdit = true;
                             }
                         }
 
